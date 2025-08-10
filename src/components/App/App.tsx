@@ -12,12 +12,12 @@ import ProtectedRoute from '../ProtectedRoute/ProtectedRoute';
 import { useAuthStore } from '@/zustand/store';
 
 function App() {
-    const hydrateAuth = useAuthStore((state) => state.hydrateAuth);
-    useEffect(() => {
-        hydrateAuth();
-    }, []);
-    const isAuth = Boolean(useAuthStore((state) => state.auth));
-
+    // const hydrateAuth = useAuthStore((state) => state.hydrateAuth);
+    // useEffect(() => {
+    //     hydrateAuth();
+    // }, []);
+    // const isAuth = Boolean(useAuthStore((state) => state.auth));
+    const isAuth = true;
     return (
         <div className='app'>
             <Routes>

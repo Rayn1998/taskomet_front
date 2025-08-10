@@ -1,0 +1,44 @@
+@use '@/scss/variables' as *;
+
+.tasksblock-list {
+    .shot-accordion {
+        border-radius: 0;
+        background-color: $background;
+        color: #fff;
+
+        .shot-accordion-expand-icon {
+            color: #fff;
+        }
+
+        .shot-accordion-details {
+            padding-left: 5rem;
+            border-radius: 0;
+            background-color: $background-forward-light;
+
+            .shot-tasks-block {
+                display: flex;
+                flex-direction: column;
+                gap: 1rem;
+
+                .shot-task {
+                    padding: 0 1rem;
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                    outline: 0.1rem solid red;
+                    cursor: pointer;
+
+                    .shot-task-name {
+                        // align-items: center;
+                    }
+                    .shot-task-status {
+                        .shot-task-status-label,
+                        .shot-task-status-select {
+                            color: #fff;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

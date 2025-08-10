@@ -1,4 +1,4 @@
-import { FC, useRef } from 'react';
+import { FC, useRef, MouseEvent } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Layout from '../Layout/Layout';
 
@@ -8,7 +8,7 @@ const ProjectsList: FC = () => {
     const navigate = useNavigate();
     const ref = useRef<HTMLDivElement>(null);
 
-    const handleClick = (e: React.MouseEvent<HTMLDivElement>) => {
+    const handleClick = (e: MouseEvent<HTMLDivElement>) => {
         const project = e.currentTarget.getAttribute('data-name');
         navigate(`/projects/${project}`);
     };
