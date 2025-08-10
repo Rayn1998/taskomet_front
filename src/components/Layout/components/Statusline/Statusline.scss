@@ -1,0 +1,26 @@
+@use '@/scss/variables' as *;
+
+.statusline {
+    min-height: 4rem;
+    width: 100%;
+    background-color: $background-forward;
+    margin-top: 1rem;
+    padding: 0 1rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    color: #fff;
+    font-size: 1.2rem;
+
+    .statusline-back {
+        @include image-icon;
+        @include hover;
+        background-image: url('../../../../assets/images/back-button.png');
+    }
+
+    .statusline-path {
+        &:hover {
+            cursor: pointer;
+        }
+    }
+}

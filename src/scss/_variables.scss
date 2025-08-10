@@ -1,0 +1,37 @@
+$background: rgb(42, 44, 51);
+$background-forward: rgb(35, 37, 44);
+$background-forward-light: rgb(45, 50, 60);
+$boder-color: rgb(68, 120, 250);
+
+@mixin image-icon {
+    min-height: 3rem;
+    min-width: 3rem;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    filter: invert(0.5);
+}
+
+@mixin hover {
+    position: relative;
+    &:hover {
+        cursor: pointer;
+        &::before {
+            opacity: 1;
+        }
+    }
+
+    &::before {
+        position: absolute;
+        top: 0;
+        left: 0;
+        content: '';
+        width: 100%;
+        height: 100%;
+        background-color: $background-forward;
+        filter: opacity(0.2);
+        border-radius: 1rem;
+        opacity: 0;
+        transition: opacity 0.1s ease-in;
+    }
+}

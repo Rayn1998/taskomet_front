@@ -1,0 +1,13 @@
+@use '@/scss/variables' as *;
+
+.tasksblock-project {
+    border-radius: 0;
+    padding: 1rem;
+    display: flex;
+    justify-content: space-between;
+
+    &:hover {
+        cursor: pointer;
+        background-color: $background-forward-light;
+    }
+}
