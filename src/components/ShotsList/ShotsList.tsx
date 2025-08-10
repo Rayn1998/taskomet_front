@@ -1,6 +1,8 @@
 import { FC, useState } from 'react';
 import Layout from '../Layout/Layout';
 
+import { useTaskPopupStore } from '@/zustand/taskPopupStore';
+
 import Accordion from '@mui/material/Accordion';
 import AccordionSummary from '@mui/material/AccordionSummary';
 import AccordionDetails from '@mui/material/AccordionDetails';
@@ -16,6 +18,7 @@ import FormControl from '@mui/material/FormControl';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 
 const ShotsList: FC = () => {
+    const handleDoubleClick = useTaskPopupStore((state) => state.setOpen);
     const [status, setStatus] = useState<string>('');
     const handleChange = (e: SelectChangeEvent) => {
         setStatus(e.target.value as string);
@@ -32,7 +35,7 @@ const ShotsList: FC = () => {
                     </AccordionSummary>
                     <AccordionDetails className='shot-accordion-details'>
                         <div className='shot-tasks-block'>
-                            <div className='shot-task'>
+                            <div className='shot-task' onDoubleClick={handleDoubleClick}>
                                 <div className='shot-task-name'>compositing</div>
                                 <Box className='shot-task-status' sx={{ minWidth: '15rem' }}>
                                     <FormControl fullWidth>

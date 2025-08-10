@@ -1,12 +1,12 @@
 @use 'components/App/App';
 @use 'components/Signup/Signup';
-@use 'components/Main/Main';
 @use 'components/Layout/Layout';
 @use 'components/Layout/components/Header/Header';
 @use 'components/Layout/components/Statusline/Statusline';
 @use 'components/Layout/components/Sidebar/Sidebar';
 @use 'components/ProjectsList/ProjectsList';
 @use 'components/ShotsList/ShotsList';
+@use 'components/Popups/TaskPopup';
 
 @use 'scss/variables' as *;
 

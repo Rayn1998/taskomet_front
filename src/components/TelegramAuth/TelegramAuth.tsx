@@ -1,6 +1,6 @@
 import { FC, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useAuthStore } from '@/zustand/store';
+import { useAuthStore } from '@/zustand/authStore';
 
 declare global {
     interface Window {

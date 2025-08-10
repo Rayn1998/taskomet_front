@@ -2,7 +2,7 @@ import { FC, useState, useRef } from 'react';
 
 import backgroundImage from '@/assets/images/user.png';
 
-import { useAuthStore } from '@/zustand/store';
+import { useAuthStore } from '@/zustand/authStore';
 
 const Header: FC = () => {
     const auth = useAuthStore((state) => state.auth);
