@@ -2,18 +2,15 @@ import { create } from 'zustand';
 
 interface ITaskPopupStore {
     isOpen: boolean;
-    setOpen: () => void;
+    setOpenClose: () => void;
     setClose: () => void;
 }
 
 export const useTaskPopupStore = create<ITaskPopupStore>((set) => ({
     isOpen: false,
-    setOpen: () =>
-        set(() => ({
-            isOpen: true,
+    setOpenClose: () =>
+        set((state) => ({
+            isOpen: !state.isOpen,
         })),
-    setClose: () =>
-        set(() => ({
-            isOpen: false,
-        })),
+    setClose: () => set(() => ({isOpen: false}))
 }));

@@ -11,33 +11,84 @@
         height: 100%;
 
         .layout-tasksblock {
+            padding: 1rem;
             margin-top: 1rem;
             min-width: 100%;
             min-height: 20rem;
             background-color: $background-forward;
             color: #fff;
             font-size: 1.2rem;
+            display: flex;
+            gap: 1rem;
 
-            .layout-tasksblock-menu {
-                display: flex;
-                padding: 1rem;
-                justify-content: flex-end;
-                gap: 1rem;
-                border-radius: 1rem 1rem 0 0;
-                border-bottom: 0.1rem solid $background;
+            .layout-tasksblock-left_block {
+                width: 50%;
+                transition: 0.5s all ease-in;
+
+                .layout-structure-icon {
+                border-radius: 0;
+                @include image-icon;
+                @include hover;
+                }
+
+                .layout-tasksblock-menu {
+                    display: flex;
+                    padding: 1rem;
+                    justify-content: flex-end;
+                    gap: 1rem;
+                    border-radius: 1rem 1rem 0 0;
+                    border-bottom: 0.1rem solid $background;
+                    
+                    .layout-tasksblock-button {
+                        filter: invert(1);
+                        background-color: transparent;
+
+                        .layout-tasksblock-button__image {
+                            max-width: 3rem;
+                            max-height: 3rem;
+                        }
+                    }
+                }
+
+                .layout-tasksblock-ordering {
+                    display: flex;
+                    padding: 1rem;
+                    justify-content: space-between;
+                    border-radius: 1rem 1rem 0 0;
+                    border-bottom: 0.1rem solid $background;
+                }
+
+                .layout-tasksblock-list {
+                    display: flex;
+                    flex-direction: column;
+                }
             }
 
-            .layout-tasksblock-ordering {
-                display: flex;
-                padding: 1rem;
-                justify-content: space-between;
-                border-radius: 1rem 1rem 0 0;
-                border-bottom: 0.1rem solid $background;
-            }
+            .layout-tasksblock-right_block {
+                max-width: 50%;
+                outline: 0.1rem solid cyan;
+                position: relative;
+                transition: 0.5s all ease-in;
+                overflow-y: scroll;
 
-            .layout-tasksblock-list {
-                display: flex;
-                flex-direction: column;
+                .layout-tasksblock-right_block-hide {
+                    @include hover;
+                    border-radius: 0;
+                    width: 3rem;
+                    height: 3rem;
+                    position: absolute;
+                    top: 1rem;
+                    left: 1rem;
+                    background-size: cover;
+                    background-position: center;
+                    background-repeat: no-repeat;
+                    transform: rotate(90deg);
+                    filter: saturate(100);
+                }
+
+                .layout-info-block {
+                    flex: 1;
+                }
             }
         }
     }

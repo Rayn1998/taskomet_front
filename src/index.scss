@@ -7,6 +7,8 @@
 @use 'components/ProjectsList/ProjectsList';
 @use 'components/ShotsList/ShotsList';
 @use 'components/Popups/TaskPopup';
+@use 'components/ShotsList/components/DropDown/DropDown';
+@use 'components/ShotsList/components/Task/Task';
 
 @use 'scss/variables' as *;
 

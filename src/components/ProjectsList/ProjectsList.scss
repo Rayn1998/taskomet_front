@@ -1,13 +1,23 @@
 @use '@/scss/variables' as *;
 
-.tasksblock-project {
+.tasksblock-item {
     border-radius: 0;
     padding: 1rem;
     display: flex;
     justify-content: space-between;
+    user-select: none;
 
     &:hover {
         cursor: pointer;
         background-color: $background-forward-light;
     }
+
+    // .layout-tasksblock-left_block {
+    //     .layout-tasksblock-menu {
+    //         .layout-tasksblock-button {
+    //             background-color: transparent;
+    //         }
+    //     }
+    // }
+    
 }
