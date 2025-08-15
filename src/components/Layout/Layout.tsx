@@ -1,8 +1,8 @@
 import { FC } from 'react';
-import Sidebar from './components/Sidebar/Sidebar';
-import Header from './components/Header/Header';
-import Statusline from './components/Statusline/Statusline';
-import TasksBlock from './components/TasksBlock/TasksBlock';
+import Sidebar from '@/components/Layout/components/Sidebar/Sidebar';
+import Header from '@/components/Layout/components/Header/Header';
+import Statusline from '@/components/Layout/components/Statusline/Statusline';
+import TasksBlock from '@/components/Layout/components/TasksBlock/TasksBlock';
 import { IChildrenComponent } from '@/types/IChildrenComponent';
 
 const Layout: FC<IChildrenComponent> = ({ children }) => {

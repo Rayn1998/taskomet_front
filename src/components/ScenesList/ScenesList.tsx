@@ -1,7 +1,7 @@
 import { FC, MouseEvent, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import Layout from '../Layout/Layout';
-import TasksBlockItem from '../Layout/components/TasksblockItem/TasksBlockItem';
+import Layout from '@/components/Layout/Layout';
+import TasksBlockItem from '@/components/Layout/components/TasksblockItem/TasksBlockItem';
 
 const ScenesList: FC = () => {
     // const tasks = [

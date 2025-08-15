@@ -19,50 +19,47 @@ interface ISimpleDialog {
 }
 
 const SimpleDialog: FC<ISimpleDialog> = (props) => {
-  const { onClose, selectedValue, open } = props;
-  
-  const artists = ['Tim Popov', 'Evgeniy Kovalets'];
+    const { onClose, selectedValue, open } = props;
 
-  const handleClose = () => {
-    onClose(selectedValue);
-  };
+    const artists = ['Tim Popov', 'Evgeniy Kovalets'];
 
-  const handleListItemClick = (value: string) => {
-    onClose(value);
-  };
+    const handleClose = () => {
+        onClose(selectedValue);
+    };
 
-  return (
-    <Dialog onClose={handleClose} open={open}>
-      <DialogTitle>Set backup account</DialogTitle>
-      <List sx={{ pt: 0 }}>
-        {artists.map((artist) => (
-          <ListItem disablePadding key={artist}>
-            <ListItemButton onClick={() => handleListItemClick(artist)}>
-              <ListItemAvatar>
-                <Avatar sx={{ bgcolor: blue[100], color: blue[600] }}>
-                  <PersonIcon />
-                </Avatar>
-              </ListItemAvatar>
-              <ListItemText primary={artist} />
-            </ListItemButton>
-          </ListItem>
-        ))}
-        <ListItem disablePadding>
-          <ListItemButton
-            autoFocus
-            onClick={() => handleListItemClick('addAccount')}
-          >
-            <ListItemAvatar>
-              <Avatar>
-                <AddIcon />
-              </Avatar>
-            </ListItemAvatar>
-            <ListItemText primary="Add account" />
-          </ListItemButton>
-        </ListItem>
-      </List>
-    </Dialog>
-  );
-}
+    const handleListItemClick = (value: string) => {
+        onClose(value);
+    };
+
+    return (
+        <Dialog onClose={handleClose} open={open}>
+            <DialogTitle>Set backup account</DialogTitle>
+            <List sx={{ pt: 0 }}>
+                {artists.map((artist) => (
+                    <ListItem disablePadding key={artist}>
+                        <ListItemButton onClick={() => handleListItemClick(artist)}>
+                            <ListItemAvatar>
+                                <Avatar sx={{ bgcolor: blue[100], color: blue[600] }}>
+                                    <PersonIcon />
+                                </Avatar>
+                            </ListItemAvatar>
+                            <ListItemText primary={artist} />
+                        </ListItemButton>
+                    </ListItem>
+                ))}
+                <ListItem disablePadding>
+                    <ListItemButton autoFocus onClick={() => handleListItemClick('addAccount')}>
+                        <ListItemAvatar>
+                            <Avatar>
+                                <AddIcon />
+                            </Avatar>
+                        </ListItemAvatar>
+                        <ListItemText primary='Add account' />
+                    </ListItemButton>
+                </ListItem>
+            </List>
+        </Dialog>
+    );
+};
 
 export default SimpleDialog;

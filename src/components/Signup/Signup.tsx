@@ -1,5 +1,5 @@
 import { FC } from 'react';
-import TelegramAuth from '../TelegramAuth/TelegramAuth';
+import TelegramAuth from '@/components/TelegramAuth/TelegramAuth';
 
 const Signup: FC = () => {
     return (

@@ -8,13 +8,13 @@ import Typography from '@mui/material/Typography';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import Button from '@mui/material/Button';
 
-import Task from '../Task/Task';
+import Task from '@/components/ShotsList/components/Task/Task';
 
 interface IShot {
     name: string;
 }
 
-const Shot: FC<IShot> = ({name}) => {
+const Shot: FC<IShot> = ({ name }) => {
     return (
         <Accordion className='shot-accordion'>
             <AccordionSummary
@@ -25,7 +25,7 @@ const Shot: FC<IShot> = ({name}) => {
             </AccordionSummary>
             <AccordionDetails className='shot-accordion-details'>
                 <div className='shot-tasks-block'>
-                    <Task name="compositing" />
+                    <Task name='compositing' />
                 </div>
             </AccordionDetails>
             <AccordionActions>
@@ -33,6 +33,6 @@ const Shot: FC<IShot> = ({name}) => {
             </AccordionActions>
         </Accordion>
     );
-}
+};
 
 export default Shot;

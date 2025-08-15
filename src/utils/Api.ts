@@ -1,4 +1,4 @@
-import { IProject } from '@/types/IProject';
+import IProject from '@shared/types/Project';
 
 class Api {
     url: string;

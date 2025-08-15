@@ -1,14 +1,11 @@
 import { FC } from 'react';
-import { Routes, Route, Navigate, useNavigate } from 'react-router-dom';
-import ProjectsList from '../ProjectsList/ProjectsList';
-import ScenesList from '../ScenesList/ScenesList';
-import ShotsList from '../ShotsList/ShotsList';
-import Signup from '../Signup/Signup';
-import TaskPopup from '../Popups/TaskPopup';
+import { Routes, Route, Navigate } from 'react-router-dom';
+import ProjectsList from '@/components/ProjectsList/ProjectsList';
+import ScenesList from '@/components/ScenesList/ScenesList';
+import ShotsList from '@/components/ShotsList/ShotsList';
+import Signup from '@/components/Signup/Signup';
 
-import ProtectedRoute from '../ProtectedRoute/ProtectedRoute';
-
-import { useAuthStore } from '@/zustand/authStore';
+import ProtectedRoute from '@/components/ProtectedRoute/ProtectedRoute';
 
 const App: FC = () => {
     // FOR TESTING

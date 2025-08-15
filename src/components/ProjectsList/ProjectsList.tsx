@@ -5,7 +5,7 @@ import TasksBlockItem from '@/components/Layout/components/TasksblockItem/TasksB
 
 import { api } from '@/utils/Api';
 
-import { IProject } from '@/types/IProject';
+import IProject from '@shared/types/Project';
 // потом добавить React-Table чтобы менять размер столбцов вручную
 
 const ProjectsList: FC = () => {
