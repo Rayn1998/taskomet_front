@@ -4,11 +4,12 @@ import Layout from '@/components/Layout/Layout';
 import TasksBlockItem from '@/components/Layout/components/TasksblockItem/TasksBlockItem';
 
 import { api } from '@/utils/Api';
-
+import { errorDataStore } from '@/zustand/errorDataStore';
 import IProject from '@shared/types/Project';
 // потом добавить React-Table чтобы менять размер столбцов вручную
 
 const ProjectsList: FC = () => {
+    const setErrorData = errorDataStore((state) => state.setData);
     const [projects, setProjects] = useState<Array<IProject>>([]);
     const [selected, setSelected] = useState<string>('');
     const navigate = useNavigate();
@@ -24,8 +25,19 @@ const ProjectsList: FC = () => {
 
     useEffect(() => {
         (async () => {
-            const projects = await api.getProjects();
-            setProjects(projects);
+            try {
+                const projects = await api.getProjects();
+                setProjects(projects);
+            } catch (err: unknown) {
+                console.log(err);
+                // if (err && typeof err === 'object' && 'status' in err && 'message' in err) {
+                //     setErrorData({ ...err });
+                //     console.log('here');
+                //     navigate('/error-page');
+                // } else {
+                //     navigate('/not-found');
+                // }
+            }
         })();
     }, []);
     return (

@@ -4,6 +4,7 @@ import ProjectsList from '@/components/ProjectsList/ProjectsList';
 import ScenesList from '@/components/ScenesList/ScenesList';
 import ShotsList from '@/components/ShotsList/ShotsList';
 import Signup from '@/components/Signup/Signup';
+import Error from '@/components/Error/Error';
 
 import ProtectedRoute from '@/components/ProtectedRoute/ProtectedRoute';
 
@@ -21,10 +22,6 @@ const App: FC = () => {
         <div className='app'>
             <Routes>
                 <Route path='/' element={<Navigate to='/projects' replace />} />
-                {/* <Route
-                    path='/projects'
-                    element={<ProtectedRoute path='/projects' element={ProjectsList} />}
-                /> */}
                 <Route element={<ProtectedRoute isAuth={isAuth} />}>
                     <Route path='/projects' element={<ProjectsList />} />
                     <Route path='/projects/:projectId' element={<ScenesList />} />
@@ -33,6 +30,7 @@ const App: FC = () => {
                 </Route>
 
                 <Route path='/signup' element={<Signup />} />
+                <Route path='/error-page' element={<Error />} />
             </Routes>
             {/* <TaskPopup /> */}
         </div>
