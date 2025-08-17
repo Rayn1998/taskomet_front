@@ -1,11 +1,14 @@
-import { create } from 'zustand';
+import { create } from "zustand";
 
 interface IErrorDataStore {
-    data: object | null;
-    setData: (data: object) => void;
+    message: string;
+    setMessage: (message: string) => void;
 }
 
 export const errorDataStore = create<IErrorDataStore>((set) => ({
-    data: null,
-    setData: (data) => set((state) => ({ data })),
+    message: "",
+    setMessage: (message) =>
+        set({
+            message,
+        }),
 }));

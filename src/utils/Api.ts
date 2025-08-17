@@ -1,4 +1,6 @@
-import IProject from '@shared/types/Project';
+import IProject from "@shared/types/Project";
+import IScene from "@shared/types/Scene";
+import ITask from "@shared/types/Task";
 
 class Api {
     url: string;
@@ -8,28 +10,54 @@ class Api {
     }
 
     private _getResponse = async <T>(res: Response): Promise<T> => {
+        const data = await res.json();
         if (!res.ok) {
-            const msg = await res.json();
-            return msg as T;
-        } else {
-            return res.json() as Promise<T>;
+            throw new Error(data?.message || "Unknown error");
         }
+        return data as T;
     };
 
     async _request<T>(url: string, options: RequestInit): Promise<T> {
-        return await fetch(url, options)
-            .then((res) => this._getResponse<T>(res))
-            .catch(() => Promise.reject(new Error(`Backend isn't replying`)));
+        try {
+            const responseData = await fetch(url, options);
+            return this._getResponse<T>(responseData);
+        } catch (err) {
+            return Promise.reject(new Error(`Backend isn't replying`));
+        }
     }
 
     async getProjects(): Promise<IProject[]> {
         return await this._request<IProject[]>(`${this.url}/projects`, {
-            method: 'GET',
+            method: "GET",
             headers: {
-                'Content-Type': 'application/json',
+                "Content-Type": "application/json",
             },
         });
     }
+
+    async getScenes(projectId: string): Promise<IScene[]> {
+        return await this._request<IScene[]>(
+            `${this.url}/projects/${projectId}`,
+            {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+            },
+        );
+    }
+
+    async getTasks(projectId: string, sceneId: string): Promise<ITask[]> {
+        return await this._request<ITask[]>(
+            `${this.url}/projects/${projectId}/${sceneId}`,
+            {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+            },
+        );
+    }
 }
 
-export const api = new Api('http://127.0.0.1:3001');
+export const api = new Api("http://127.0.0.1:3001");

@@ -1,4 +1,4 @@
-@use '@/scss/variables' as *;
+@use "@/scss/variables" as *;
 
 .tasksblock-item {
     border-radius: 0;
@@ -11,13 +11,4 @@
         cursor: pointer;
         background-color: $background-forward-light;
     }
-
-    // .layout-tasksblock-left_block {
-    //     .layout-tasksblock-menu {
-    //         .layout-tasksblock-button {
-    //             background-color: transparent;
-    //         }
-    //     }
-    // }
-    
 }
