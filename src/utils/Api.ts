@@ -58,6 +58,29 @@ class Api {
             },
         );
     }
+
+    async getTaskData(taskId: number): Promise<any> {
+        return await this._request<ITask[]>(
+            `${this.url}/task-data`,
+            {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({taskId})
+            },
+        );
+    }
+
+    async checkServerConnection() {
+        const response = await fetch(`${this.url}/check-server`, {
+            method: "GET",
+        });
+        if (response.status === 200) {
+            return Promise.resolve(true);
+        } 
+        return Promise.resolve(false);
+    }
 }
 
 export const api = new Api("http://127.0.0.1:3001");

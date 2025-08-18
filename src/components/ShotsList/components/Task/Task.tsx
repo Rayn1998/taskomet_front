@@ -6,17 +6,22 @@ import DropDown from '@/components/ShotsList/components/DropDown/DropDown';
 import Button from '@mui/material/Button';
 import SimpleDialog from '@/components/ShotsList/components/SimpleDialog/SimpleDialog';
 
-interface ITask {
-    shotName?: string;
-    name: string;
-}
+import { api } from '@/utils/Api';
 
-const Task: FC<ITask> = ({ shotName = '', name }) => {
+import ITask from '@shared/types/Task';
+
+// interface ITask {
+//     shotName?: string;
+//     name: string;
+    
+// }
+
+const Task: FC<ITask> = ({ name, id }) => {
     const [shotNameOn, setShotNameOn] = useState<boolean>(false);
     const statuses = ['готова к работе', 'в работе', 'дейлиз на проверку', 'approved', 'done'];
     const priority = ['минимальный', 'нормальный', 'высокий'];
 
-    const handleDoubleClick = useTaskPopupStore((state) => state.setOpenClose);
+    const setTaskView = useTaskPopupStore((state) => state.setOpenClose);
     const [open, setOpen] = useState<boolean>(false);
     const [selectedValue, setSelectedValue] = useState<string>('Artist');
 
@@ -29,12 +34,19 @@ const Task: FC<ITask> = ({ shotName = '', name }) => {
         setSelectedValue(value);
     };
 
+    // const handleDoubleClick = () => {
+    //     try {
+    //         const taskData = await api.getTaskData(id);
+    //     } catch (err) {}
+    //     setTaskView();
+    // }
+
     useEffect(() => {
-        if (shotName.length > 0) setShotNameOn(true);
+        if (name.length > 0) setShotNameOn(true);
     }, []);
     return (
-        <div className='task' onDoubleClick={handleDoubleClick}>
-            {shotNameOn && <div className='task-shot_name'>{shotName}</div>}
+        <div className='task' onDoubleClick={setTaskView}>
+            {shotNameOn && <div className='task-shot_name'>{name}</div>}
             <div className='task-name'>{name}</div>
             <DropDown label='task-status' items={statuses} />
             <div className='task-artist'>

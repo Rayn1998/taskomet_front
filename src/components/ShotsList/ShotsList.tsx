@@ -37,14 +37,14 @@ const ShotsList: FC = () => {
 			<div className="tasksblock-list">
 				{view
 					? tasks.map((shot, i) => {
-							return <Shot name={shot.name} key={i} />;
+							return <Shot name={shot.name} id={shot.id} key={i} />;
 					  })
 					: tasks.map((shot, i) => {
 							return (
 								<Task
+									id={shot.id}
 									key={i}
-									name="compositing"
-									shotName={shot.name}
+									name={shot.name}
 								/>
 							);
 					  })}

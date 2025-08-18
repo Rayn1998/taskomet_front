@@ -12,9 +12,10 @@ import Task from '@/components/ShotsList/components/Task/Task';
 
 interface IShot {
     name: string;
+    id: number;
 }
 
-const Shot: FC<IShot> = ({ name }) => {
+const Shot: FC<IShot> = ({ name, id }) => {
     return (
         <Accordion className='shot-accordion'>
             <AccordionSummary
