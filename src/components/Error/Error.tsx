@@ -1,8 +1,10 @@
 import { FC, useState, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { errorDataStore } from "@/zustand/errorDataStore";
-import errorPenguine from "@/assets/images/error-penguine.gif";
 import { api } from "@/utils/Api";
+import Button from "@mui/material/Button";
+
+import errorPenguine from "@/assets/images/error-penguine.gif";
 
 const Error: FC = () => {
 	const navigate = useNavigate();
@@ -14,23 +16,30 @@ const Error: FC = () => {
 		try {
 			const result = await api.checkServerConnection();
 			if (result) {
-				navigate('/projects');
+				navigate("/projects");
 			}
 		} catch (err) {
 			//
 		}
 	}, [navigate]);
 
+	function tryNowClick() {
+		checkConnection();
+		setTime(30);
+	}
+
 	useEffect(() => {
 		setError(errorData);
 		checkConnection();
 	}, [checkConnection, errorData]);
+
 	useEffect(() => {
 		if (time === 0) {
 			checkConnection();
 			setTime(30);
 		}
 	}, [checkConnection, time]);
+
 	useEffect(() => {
 		const interval = setInterval(() => {
 			setTime(time - 1);
@@ -41,8 +50,15 @@ const Error: FC = () => {
 	return (
 		<div className="error-page">
 			<div className="error-page-info">{error}</div>
-			<img className="error-page-gif" src={errorPenguine} alt="gif of penguine"/>
-			<p>Auto try again in to connect to server in ...</p>
+			<img
+				className="error-page-gif"
+				src={errorPenguine}
+				alt="gif of penguine"
+			/>
+			<p>Auto retry to establish server connection in ...</p>
+			<Button variant="contained" size="large" onClick={tryNowClick}>
+				Try now
+			</Button>
 			<div className="error-page-loading">
 				<div className="error-page-loading-circle"></div>
 				<p className="error-page-loading-time">{time}</p>
