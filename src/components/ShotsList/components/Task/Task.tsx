@@ -1,32 +1,40 @@
 import { FC, useState, useEffect } from "react";
 
+// STATES
 import { useTaskPopupStore } from "@/zustand/taskPopupStore";
+import { useArtistStore } from "@/zustand/artistStore";
 
+// MUI
 import DropDown from "@/components/ShotsList/components/DropDown/DropDown";
 import Button from "@mui/material/Button";
 import SimpleDialog from "@/components/ShotsList/components/SimpleDialog/SimpleDialog";
 
-import { api } from "@/utils/Api";
-
+// TYPES | CONSTANTS
 import { TaskProps } from "@/components/ShotsList/TaskProps.type";
-
 import { statuses, priorityStatuses } from "@/utils/constants";
+import { ArtistRole, ArtistRoleLabel } from "@/types/ArtistRole";
 
 const Task: FC<TaskProps> = ({ props }) => {
-	const { name, id, status, executor_name, priority } = props;
-	const [shotNameOn, setShotNameOn] = useState<boolean>(false);
+	const { name, id, status, executor, priority } = props;
+
+	// ARTIST STORE
+	const getArtist = useArtistStore((state) => state.getArtist);
 
 	const setTaskView = useTaskPopupStore((state) => state.setOpenClose);
 	const [open, setOpen] = useState<boolean>(false);
-	const [selectedValue, setSelectedValue] = useState<string>(executor_name!);
+	const [selectedExecutor, setSelectedExecutor] = useState<string>("ARTIST");
 
 	const handleOpen = () => {
 		setOpen(true);
 	};
 
-	const handleClose = (value: string) => {
+	const handleClose = (value: string | null) => {
 		setOpen(false);
-		setSelectedValue(value);
+		if (value === null) {
+			setSelectedExecutor("ARTIST");
+			return;
+		}
+		setSelectedExecutor(value);
 	};
 
 	// const handleDoubleClick = () => {
@@ -37,20 +45,27 @@ const Task: FC<TaskProps> = ({ props }) => {
 	// }
 
 	useEffect(() => {
-		if (name.length > 0) setShotNameOn(true);
+		if (executor) {
+			const artist = getArtist(executor);
+			if (artist) setSelectedExecutor(artist.name);
+		}
 	}, []);
+
 	return (
 		<div className="task" onDoubleClick={setTaskView}>
-			{/* {shotNameOn && <div className="task-shot_name">{name}</div>} */}
 			<div className="task-number">{id}</div>
 			<div className="task-name">{name}</div>
 			<DropDown label="task-status" items={statuses} selected={status} />
 			<div className="task-artist">
-				<Button variant="contained" onClick={handleOpen}>
-					{selectedValue}
+				<Button
+					className="task-artist-button"
+					variant="contained"
+					onClick={handleOpen}
+				>
+					{selectedExecutor}
 				</Button>
 				<SimpleDialog
-					selectedValue={selectedValue}
+					selectedExecutor={selectedExecutor}
 					open={open}
 					onClose={handleClose}
 				/>

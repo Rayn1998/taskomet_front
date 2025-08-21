@@ -1,6 +1,7 @@
 import IProject from "@shared/types/Project";
 import IScene from "@shared/types/Scene";
 import ITask from "@shared/types/Task";
+import IArtist from "@shared/types/Artist";
 
 class Api {
     url: string;
@@ -24,6 +25,15 @@ class Api {
         } catch (err) {
             return Promise.reject(new Error(`Backend isn't replying`));
         }
+    }
+
+    async getArtists(): Promise<IArtist[]> {
+        return await this._request<IArtist[]>(`${this.url}/get-artist`, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+            },
+        });
     }
 
     async getProjects(): Promise<IProject[]> {
@@ -60,16 +70,13 @@ class Api {
     }
 
     async getTaskData(taskId: number): Promise<any> {
-        return await this._request<ITask[]>(
-            `${this.url}/task-data`,
-            {
-                method: "GET",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({taskId})
+        return await this._request<ITask[]>(`${this.url}/task-data`, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
             },
-        );
+            body: JSON.stringify({ taskId }),
+        });
     }
 
     async checkServerConnection() {
@@ -78,8 +85,8 @@ class Api {
         });
         if (response.status === 200) {
             return Promise.resolve(true);
-        } 
-        return Promise.resolve(false);
+        }
+        return Promise.reject(false);
     }
 }
 

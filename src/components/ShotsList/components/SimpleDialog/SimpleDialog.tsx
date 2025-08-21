@@ -12,50 +12,68 @@ import PersonIcon from "@mui/icons-material/Person";
 import AddIcon from "@mui/icons-material/Add";
 import { blue } from "@mui/material/colors";
 
+import { useArtistPopupStore } from "@/zustand/artistPopupStore";
+import { useArtistStore } from "@/zustand/artistStore";
+
 interface ISimpleDialog {
 	open: boolean;
-	selectedValue: string;
-	onClose: (value: string) => void;
+	selectedExecutor: string | null;
+	onClose: (value: string | null) => void;
 }
 
 const SimpleDialog: FC<ISimpleDialog> = (props) => {
-	const { onClose, selectedValue, open } = props;
+	// ARTIST STORE
+	const artistList = useArtistStore((state) => state.artists);
+
+	const setOpenClose = useArtistPopupStore((state) => state.setOpenClose);
+
+	const { onClose, selectedExecutor, open } = props;
 
 	const handleClose = () => {
-		onClose(selectedValue);
+		onClose(selectedExecutor);
 	};
 
 	const handleListItemClick = (value: string) => {
 		onClose(value);
+		// setOpenClose();
+	};
+
+	const handleAddArtistClick = () => {
+		setOpenClose();
 	};
 
 	return (
-		<Dialog onClose={handleClose} open={open}>
+		<Dialog open={open} onClose={handleClose}>
 			<DialogTitle>Set backup account</DialogTitle>
 			<List sx={{ pt: 0 }}>
-				{/* {artists.map((artist) => (
-                    <ListItem disablePadding key={artist}>
-                        <ListItemButton onClick={() => handleListItemClick(artist)}>
-                            <ListItemAvatar>
-                                <Avatar sx={{ bgcolor: blue[100], color: blue[600] }}>
-                                    <PersonIcon />
-                                </Avatar>
-                            </ListItemAvatar>
-                            <ListItemText primary={artist} />
-                        </ListItemButton>
-                    </ListItem>
-                ))} */}
+				{artistList &&
+					artistList.map((artist) => (
+						<ListItem disablePadding key={artist.id}>
+							<ListItemButton
+								onClick={() => handleListItemClick(artist.name)}
+							>
+								<ListItemAvatar>
+									<Avatar
+										sx={{
+											bgcolor: blue[100],
+											color: blue[600],
+										}}
+									>
+										<PersonIcon />
+									</Avatar>
+								</ListItemAvatar>
+								<ListItemText primary={artist.name} />
+							</ListItemButton>
+						</ListItem>
+					))}
 				<ListItem disablePadding>
-					<ListItemButton
-						autoFocus
-						onClick={() => handleListItemClick("addAccount")}
-					>
+					<ListItemButton autoFocus onClick={handleAddArtistClick}>
 						<ListItemAvatar>
 							<Avatar>
 								<AddIcon />
 							</Avatar>
 						</ListItemAvatar>
-						<ListItemText primary="Add account" />
+						<ListItemText primary="Add new artist" />
 					</ListItemButton>
 				</ListItem>
 			</List>

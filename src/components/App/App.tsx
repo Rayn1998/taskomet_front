@@ -1,20 +1,34 @@
-import { FC } from "react";
+import { FC, useEffect } from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
 import ProjectsList from "@/components/ProjectsList/ProjectsList";
 import ScenesList from "@/components/ScenesList/ScenesList";
 import ShotsList from "@/components/ShotsList/ShotsList";
 import Signup from "@/components/Signup/Signup";
 import Error from "@/components/Error/Error";
+import CreateArtistPopup from "@/components/Popups/CreateArtist/CreateArtist";
 
 import ProtectedRoute from "@/components/ProtectedRoute/ProtectedRoute";
 
+import { api } from "@/utils/Api";
+import { useArtistStore } from "@/zustand/artistStore";
+
 const App: FC = () => {
+	const setArtists = useArtistStore((state) => state.setArtists);
 	// FOR TESTING
 	// const hydrateAuth = useAuthStore((state) => state.hydrateAuth);
 	// useEffect(() => {
 	//     hydrateAuth();
 	// }, []);
-	// const isAuth = Boolean(useAuthStore((state) => state.auth));
+	// const isAuth = Boolean(useAuthStore((state) => state.auth));a
+
+	useEffect(() => {
+		(async () => {
+			const artistList = await api.getArtists();
+			if (artistList.length > 0) {
+				setArtists(artistList);
+			}
+		})();
+	}, []);
 
 	// FOR DEVELOPING
 	const isAuth = true;
@@ -40,6 +54,7 @@ const App: FC = () => {
 				<Route path="/not-found" element={<Error />} />
 			</Routes>
 			{/* <TaskPopup /> */}
+			<CreateArtistPopup />
 		</div>
 	);
 };

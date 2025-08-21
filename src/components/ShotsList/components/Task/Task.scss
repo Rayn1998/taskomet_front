@@ -7,4 +7,26 @@
     cursor: pointer;
     margin-bottom: 0.5rem;
     user-select: none;
+
+    .task-number {
+        width: 10%;
+    }
+
+    .task-name,
+    .task-status,
+    .task-artist,
+    .drop-down {
+        width: 22.4%;
+    }
+
+    .task-artist {
+        padding: 0 2%;
+
+        .task-artist-button {
+            width: 100%;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+    }
 }

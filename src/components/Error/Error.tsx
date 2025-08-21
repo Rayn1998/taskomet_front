@@ -28,16 +28,16 @@ const Error: FC = () => {
 		setTime(30);
 	}
 
-	useEffect(() => {
-		setError(errorData);
-		checkConnection();
-	}, [checkConnection, errorData]);
+	// useEffect(() => {
+	// 	checkConnection();
+	// }, [checkConnection, errorData]);
 
 	useEffect(() => {
 		if (time === 0) {
 			checkConnection();
 			setTime(30);
 		}
+		setError(errorData);
 	}, [checkConnection, time]);
 
 	useEffect(() => {

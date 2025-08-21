@@ -32,6 +32,7 @@ const ProjectsList: FC = () => {
 				setProjects(result);
 			} catch (err: unknown) {
 				if (err instanceof Error) {
+					console.log(err.message);
 					setErrorData(err.message);
 					return navigate("/error-page");
 				}
