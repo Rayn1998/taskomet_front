@@ -17,11 +17,11 @@ import { useArtistStore } from "@/zustand/artistStore";
 
 interface ISimpleDialog {
 	open: boolean;
-	selectedExecutor: string | null;
-	onClose: (value: string | null) => void;
+	selectedExecutor: number | null;
+	onClose: (value: number | null) => void;
 }
 
-const SimpleDialog: FC<ISimpleDialog> = (props) => {
+const ArtistSimpleDialog: FC<ISimpleDialog> = (props) => {
 	// ARTIST STORE
 	const artistList = useArtistStore((state) => state.artists);
 
@@ -33,8 +33,8 @@ const SimpleDialog: FC<ISimpleDialog> = (props) => {
 		onClose(selectedExecutor);
 	};
 
-	const handleListItemClick = (value: string) => {
-		onClose(value);
+	const handleListItemClick = (artistId: number) => {
+		onClose(artistId);
 		// setOpenClose();
 	};
 
@@ -50,7 +50,7 @@ const SimpleDialog: FC<ISimpleDialog> = (props) => {
 					artistList.map((artist) => (
 						<ListItem disablePadding key={artist.id}>
 							<ListItemButton
-								onClick={() => handleListItemClick(artist.name)}
+								onClick={() => handleListItemClick(artist.id)}
 							>
 								<ListItemAvatar>
 									<Avatar
@@ -81,4 +81,4 @@ const SimpleDialog: FC<ISimpleDialog> = (props) => {
 	);
 };
 
-export default SimpleDialog;
+export default ArtistSimpleDialog;

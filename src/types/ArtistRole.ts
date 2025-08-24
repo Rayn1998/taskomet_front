@@ -1,4 +1,4 @@
-export enum ArtistRole {
+export enum EArtistRole {
     Artist = 0,
     Coordinator = 1,
     Supervisor = 2,
@@ -6,10 +6,10 @@ export enum ArtistRole {
     God = 10,
 }
 
-export const ArtistRoleLabel: Record<ArtistRole, string> = {
-    [ArtistRole.Artist]: "Artist",
-    [ArtistRole.Coordinator]: "Coordinator",
-    [ArtistRole.Supervisor]: "Supervisor",
-    [ArtistRole.Admin]: "Admin",
-    [ArtistRole.God]: "God",
+export const ArtistRoleLabels: Record<EArtistRole, string> = {
+    [EArtistRole.Artist]: "Artist",
+    [EArtistRole.Coordinator]: "Coordinator",
+    [EArtistRole.Supervisor]: "Supervisor",
+    [EArtistRole.Admin]: "Admin",
+    [EArtistRole.God]: "God",
 };

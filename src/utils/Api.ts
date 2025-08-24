@@ -18,7 +18,7 @@ class Api {
         return data as T;
     };
 
-    async _request<T>(url: string, options: RequestInit): Promise<T> {
+    private async _request<T>(url: string, options: RequestInit): Promise<T> {
         try {
             const responseData = await fetch(url, options);
             return this._getResponse<T>(responseData);
@@ -28,7 +28,7 @@ class Api {
     }
 
     async getArtists(): Promise<IArtist[]> {
-        return await this._request<IArtist[]>(`${this.url}/get-artist`, {
+        return this._request<IArtist[]>(`${this.url}/get-artist`, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
@@ -37,7 +37,7 @@ class Api {
     }
 
     async getProjects(): Promise<IProject[]> {
-        return await this._request<IProject[]>(`${this.url}/projects`, {
+        return this._request<IProject[]>(`${this.url}/projects`, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
@@ -46,19 +46,16 @@ class Api {
     }
 
     async getScenes(projectId: string): Promise<IScene[]> {
-        return await this._request<IScene[]>(
-            `${this.url}/projects/${projectId}`,
-            {
-                method: "GET",
-                headers: {
-                    "Content-Type": "application/json",
-                },
+        return this._request<IScene[]>(`${this.url}/projects/${projectId}`, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
             },
-        );
+        });
     }
 
     async getTasks(projectId: string, sceneId: string): Promise<ITask[]> {
-        return await this._request<ITask[]>(
+        return this._request<ITask[]>(
             `${this.url}/projects/${projectId}/${sceneId}`,
             {
                 method: "GET",
@@ -69,8 +66,31 @@ class Api {
         );
     }
 
+    async updateTaskExecutor(
+        taskId: number,
+        executorId: number,
+    ): Promise<number> {
+        return this._request<number>(`${this.url}/task-update-executor`, {
+            method: "PATCH",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ taskId, executorId }),
+        });
+    }
+
+    async updateTaskStatus(taskId: number, status: number): Promise<number> {
+        return this._request<number>(`${this.url}/task-update-status`, {
+            method: "PATCH",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ taskId, status }),
+        });
+    }
+
     async getTaskData(taskId: number): Promise<any> {
-        return await this._request<ITask[]>(`${this.url}/task-data`, {
+        return this._request<ITask[]>(`${this.url}/task-data`, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
