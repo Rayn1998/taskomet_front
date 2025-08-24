@@ -89,6 +89,19 @@ class Api {
         });
     }
 
+    async updateTaskPriority(
+        taskId: number,
+        priority: number,
+    ): Promise<number> {
+        return this._request<number>(`${this.url}/task-update-priority`, {
+            method: "PATCH",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ taskId, priority }),
+        });
+    }
+
     async getTaskData(taskId: number): Promise<any> {
         return this._request<ITask[]>(`${this.url}/task-data`, {
             method: "GET",

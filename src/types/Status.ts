@@ -1,10 +1,10 @@
 export enum EStatus {
-    NoStatus = 0,
-    ReadyToWork = 1,
-    InProgress = 2,
-    DailiesForCheck = 3,
-    Approved = 4,
-    Done = 5,
+    NoStatus,
+    ReadyToWork,
+    InProgress,
+    DailiesForCheck,
+    Approved,
+    Done,
 }
 export const StatusLabels: Record<EStatus, string> = {
     [EStatus.NoStatus]: "нет статуса",

@@ -1,8 +1,8 @@
 export enum EArtistRole {
-    Artist = 0,
-    Coordinator = 1,
-    Supervisor = 2,
-    Admin = 3,
+    Artist,
+    Coordinator,
+    Supervisor,
+    Admin,
     God = 10,
 }
 

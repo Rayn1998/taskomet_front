@@ -6,31 +6,28 @@ import InputLabel from "@mui/material/InputLabel";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
 
-interface IDropDown<K extends string | number> {
+interface IDropDown<K extends number> {
 	label: string;
 	selected: number;
 	items: Record<K, string>;
 	onChange: (item: K) => void;
 }
 
-const DropDown = <K extends string | number>({
+const DropDown = <K extends number>({
 	label,
 	items,
 	selected,
 	onChange,
 }: IDropDown<K>) => {
-	const [status, setStatus] = useState<number>(selected);
+	const [status, setStatus] = useState<K>(selected as K);
 
-	const handleChange = (e: SelectChangeEvent) => {
-		// setStatus(e.target.value as string);
-		console.log(e.target.value);
-		// onChange(e.target.value);
+	const handleChange = (e: SelectChangeEvent<K>) => {
+		onChange(e.target.value as K);
 	};
 
-	// useEffect(() => {
-	// 	console.log(items[selected + 1]);
-	// 	selected ? setStatus(items[selected + 1]) : setStatus("");
-	// }, [status]);
+	useEffect(() => {
+		setStatus(selected as K);
+	}, [selected]);
 	return (
 		<Box className="drop-down" sx={{ minWidth: "10rem" }}>
 			<FormControl fullWidth>
@@ -38,18 +35,17 @@ const DropDown = <K extends string | number>({
 				<Select
 					className="drop-down-select"
 					label={label}
-					// onChange={handleChange}
+					onChange={handleChange}
 					value={status}
-					defaultValue={status}
 				>
-					{Object.values(items as string[]).map((value, i) => {
+					{Object.entries(items).map(([key, value]) => {
 						return (
 							<MenuItem
-								key={i}
+								key={key}
 								className="drop-down-item"
-								value={value}
+								value={key}
 							>
-								{value}
+								{value as K}
 							</MenuItem>
 						);
 					})}
