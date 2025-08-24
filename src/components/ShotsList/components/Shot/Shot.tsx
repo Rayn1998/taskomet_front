@@ -13,7 +13,7 @@ import Task from "@/components/ShotsList/components/Task/Task";
 // import ITask from "@shared/types/Task";
 import { TaskProps } from "@/components/ShotsList/TaskProps.type";
 
-const Shot: FC<TaskProps> = ({ props }) => {
+const Shot: FC<TaskProps> = ({ props, orderNum }) => {
 	const { name, id, ...rest } = props;
 	return (
 		<Accordion className="shot-accordion">
@@ -27,7 +27,7 @@ const Shot: FC<TaskProps> = ({ props }) => {
 			</AccordionSummary>
 			<AccordionDetails className="shot-accordion-details">
 				<div className="shot-tasks-block">
-					<Task props={props} />
+					<Task props={props} orderNum={orderNum} />
 				</div>
 			</AccordionDetails>
 			<AccordionActions>

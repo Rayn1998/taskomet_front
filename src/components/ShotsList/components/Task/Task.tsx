@@ -4,6 +4,7 @@ import { api } from "@/utils/Api";
 // STATES
 import { useTaskPopupStore } from "@/zustand/taskPopupStore";
 import { useArtistStore } from "@/zustand/artistStore";
+import { useTaskDataStore } from "@/zustand/taskDataStore";
 
 // MUI
 import DropDown from "@/components/ShotsList/components/DropDown/DropDown";
@@ -12,17 +13,18 @@ import ArtistSimpleDialog from "@/components/ShotsList/components/ArtistSimpleDi
 
 // TYPES | CONSTANTS
 import { TaskProps } from "@/components/ShotsList/TaskProps.type";
-import { statuses, priorityStatuses } from "@/utils/constants";
 import { EStatus, StatusLabels } from "@/types/Status";
 import { EPriority, PriorityLabels } from "@/types/Priority";
 import { EArtistRole, ArtistRoleLabels } from "@/types/ArtistRole";
 
-const Task: FC<TaskProps> = ({ props }) => {
+const Task: FC<TaskProps> = ({ props, orderNum }) => {
 	const { name, id, status, executor, priority } = props;
 
 	// ARTIST STORE
 	const getArtist = useArtistStore((state) => state.getArtist);
 	const artists = useArtistStore((state) => state.artists);
+	// TASK DATA STORE
+	const setTaskData = useTaskDataStore((state) => state.setData);
 
 	const setTaskView = useTaskPopupStore((state) => state.setOpenClose);
 	const [open, setOpen] = useState<boolean>(false);
@@ -66,13 +68,14 @@ const Task: FC<TaskProps> = ({ props }) => {
 			.catch((err) => console.log(err));
 	};
 
-	// !!!!!!!!!!!!!!!!!!!!надо будет запрашивать данные таска при открытии его
-	// const handleDoubleClick = () => {
-	//     try {
-	//         const taskData = await api.getTaskData(id);
-	//     } catch (err) {}
-	//     setTaskView();
-	// }
+	const handleDoubleClick = () => {
+		api.getTaskData(id)
+			.then((taskData) => {
+				setTaskData(taskData);
+			})
+			.catch((err) => console.log(err));
+		setTaskView();
+	};
 
 	useEffect(() => {
 		if (executor) setSelectedExecutorId(executor);
@@ -88,8 +91,8 @@ const Task: FC<TaskProps> = ({ props }) => {
 	}, [selectedExecutorId, artists]);
 
 	return (
-		<div className="task" onDoubleClick={setTaskView}>
-			<div className="task-number">{id}</div>
+		<div className="task" onDoubleClick={handleDoubleClick}>
+			<div className="task-number">{orderNum + 1}</div>
 			<div className="task-name">{name}</div>
 			<DropDown<EStatus>
 				label="task-status"

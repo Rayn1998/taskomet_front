@@ -1,6 +1,7 @@
 import IProject from "@shared/types/Project";
 import IScene from "@shared/types/Scene";
 import ITask from "@shared/types/Task";
+import ITaskData from "@shared/types/TaskData";
 import IArtist from "@shared/types/Artist";
 
 class Api {
@@ -23,6 +24,7 @@ class Api {
             const responseData = await fetch(url, options);
             return this._getResponse<T>(responseData);
         } catch (err) {
+            console.log(err);
             return Promise.reject(new Error(`Backend isn't replying`));
         }
     }
@@ -102,14 +104,13 @@ class Api {
         });
     }
 
-    async getTaskData(taskId: number): Promise<any> {
-        return this._request<ITask[]>(`${this.url}/task-data`, {
-            method: "GET",
-            headers: {
-                "Content-Type": "application/json",
+    async getTaskData(taskId: number): Promise<ITaskData[]> {
+        return this._request<ITaskData[]>(
+            `${this.url}/task-data?id=${taskId}`,
+            {
+                method: "GET",
             },
-            body: JSON.stringify({ taskId }),
-        });
+        );
     }
 
     async checkServerConnection() {
