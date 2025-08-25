@@ -1,16 +1,22 @@
-import { FC } from "react";
+import { useEffect } from "react";
 import { IChildrenComponent } from "@/types/IChildrenComponent";
 import { useTaskViewStore } from "@/zustand/taskViewStore";
 import { useTaskPopupStore } from "@/zustand/taskPopupStore";
 import { useTaskDataStore } from "@/zustand/taskDataStore";
 
+import Comment from "./components/Comment/Comment";
+
 import structureImage from "@/assets/images/structure.png";
 import arrow from "@/assets/images/up-arrow.png";
 import info from "@/assets/images/info.png";
 
-const TasksBlock: FC<IChildrenComponent> = ({ children }) => {
+const TasksBlock = ({ children }: IChildrenComponent) => {
 	// TASK DATA STORE
 	const taskDdata = useTaskDataStore((state) => state.data);
+
+	useEffect(() => {
+		console.log(taskDdata);
+	}, [taskDdata]);
 
 	const taskOpen = useTaskPopupStore((state) => state.isOpen);
 	const infoOpenClose = useTaskPopupStore((state) => state.setOpenClose);
@@ -70,7 +76,7 @@ const TasksBlock: FC<IChildrenComponent> = ({ children }) => {
 				<div className="layout-info-block">
 					{taskDdata &&
 						taskDdata.map((data, i) => {
-							return <div key={i}>{`${data}`}</div>;
+							return <Comment task={data} key={i} />;
 						})}
 				</div>
 			</div>

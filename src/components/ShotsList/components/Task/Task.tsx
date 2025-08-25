@@ -1,4 +1,4 @@
-import { FC, useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { api } from "@/utils/Api";
 
 // STATES
@@ -17,7 +17,7 @@ import { EStatus, StatusLabels } from "@/types/Status";
 import { EPriority, PriorityLabels } from "@/types/Priority";
 import { EArtistRole, ArtistRoleLabels } from "@/types/ArtistRole";
 
-const Task: FC<TaskProps> = ({ props, orderNum }) => {
+const Task = ({ props, orderNum, selected, handleClick }: TaskProps) => {
 	const { name, id, status, executor, priority } = props;
 
 	// ARTIST STORE
@@ -25,9 +25,13 @@ const Task: FC<TaskProps> = ({ props, orderNum }) => {
 	const artists = useArtistStore((state) => state.artists);
 	// TASK DATA STORE
 	const setTaskData = useTaskDataStore((state) => state.setData);
+	const taskViewOpen = useTaskPopupStore((state) => state.isOpen);
+	const setTaskViewOpenClose = useTaskPopupStore(
+		(state) => state.setOpenClose,
+	);
 
-	const setTaskView = useTaskPopupStore((state) => state.setOpenClose);
-	const [open, setOpen] = useState<boolean>(false);
+	const [hover, setHover] = useState<boolean>(false);
+	const [artistDialogOpen, setartistDialogOpen] = useState<boolean>(false);
 	const [selectedExecutorId, setSelectedExecutorId] = useState<number | null>(
 		null,
 	);
@@ -37,11 +41,11 @@ const Task: FC<TaskProps> = ({ props, orderNum }) => {
 		useState<string>("NONE");
 
 	const handleOpen = () => {
-		setOpen(true);
+		setartistDialogOpen(true);
 	};
 
 	const handleClose = (artistId: number | null) => {
-		setOpen(false);
+		setartistDialogOpen(false);
 		if (artistId === null) return;
 		if (typeof artistId === "number" && artistId !== selectedExecutorId) {
 			api.updateTaskExecutor(id, artistId)
@@ -69,12 +73,7 @@ const Task: FC<TaskProps> = ({ props, orderNum }) => {
 	};
 
 	const handleDoubleClick = () => {
-		api.getTaskData(id)
-			.then((taskData) => {
-				setTaskData(taskData);
-			})
-			.catch((err) => console.log(err));
-		setTaskView();
+		if (!taskViewOpen) setTaskViewOpenClose();
 	};
 
 	useEffect(() => {
@@ -90,8 +89,28 @@ const Task: FC<TaskProps> = ({ props, orderNum }) => {
 		}
 	}, [selectedExecutorId, artists]);
 
+	useEffect(() => {
+		if (taskViewOpen && selected) {
+			api.getTaskData(id)
+				.then((taskData) => {
+					setTaskData(taskData);
+				})
+				.catch((err) => console.log(err));
+		}
+	}, [taskViewOpen, selected]);
+
 	return (
-		<div className="task" onDoubleClick={handleDoubleClick}>
+		<div
+			className="task"
+			onClick={() => handleClick(name)}
+			onDoubleClick={handleDoubleClick}
+			onMouseEnter={() => setHover(true)}
+			onMouseLeave={() => setHover(false)}
+			style={{
+				backgroundColor:
+					hover || selected ? "rgb(45, 50, 60)" : "rgb(35, 37, 44)",
+			}}
+		>
 			<div className="task-number">{orderNum + 1}</div>
 			<div className="task-name">{name}</div>
 			<DropDown<EStatus>
@@ -110,7 +129,7 @@ const Task: FC<TaskProps> = ({ props, orderNum }) => {
 				</Button>
 				<ArtistSimpleDialog
 					selectedExecutor={selectedExecutorId}
-					open={open}
+					open={artistDialogOpen}
 					onClose={handleClose}
 				/>
 			</div>

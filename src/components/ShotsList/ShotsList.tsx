@@ -9,11 +9,21 @@ import { useTaskViewStore } from "@/zustand/taskViewStore";
 import ITask from "@shared/types/Task";
 
 const ShotsList: FC = () => {
-	const view = useTaskViewStore((state) => state.change);
-	const setErrorData = errorDataStore((state) => state.setMessage);
-	const [tasks, setTasks] = useState<ITask[]>([]);
 	const navigate = useNavigate();
 	const location = useLocation();
+
+	// TASK VIEW STORE
+	const view = useTaskViewStore((state) => state.change);
+
+	// ERROR DATA STORE
+	const setErrorData = errorDataStore((state) => state.setMessage);
+
+	const [tasks, setTasks] = useState<ITask[]>([]);
+	const [selected, setSelected] = useState<string>("");
+
+	const handleClick = (name: string) => {
+		setSelected(name);
+	};
 
 	useEffect(() => {
 		const [projectId, sceneId] = location.pathname.split("/").slice(-2);
@@ -37,10 +47,26 @@ const ShotsList: FC = () => {
 			<div className="tasksblock-list">
 				{view
 					? tasks.map((shot, i) => {
-							return <Shot props={shot} key={i} orderNum={i} />;
+							return (
+								<Shot
+									props={shot}
+									key={i}
+									orderNum={i}
+									selected={Boolean(selected === shot.name)}
+									handleClick={handleClick}
+								/>
+							);
 					  })
 					: tasks.map((shot, i) => {
-							return <Task key={i} props={shot} orderNum={i} />;
+							return (
+								<Task
+									key={i}
+									props={shot}
+									orderNum={i}
+									selected={Boolean(selected === shot.name)}
+									handleClick={handleClick}
+								/>
+							);
 					  })}
 			</div>
 		</Layout>

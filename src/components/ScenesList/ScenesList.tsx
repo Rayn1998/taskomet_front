@@ -17,7 +17,7 @@ const ScenesList: FC = () => {
 	const navigate = useNavigate();
 	const location = useLocation();
 	const handleDoubleClick = (e: MouseEvent<HTMLDivElement>) => {
-		const scene = e.currentTarget.getAttribute("data-name")?.toLowerCase();
+		const scene = e.currentTarget.getAttribute("data-name")!.toLowerCase();
 		navigate(`${location.pathname}/${scene}`);
 	};
 
