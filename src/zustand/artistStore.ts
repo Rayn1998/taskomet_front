@@ -5,6 +5,7 @@ interface IArtistStore {
     artists: IArtist[] | null;
     setArtists: (data: IArtist[]) => void;
     getArtist: (id: number) => IArtist | undefined;
+    addArtist: (data: IArtist) => void;
 }
 
 export const useArtistStore = create<IArtistStore>((set, get) => ({
@@ -14,4 +15,8 @@ export const useArtistStore = create<IArtistStore>((set, get) => ({
         const { artists } = get();
         return artists?.find((artist) => artist.id === id);
     },
+    addArtist: (data) =>
+        set((state) => ({
+            artists: state.artists ? state.artists.concat(data) : [data],
+        })),
 }));

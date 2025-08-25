@@ -15,7 +15,6 @@ const Comment = ({ task }: ITaskDataProps) => {
 		if (task && task.created_by) {
 			const artist = getArtist(task.created_by);
 			if (artist) {
-				console.log(artist);
 				setAuthor(artist.name);
 			}
 		}

@@ -113,6 +113,20 @@ class Api {
         );
     }
 
+    async createArtist(
+        name: string,
+        role: number,
+        tgid: string,
+    ): Promise<IArtist> {
+        return this._request<IArtist>(`${this.url}/create-artist`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ name, role, tgid }),
+        });
+    }
+
     async checkServerConnection() {
         const response = await fetch(`${this.url}/check-server`, {
             method: "GET",

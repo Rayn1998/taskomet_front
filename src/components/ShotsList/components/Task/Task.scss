@@ -1,3 +1,5 @@
+@use "@/scss/variables" as *;
+
 .task {
     padding: 0 1rem;
     display: flex;
@@ -8,15 +10,19 @@
     margin-bottom: 0.5rem;
     user-select: none;
 
+    * {
+        text-align: center;
+    }
+
     .task-number {
-        width: 10%;
+        width: $number-width;
     }
 
     .task-name,
     .task-status,
     .task-artist,
     .drop-down {
-        width: 22.4%;
+        width: $items-width;
     }
 
     .task-artist {

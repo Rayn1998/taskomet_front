@@ -4,6 +4,9 @@ $background-forward: rgb(35, 37, 44);
 $background-forward-light: rgb(45, 50, 60);
 $boder-color: rgb(68, 120, 250);
 
+$number-width: 10%;
+$items-width: 22.4%;
+
 @mixin image-icon {
     border-radius: 0;
     min-height: 3rem;
@@ -27,7 +30,7 @@ $boder-color: rgb(68, 120, 250);
         position: absolute;
         top: 0;
         left: 0;
-        content: '';
+        content: "";
         width: 100%;
         height: 100%;
         background-color: $background-forward;

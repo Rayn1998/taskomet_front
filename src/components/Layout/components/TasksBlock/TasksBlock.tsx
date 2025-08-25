@@ -1,22 +1,39 @@
-import { useEffect } from "react";
+import { useState, useEffect } from "react";
+import { useLocation } from "react-router-dom";
 import { IChildrenComponent } from "@/types/IChildrenComponent";
 import { useTaskViewStore } from "@/zustand/taskViewStore";
 import { useTaskPopupStore } from "@/zustand/taskPopupStore";
 import { useTaskDataStore } from "@/zustand/taskDataStore";
+import { useProjectDataStore } from "@/zustand/projectDataStore";
 
-import Comment from "./components/Comment/Comment";
+import Comment from "@/components/Layout/components/TasksBlock/components/Comment/Comment";
+import ProjectDescription from "@/components/Layout/components/TasksBlock/components/ProjectDescription/ProjectDescription";
 
 import structureImage from "@/assets/images/structure.png";
 import arrow from "@/assets/images/up-arrow.png";
 import info from "@/assets/images/info.png";
 
 const TasksBlock = ({ children }: IChildrenComponent) => {
+	const location = useLocation();
+
 	// TASK DATA STORE
 	const taskDdata = useTaskDataStore((state) => state.data);
 
+	// PROJECT DATA STORE
+	const projectData = useProjectDataStore((state) => state.data);
+
 	useEffect(() => {
-		console.log(taskDdata);
-	}, [taskDdata]);
+		if (location.pathname.split("/").slice(2).length >= 2)
+			setTaskLocation(true);
+		if (
+			location.pathname.split("/").filter((item) => item !== "")
+				.length === 1
+		)
+			setprojectsLocation(true);
+	}, [location]);
+
+	const [taskLocation, setTaskLocation] = useState<boolean>(false);
+	const [projectsLocation, setprojectsLocation] = useState<boolean>(false);
 
 	const taskOpen = useTaskPopupStore((state) => state.isOpen);
 	const infoOpenClose = useTaskPopupStore((state) => state.setOpenClose);
@@ -75,9 +92,15 @@ const TasksBlock = ({ children }: IChildrenComponent) => {
 				></div>
 				<div className="layout-info-block">
 					{taskDdata &&
+						taskLocation &&
 						taskDdata.map((data, i) => {
 							return <Comment task={data} key={i} />;
 						})}
+					{projectData && projectsLocation && (
+						<ProjectDescription
+							description={projectData.description}
+						/>
+					)}
 				</div>
 			</div>
 		</div>

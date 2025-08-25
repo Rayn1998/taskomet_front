@@ -1,0 +1,21 @@
+@use "@/scss/variables" as *;
+
+.tasksblock-item {
+    display: flex;
+    justify-content: space-between;
+
+    p {
+        text-align: center;
+    }
+    .tasksblock-item-number {
+        width: $number-width;
+    }
+
+    .tasksblock-item-name,
+    .tasksblock-item-status,
+    .tasksblock-item-artists,
+    .tasksblock-item-priority {
+        text-align: center;
+        width: $items-width;
+    }
+}

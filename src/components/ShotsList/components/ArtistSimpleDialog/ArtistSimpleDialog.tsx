@@ -41,7 +41,6 @@ const ArtistSimpleDialog: FC<ISimpleDialog> = (props) => {
 	const handleAddArtistClick = () => {
 		setOpenClose();
 	};
-
 	return (
 		<Dialog open={open} onClose={handleClose}>
 			<DialogTitle>Set backup account</DialogTitle>

@@ -1,4 +1,4 @@
-@use '@/scss/variables' as *;
+@use "@/scss/variables" as *;
 
 .layout {
     min-width: 100%;
@@ -26,9 +26,9 @@
                 transition: 0.5s all ease-in;
 
                 .layout-structure-icon {
-                border-radius: 0;
-                @include image-icon;
-                @include hover;
+                    border-radius: 0;
+                    @include image-icon;
+                    @include hover;
                 }
 
                 .layout-tasksblock-menu {
@@ -38,7 +38,7 @@
                     gap: 1rem;
                     border-radius: 1rem 1rem 0 0;
                     border-bottom: 0.1rem solid $background;
-                    
+
                     .layout-tasksblock-button {
                         filter: invert(1);
                         background-color: transparent;
@@ -56,6 +56,14 @@
                     justify-content: space-between;
                     border-radius: 1rem 1rem 0 0;
                     border-bottom: 0.1rem solid $background;
+
+                    div:nth-child(1) {
+                        width: 10%;
+                    }
+                    div {
+                        text-align: center;
+                        width: 22.4%;
+                    }
                 }
 
                 .layout-tasksblock-list {
