@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { api } from "@/utils/Api";
 
 // STATES
-import { useTaskPopupStore } from "@/zustand/taskPopupStore";
+import { useTaskInfoStore } from "@/zustand/taskInfoStore";
 import { useArtistStore } from "@/zustand/artistStore";
 import { useTaskDataStore } from "@/zustand/taskDataStore";
 
@@ -25,8 +25,8 @@ const Task = ({ props, orderNum, selected, handleClick }: TaskProps) => {
 	const artists = useArtistStore((state) => state.artists);
 	// TASK DATA STORE
 	const setTaskData = useTaskDataStore((state) => state.setData);
-	const taskViewOpen = useTaskPopupStore((state) => state.isOpen);
-	const setTaskViewOpenClose = useTaskPopupStore(
+	const taskViewOpen = useTaskInfoStore((state) => state.isOpen);
+	const setTaskViewOpenClose = useTaskInfoStore(
 		(state) => state.setOpenClose,
 	);
 

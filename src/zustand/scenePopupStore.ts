@@ -1,12 +1,12 @@
 import { create } from "zustand";
 
-interface ITaskPopupStore {
+interface IScenePopupStore {
     isOpen: boolean;
     setOpenClose: () => void;
     setClose: () => void;
 }
 
-export const useTaskPopupStore = create<ITaskPopupStore>((set) => ({
+export const useScenePopupStore = create<IScenePopupStore>((set) => ({
     isOpen: false,
     setOpenClose: () =>
         set((state) => ({

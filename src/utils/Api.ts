@@ -68,6 +68,24 @@ class Api {
         );
     }
 
+    async createTask(
+        name: string,
+        description: string,
+        projectName: string,
+        sceneName: string,
+    ): Promise<ITask> {
+        return this._request<ITask>(
+            `${this.url}/projects/${projectName}/${sceneName}`,
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ name, description }),
+            },
+        );
+    }
+
     async updateTaskExecutor(
         taskId: number,
         executorId: number,

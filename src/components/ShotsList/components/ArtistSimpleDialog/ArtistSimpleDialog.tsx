@@ -43,7 +43,7 @@ const ArtistSimpleDialog: FC<ISimpleDialog> = (props) => {
 	};
 	return (
 		<Dialog open={open} onClose={handleClose}>
-			<DialogTitle>Set backup account</DialogTitle>
+			<DialogTitle>Select artist</DialogTitle>
 			<List sx={{ pt: 0 }}>
 				{artistList &&
 					artistList.map((artist) => (

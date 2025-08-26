@@ -1,19 +1,27 @@
-import { FC, useEffect } from "react";
+import { useEffect } from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
+
+// COMPONENTS
 import ProjectsList from "@/components/ProjectsList/ProjectsList";
 import ScenesList from "@/components/ScenesList/ScenesList";
 import ShotsList from "@/components/ShotsList/ShotsList";
 import Signup from "@/components/Signup/Signup";
 import Error from "@/components/Error/Error";
 import CreateArtistPopup from "@/components/Popups/CreateArtist/CreateArtist";
-
 import ProtectedRoute from "@/components/ProtectedRoute/ProtectedRoute";
+import CreateProjectPopup from "../Popups/CreateProject/CreateProject";
+import CreateScenePopup from "../Popups/CreateScene/CreateScene";
+import CreateTaskPopup from "../Popups/CreateTask/CreateTask";
 
 import { api } from "@/utils/Api";
+
+// STORES
 import { useArtistStore } from "@/zustand/artistStore";
 
-const App: FC = () => {
+const App = () => {
+	// ARTIST STORE
 	const setArtists = useArtistStore((state) => state.setArtists);
+
 	// FOR TESTING
 	// const hydrateAuth = useAuthStore((state) => state.hydrateAuth);
 	// useEffect(() => {
@@ -46,15 +54,16 @@ const App: FC = () => {
 						path="/projects/:projectId/:sceneId"
 						element={<ShotsList />}
 					/>
-					{/* <Route path='/projects/:projectId/:sceneId/:shotId' element={<TasksList />} /> */}
 				</Route>
 
 				<Route path="/signup" element={<Signup />} />
 				<Route path="/error-page" element={<Error />} />
 				<Route path="/not-found" element={<Error />} />
 			</Routes>
-			{/* <TaskPopup /> */}
 			<CreateArtistPopup />
+			<CreateProjectPopup />
+			<CreateScenePopup />
+			<CreateTaskPopup />
 		</div>
 	);
 };

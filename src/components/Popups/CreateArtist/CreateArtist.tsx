@@ -29,6 +29,9 @@ const CreateArtistPopup = () => {
 	const handleClick = () => {
 		api.createArtist(name, 0, tgId)
 			.then((newArtist) => {
+				setName("");
+				setTgId("");
+				handleClose();
 				addArtist(newArtist);
 			})
 			.catch((err) => console.log(err));

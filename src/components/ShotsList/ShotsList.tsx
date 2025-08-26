@@ -1,12 +1,15 @@
 import { FC, useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
+
 import Layout from "@/components/Layout/Layout";
 import Shot from "@/components/ShotsList/components/Shot/Shot";
 import Task from "@/components/ShotsList/components/Task/Task";
 import { api } from "@/utils/Api";
+
+// STORES
 import { errorDataStore } from "@/zustand/errorDataStore";
 import { useTaskViewStore } from "@/zustand/taskViewStore";
-import ITask from "@shared/types/Task";
+import { useTasksStore } from "@/zustand/tasksStore";
 
 const ShotsList: FC = () => {
 	const navigate = useNavigate();
@@ -18,7 +21,10 @@ const ShotsList: FC = () => {
 	// ERROR DATA STORE
 	const setErrorData = errorDataStore((state) => state.setMessage);
 
-	const [tasks, setTasks] = useState<ITask[]>([]);
+	// TASKS STORE
+	const tasks = useTasksStore((state) => state.tasks);
+	const setTasks = useTasksStore((state) => state.setTasks);
+
 	const [selected, setSelected] = useState<string>("");
 
 	const handleClick = (name: string) => {

@@ -1,6 +1,10 @@
 @use "@/scss/variables" as *;
 
 .tasksblock-list {
+    max-height: 63vh;
+    overflow-y: scroll;
+    padding: 1rem;
+
     .shot-accordion {
         border-radius: 0;
         background-color: $background;
