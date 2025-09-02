@@ -1,0 +1,13 @@
+.title {
+    background-color: rgb(76, 140, 145);
+    margin: 1.5rem;
+    margin-left: 5rem;
+    padding: 0.25rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    .title-text {
+        font-size: 2rem;
+    }
+}

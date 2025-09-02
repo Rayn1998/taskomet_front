@@ -5,8 +5,9 @@
 @use "components/Layout/components/Sidebar/Sidebar";
 @use "components/Layout/components/Statusline/Statusline";
 @use "components/Layout/components/TasksblockItem/TasksBlockItem";
+@use "components/Layout/components/TasksBlock/components/Title/Title";
+@use "components/Layout/components/TasksBlock/components/Description/Description";
 @use "components/Layout/components/TasksBlock/components/Comment/Comment";
-@use "components/Layout/components/TasksBlock/components/ProjectDescription/ProjectDescription";
 @use "components/ProjectsList/ProjectsList";
 @use "components/ShotsList/ShotsList";
 @use "components/ShotsList/components/DropDown/DropDown";

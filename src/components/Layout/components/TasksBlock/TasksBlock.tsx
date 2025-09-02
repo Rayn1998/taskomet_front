@@ -4,6 +4,7 @@ import { useLocation } from "react-router-dom";
 import { IChildrenComponent } from "@/types/IChildrenComponent";
 
 // STORES
+import { useTasksStore } from "@/zustand/tasksStore";
 import { useTaskViewStore } from "@/zustand/taskViewStore";
 import { useTaskInfoStore } from "@/zustand/taskInfoStore";
 import { useTaskDataStore } from "@/zustand/taskDataStore";
@@ -11,11 +12,15 @@ import { useProjectDataStore } from "@/zustand/projectDataStore";
 import { useProjectPopupStore } from "@/zustand/projectPopupStore";
 import { useScenePopupStore } from "@/zustand/scenePopupStore";
 import { useTaskPopupStore } from "@/zustand/taskPopupStore";
+import { useSnackBarStore } from "@/zustand/snackBarStore";
 
+import Title from "@/components/Layout/components/TasksBlock/components/Title/Title";
+import Description from "@/components/Layout/components/TasksBlock/components/Description/Description";
 import Comment from "@/components/Layout/components/TasksBlock/components/Comment/Comment";
-import ProjectDescription from "@/components/Layout/components/TasksBlock/components/ProjectDescription/ProjectDescription";
+import { api } from "@/utils/Api";
 
 // IMAGES
+import trash from "@/assets/images/delete.png";
 import structureImage from "@/assets/images/structure.png";
 import arrow from "@/assets/images/up-arrow.png";
 import info from "@/assets/images/info.png";
@@ -33,8 +38,13 @@ const TasksBlock = ({ children }: IChildrenComponent) => {
 	const [taskLocation, setTaskLocation] = useState<boolean>(false);
 	const [projectsLocation, setprojectsLocation] = useState<boolean>(false);
 
+	// TASKS STORE
+	const removeTask = useTasksStore((state) => state.removeTask);
+
 	// TASK DATA STORE
-	const taskDdata = useTaskDataStore((state) => state.data);
+	const taskData = useTaskDataStore((state) => state.data);
+	const taskDataTask = useTaskDataStore((state) => state.task);
+	const resetTaskData = useTaskDataStore((state) => state.resetData);
 
 	// PROJECT DATA STORE
 	const projectData = useProjectDataStore((state) => state.data);
@@ -62,10 +72,30 @@ const TasksBlock = ({ children }: IChildrenComponent) => {
 	// TASK VIEW STORE
 	const handleClick = useTaskViewStore((state) => state.setChange);
 
+	// SNACKBAR STORE
+	const setOpenSnackBar = useSnackBarStore((state) => state.setOpen);
+	const setSnackBarMessage = useSnackBarStore((state) => state.setMessage);
+
 	const handleAddButton = () => {
 		if (createProjectAllowed) setOpenCloseProjectPopup();
 		if (createSceneAllowed) setOpenCloseScenePopup();
 		if (createTaskAllowed) setOpenCloseTaskPopup();
+	};
+
+	const handleDeleteButton = () => {
+		api.deleteTask(taskDataTask!.id)
+			.then((res) => {
+				setOpenSnackBar(true);
+				setSnackBarMessage(
+					`Task ${res.name} was deleted successfully!`,
+				);
+				removeTask(res.id);
+				resetTaskData();
+			})
+			.catch((err) => {
+				setOpenSnackBar(true);
+				setSnackBarMessage(err.message);
+			});
 	};
 
 	useEffect(() => {
@@ -84,7 +114,7 @@ const TasksBlock = ({ children }: IChildrenComponent) => {
 				.length === 2
 		) {
 			setCreateSceneAllowed(true);
-			setprojectsLocation(true);
+			// setprojectsLocation(true);
 		} else {
 			setCreateSceneAllowed(false);
 		}
@@ -159,17 +189,31 @@ const TasksBlock = ({ children }: IChildrenComponent) => {
 						className="layout-tasksblock-right_block-add"
 						style={{ backgroundImage: `url(${comment})` }}
 					></div>
+					<div
+						className="layout-tasksblock-right_block-delete"
+						style={{ backgroundImage: `url(${trash})` }}
+						onClick={handleDeleteButton}
+					></div>
 				</div>
 				<div className="layout-info-block">
-					{taskDdata &&
-						taskLocation &&
-						taskDdata.map((data, i) => {
-							return <Comment task={data} key={i} />;
-						})}
+					{taskData && taskDataTask && taskLocation && (
+						<>
+							<Title title={taskDataTask.name} />
+							<Description
+								description={taskDataTask.description}
+							/>
+							{taskData.map((task, i) => (
+								<Comment task={task} key={i} />
+							))}
+						</>
+					)}
 					{projectData && projectsLocation && (
-						<ProjectDescription
-							description={projectData.description}
-						/>
+						<>
+							<Title title={projectData.name} />
+							<Description
+								description={projectData.description}
+							/>
+						</>
 					)}
 				</div>
 			</div>

@@ -13,7 +13,7 @@ export const useTasksStore = create<ITaskStore>((set) => ({
     setTasks: (data) => set({ tasks: data }),
     addTask: (data) =>
         set((state) => ({
-            tasks: state.tasks ? state.tasks.concat(data) : [data],
+            tasks: state.tasks ? [...state.tasks, data] : [data],
         })),
     removeTask: (data) =>
         set((state) => ({

@@ -1,25 +1,39 @@
 import { FC, useState, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
-import { errorDataStore } from "@/zustand/errorDataStore";
+
 import { api } from "@/utils/Api";
 import Button from "@mui/material/Button";
 
+// STORES
+import { errorDataStore } from "@/zustand/errorDataStore";
+import { useArtistStore } from "@/zustand/artistStore";
+
+// IMAGES
 import errorPenguine from "@/assets/images/error-penguine.gif";
 
 const Error: FC = () => {
 	const navigate = useNavigate();
 	const [error, setError] = useState<string>("");
 	const [time, setTime] = useState<number>(30);
+
+	// ERROR DATA STORE
 	const errorData = errorDataStore((state) => state.message);
+
+	// ARTIST STORE
+	const setArtists = useArtistStore((state) => state.setArtists);
 
 	const checkConnection = useCallback(async () => {
 		try {
 			const result = await api.checkServerConnection();
 			if (result) {
+				await api
+					.getArtists()
+					.then((artistList) => setArtists(artistList))
+					.catch((err) => console.log(err));
 				navigate("/projects");
 			}
 		} catch (err) {
-			//
+			console.log(err);
 		}
 	}, [navigate]);
 
@@ -27,10 +41,6 @@ const Error: FC = () => {
 		checkConnection();
 		setTime(30);
 	}
-
-	// useEffect(() => {
-	// 	checkConnection();
-	// }, [checkConnection, errorData]);
 
 	useEffect(() => {
 		if (time === 0) {

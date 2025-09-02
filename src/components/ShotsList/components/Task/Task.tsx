@@ -15,10 +15,10 @@ import ArtistSimpleDialog from "@/components/ShotsList/components/ArtistSimpleDi
 import { TaskProps } from "@/components/ShotsList/TaskProps.type";
 import { EStatus, StatusLabels } from "@/types/Status";
 import { EPriority, PriorityLabels } from "@/types/Priority";
-import { EArtistRole, ArtistRoleLabels } from "@/types/ArtistRole";
 
 const Task = ({ props, orderNum, selected, handleClick }: TaskProps) => {
-	const { name, id, status, executor, priority } = props;
+	const { name, id, status, executor, priority, scene_name, description } =
+		props;
 
 	// ARTIST STORE
 	const getArtist = useArtistStore((state) => state.getArtist);
@@ -93,7 +93,7 @@ const Task = ({ props, orderNum, selected, handleClick }: TaskProps) => {
 		if (taskViewOpen && selected) {
 			api.getTaskData(id)
 				.then((taskData) => {
-					setTaskData(taskData);
+					setTaskData(taskData, props);
 				})
 				.catch((err) => console.log(err));
 		}
@@ -112,7 +112,9 @@ const Task = ({ props, orderNum, selected, handleClick }: TaskProps) => {
 			}}
 		>
 			<div className="task-number">{orderNum + 1}</div>
-			<div className="task-name">{name}</div>
+			<div className="task-name">
+				{scene_name}_{name}
+			</div>
 			<DropDown<EStatus>
 				label="task-status"
 				items={StatusLabels}

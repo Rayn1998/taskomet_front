@@ -30,12 +30,13 @@ const CreateTaskPopup = () => {
 	const [name, setName] = useState<string>("");
 	const [description, setDescription] = useState<string>("");
 
-	// const projects = useProjectDataStore((state) => state.data);
 	const handleCreateTask = () => {
 		const [projectName, sceneName] = location.pathname.split("/").slice(-2);
 		if (projectName && projectName.length > 0) {
 			api.createTask(name, description, projectName, sceneName)
 				.then((newTask) => {
+					newTask.project_name = projectName;
+					newTask.scene_name = sceneName.toUpperCase();
 					addTask(newTask);
 					setName("");
 					setDescription("");

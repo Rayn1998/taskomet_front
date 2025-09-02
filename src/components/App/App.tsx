@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
 
 // COMPONENTS
@@ -13,14 +13,28 @@ import CreateProjectPopup from "../Popups/CreateProject/CreateProject";
 import CreateScenePopup from "../Popups/CreateScene/CreateScene";
 import CreateTaskPopup from "../Popups/CreateTask/CreateTask";
 
+// MUI
+import Snackbar from "@mui/material/Snackbar";
+import Alert from "@mui/material/Alert";
+import Slide from "@mui/material/Slide";
+
 import { api } from "@/utils/Api";
 
 // STORES
 import { useArtistStore } from "@/zustand/artistStore";
+import { useSnackBarStore } from "@/zustand/snackBarStore";
 
 const App = () => {
+	const snackBarOpen = useSnackBarStore((state) => state.open);
+	const snackBarMessage = useSnackBarStore((state) => state.message);
+	const setSnackBarOpen = useSnackBarStore((state) => state.setOpen);
+
 	// ARTIST STORE
 	const setArtists = useArtistStore((state) => state.setArtists);
+
+	const handleSnackBarClose = () => {
+		setSnackBarOpen(false);
+	};
 
 	// FOR TESTING
 	// const hydrateAuth = useAuthStore((state) => state.hydrateAuth);
@@ -30,12 +44,15 @@ const App = () => {
 	// const isAuth = Boolean(useAuthStore((state) => state.auth));a
 
 	useEffect(() => {
-		(async () => {
-			const artistList = await api.getArtists();
-			if (artistList.length > 0) {
-				setArtists(artistList);
-			}
-		})();
+		api.getArtists()
+			.then((artistList) => {
+				if (artistList.length > 0) {
+					setArtists(artistList);
+				}
+			})
+			.catch((err) => {
+				console.log(err);
+			});
 	}, []);
 
 	// FOR DEVELOPING
@@ -64,6 +81,14 @@ const App = () => {
 			<CreateProjectPopup />
 			<CreateScenePopup />
 			<CreateTaskPopup />
+			<Snackbar
+				open={snackBarOpen}
+				autoHideDuration={5000}
+				onClose={handleSnackBarClose}
+				slots={{ transition: Slide }}
+			>
+				<Alert severity="success">{snackBarMessage}</Alert>
+			</Snackbar>
 		</div>
 	);
 };

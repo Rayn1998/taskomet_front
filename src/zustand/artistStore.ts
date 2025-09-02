@@ -17,6 +17,6 @@ export const useArtistStore = create<IArtistStore>((set, get) => ({
     },
     addArtist: (data) =>
         set((state) => ({
-            artists: state.artists ? state.artists.concat(data) : [data],
+            artists: state.artists ? [...state.artists, data] : [data],
         })),
 }));

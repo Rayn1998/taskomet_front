@@ -86,6 +86,16 @@ class Api {
         );
     }
 
+    async deleteTask(id: number): Promise<ITask> {
+        return this._request<ITask>(`${this.url}/delete-task`, {
+            method: "DELETE",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ id }),
+        });
+    }
+
     async updateTaskExecutor(
         taskId: number,
         executorId: number,

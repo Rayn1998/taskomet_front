@@ -1,4 +1,4 @@
-.project-description {
+.description {
     background-color: rgb(76, 140, 145);
     margin: 1.5rem;
     margin-left: 5rem;
@@ -7,7 +7,7 @@
     position: relative;
     min-height: 6rem;
 
-    .project-description-badge {
+    .description-badge {
         position: absolute;
         top: -0.5rem;
         left: -0.5rem;
@@ -15,17 +15,17 @@
         padding: 0.5rem;
     }
 
-    .project-description-block {
+    .description-block {
         width: 100%;
         display: flex;
         flex-direction: column;
 
-        .project-description-text-block {
+        .description-text-block {
             margin-top: 1rem;
             padding: 1rem;
             background-color: purple;
 
-            .project-description-text {
+            .description-text {
             }
         }
     }
