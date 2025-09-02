@@ -1,3 +1,7 @@
+import { useState } from "react";
+
+import { api } from "@/utils/Api";
+
 // MUI
 import Dialog from "@mui/material/Dialog";
 import DialogTitle from "@mui/material/DialogTitle";
@@ -10,11 +14,20 @@ import TextField from "@mui/material/TextField";
 import { useProjectPopupStore } from "@/zustand/projectPopupStore";
 
 const CreateProjectPopup = () => {
+	const [name, setName] = useState<string>("");
+	const [description, setDescription] = useState<string>("");
+
 	// TASK POPUP STORE
-	const isProjectPopupOpen = useProjectPopupStore((state) => state.isOpen);
-	const setProjectPopupClose = useProjectPopupStore(
-		(state) => state.setClose,
-	);
+	const { isOpen: isProjectPopupOpen, setClose: setProjectPopupClose } =
+		useProjectPopupStore();
+
+	const handleCreateProject = () => {
+		api.createProject(name, description).then((res) => {
+			setProjectPopupClose();
+			setName("");
+			setDescription("");
+		});
+	};
 
 	const handleClose = () => {
 		setProjectPopupClose();
@@ -30,11 +43,19 @@ const CreateProjectPopup = () => {
 					gap: "1rem",
 				}}
 			>
-				<TextField label="name" />
-				<TextField label="description" />
+				<TextField
+					label="name"
+					value={name}
+					onChange={(e) => setName(e.currentTarget.value)}
+				/>
+				<TextField
+					label="description"
+					value={description}
+					onChange={(e) => setDescription(e.currentTarget.value)}
+				/>
 			</DialogContent>
 			<DialogActions>
-				<Button>Add new project</Button>
+				<Button onClick={handleCreateProject}>Add new project</Button>
 			</DialogActions>
 		</Dialog>
 	);

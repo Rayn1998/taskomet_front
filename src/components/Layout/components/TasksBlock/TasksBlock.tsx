@@ -42,9 +42,11 @@ const TasksBlock = ({ children }: IChildrenComponent) => {
 	const removeTask = useTasksStore((state) => state.removeTask);
 
 	// TASK DATA STORE
-	const taskData = useTaskDataStore((state) => state.data);
-	const taskDataTask = useTaskDataStore((state) => state.task);
-	const resetTaskData = useTaskDataStore((state) => state.resetData);
+	const {
+		data: taskData,
+		task: taskDataTask,
+		resetData: resetTaskData,
+	} = useTaskDataStore();
 
 	// PROJECT DATA STORE
 	const projectData = useProjectDataStore((state) => state.data);
@@ -65,9 +67,11 @@ const TasksBlock = ({ children }: IChildrenComponent) => {
 	);
 
 	// TASK INFO STORE
-	const taskOpen = useTaskInfoStore((state) => state.isOpen);
-	const infoOpenClose = useTaskInfoStore((state) => state.setOpenClose);
-	const closeTask = useTaskInfoStore((state) => state.setClose);
+	const {
+		isOpen: taskOpen,
+		setOpenClose: infoOpenClose,
+		setClose: closeTask,
+	} = useTaskInfoStore();
 
 	// TASK VIEW STORE
 	const handleClick = useTaskViewStore((state) => state.setChange);

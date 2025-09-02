@@ -12,6 +12,7 @@ import PersonIcon from "@mui/icons-material/Person";
 import AddIcon from "@mui/icons-material/Add";
 import { blue } from "@mui/material/colors";
 
+// STORES
 import { useArtistPopupStore } from "@/zustand/artistPopupStore";
 import { useArtistStore } from "@/zustand/artistStore";
 

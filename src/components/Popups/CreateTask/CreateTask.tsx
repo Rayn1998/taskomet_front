@@ -12,7 +12,6 @@ import TextField from "@mui/material/TextField";
 // STORES
 import { useTaskPopupStore } from "@/zustand/taskPopupStore";
 import { useTasksStore } from "@/zustand/tasksStore";
-import { useProjectDataStore } from "@/zustand/projectDataStore";
 
 import { api } from "@/utils/Api";
 
@@ -20,8 +19,8 @@ const CreateTaskPopup = () => {
 	const location = useLocation();
 
 	// TASK POPUP STORE
-	const isTaskPopupOpen = useTaskPopupStore((state) => state.isOpen);
-	const setTaskPopupClose = useTaskPopupStore((state) => state.setClose);
+	const { isOpen: isTaskPopupOpen, setClose: setTaskPopupClose } =
+		useTaskPopupStore();
 
 	// TASKS STORE
 	const addTask = useTasksStore((state) => state.addTask);

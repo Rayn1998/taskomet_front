@@ -47,12 +47,36 @@ class Api {
         });
     }
 
-    async getScenes(projectId: string): Promise<IScene[]> {
-        return this._request<IScene[]>(`${this.url}/projects/${projectId}`, {
+    async createProject(name: string, description: string): Promise<IProject> {
+        return this._request<IProject>(`${this.url}/projects/create-project`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ name, description: description || "" }),
+        });
+    }
+
+    async getScenes(projectName: string): Promise<IScene[]> {
+        return this._request<IScene[]>(`${this.url}/projects/${projectName}`, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
             },
+        });
+    }
+
+    async createScene(
+        name: string,
+        description: string,
+        projectName: string,
+    ): Promise<IScene> {
+        return this._request<IScene>(`${this.url}/projects/${projectName}`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ name, description }),
         });
     }
 

@@ -21,14 +21,11 @@ const Task = ({ props, orderNum, selected, handleClick }: TaskProps) => {
 		props;
 
 	// ARTIST STORE
-	const getArtist = useArtistStore((state) => state.getArtist);
-	const artists = useArtistStore((state) => state.artists);
+	const { getArtist, artists } = useArtistStore();
 	// TASK DATA STORE
 	const setTaskData = useTaskDataStore((state) => state.setData);
-	const taskViewOpen = useTaskInfoStore((state) => state.isOpen);
-	const setTaskViewOpenClose = useTaskInfoStore(
-		(state) => state.setOpenClose,
-	);
+	const { isOpen: taskViewOpen, setOpenClose: setTaskViewOpenClose } =
+		useTaskInfoStore();
 
 	const [hover, setHover] = useState<boolean>(false);
 	const [artistDialogOpen, setartistDialogOpen] = useState<boolean>(false);

@@ -25,9 +25,11 @@ import { useArtistStore } from "@/zustand/artistStore";
 import { useSnackBarStore } from "@/zustand/snackBarStore";
 
 const App = () => {
-	const snackBarOpen = useSnackBarStore((state) => state.open);
-	const snackBarMessage = useSnackBarStore((state) => state.message);
-	const setSnackBarOpen = useSnackBarStore((state) => state.setOpen);
+	const {
+		open: snackBarOpen,
+		message: snackBarMessage,
+		setOpen: setSnackBarOpen,
+	} = useSnackBarStore();
 
 	// ARTIST STORE
 	const setArtists = useArtistStore((state) => state.setArtists);

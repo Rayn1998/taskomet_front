@@ -4,13 +4,17 @@ import Layout from "@/components/Layout/Layout";
 import TasksBlockItem from "@/components/Layout/components/TasksblockItem/TasksBlockItem";
 
 import { api } from "@/utils/Api";
-import { errorDataStore } from "@/zustand/errorDataStore";
-import { useProjectDataStore } from "@/zustand/projectDataStore";
 
-import IProject from "@shared/types/Project";
+// STORES
+import { errorDataStore } from "@/zustand/errorDataStore";
+import { useProjectsStore } from "@/zustand/projectsStore";
+import { useProjectDataStore } from "@/zustand/projectDataStore";
 
 const ProjectsList = () => {
 	const navigate = useNavigate();
+
+	// PROJECTS STORE
+	const { projects, setProjects } = useProjectsStore();
 
 	// ERROR DATA STORE
 	const setErrorData = errorDataStore((state) => state.setMessage);
@@ -18,7 +22,6 @@ const ProjectsList = () => {
 	// PROJECT DATA STORE
 	const setProjectData = useProjectDataStore((state) => state.setData);
 
-	const [projects, setProjects] = useState<IProject[]>([]);
 	const [selected, setSelected] = useState<string>("");
 
 	const handleClick = (name: string, description: string) => {
@@ -34,37 +37,37 @@ const ProjectsList = () => {
 	};
 
 	useEffect(() => {
-		(async () => {
-			try {
-				const result = await api.getProjects();
-				setProjects(result);
-			} catch (err: unknown) {
+		api.getProjects()
+			.then((res) => {
+				setProjects(res);
+			})
+			.catch((err) => {
 				if (err instanceof Error) {
 					console.log(err.message);
 					setErrorData(err.message);
 					return navigate("/error-page");
 				}
 				navigate("/not-found");
-			}
-		})();
+			});
 	}, []);
 	return (
 		<Layout>
 			<div className="tasksblock-list">
-				{projects.map((task, i) => {
-					return (
-						<TasksBlockItem
-							key={i}
-							number={i + 1}
-							name={task.name}
-							priority={task.priority}
-							description={task.description}
-							handleClick={handleClick}
-							handleDoubleClick={handleDoubleClick}
-							selected={Boolean(task.name === selected)}
-						/>
-					);
-				})}
+				{projects &&
+					projects.map((task, i) => {
+						return (
+							<TasksBlockItem
+								key={i}
+								number={i + 1}
+								name={task.name}
+								priority={task.priority}
+								description={task.description}
+								handleClick={handleClick}
+								handleDoubleClick={handleDoubleClick}
+								selected={Boolean(task.name === selected)}
+							/>
+						);
+					})}
 			</div>
 		</Layout>
 	);

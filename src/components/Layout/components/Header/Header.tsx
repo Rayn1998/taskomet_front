@@ -6,7 +6,6 @@ import { useAuthStore } from "@/zustand/authStore";
 
 const Header = () => {
 	const auth = useAuthStore((state) => state.auth);
-	// console.log(auth);
 	const isAuth = Boolean(auth);
 	const [isSearchActive, setSearchActive] = useState<boolean>(false);
 	const inputRef = useRef<HTMLInputElement>(null);

@@ -22,8 +22,7 @@ const ShotsList: FC = () => {
 	const setErrorData = errorDataStore((state) => state.setMessage);
 
 	// TASKS STORE
-	const tasks = useTasksStore((state) => state.tasks);
-	const setTasks = useTasksStore((state) => state.setTasks);
+	const { tasks, setTasks } = useTasksStore();
 
 	const [selected, setSelected] = useState<string>("");
 

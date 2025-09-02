@@ -19,8 +19,7 @@ const CreateArtistPopup = () => {
 	const addArtist = useArtistStore((state) => state.addArtist);
 
 	// Create Artist Popup states
-	const isOpen = useArtistPopupStore((state) => state.isOpen);
-	const handleClose = useArtistPopupStore((state) => state.setClose);
+	const { isOpen, setClose: handleClose } = useArtistPopupStore();
 
 	// states for form of popup
 	const [name, setName] = useState<string>("");
