@@ -1,28 +1,92 @@
 import { useState, useEffect } from "react";
 
+import { api } from "@/utils/Api";
+
 // MUI
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
+
+// STORES
+import { useProjectsStore } from "@/zustand/projectsStore";
+import { useProjectDataStore } from "@/zustand/projectDataStore";
+import { useScenesStore } from "@/zustand/scenesStore";
+import { useSceneDataStore } from "@/zustand/sceneDataStore";
+import { useTaskDataStore } from "@/zustand/taskDataStore";
+import { useTasksStore } from "@/zustand/tasksStore";
 
 interface IContextMenuData {
 	mouseX: number;
 	mouseY: number;
 	target: HTMLElement;
+	type: string;
 }
 
 const ContextMenu = () => {
+	// PROJECTS STORE
+	const { removeProject } = useProjectsStore();
+
+	// PROJECT DATA STORE
+	const { project, resetData: resetProjectData } = useProjectDataStore();
+
+	// SCENES STORE
+	const { removeScene } = useScenesStore();
+
+	// SCENE DATA STORE
+	const { scene } = useSceneDataStore();
+
+	// TASK DATA STORE
+	const { task, resetData: resetTaskData } = useTaskDataStore();
+
+	// TASKS STORE
+	const { removeTask } = useTasksStore();
+
 	const [contextMenu, setContextMenu] = useState<null | IContextMenuData>(
 		null,
 	);
 	const handleContextMenuClose = () => setContextMenu(null);
 
+	const handleProjectDelete = () => {
+		if (!project) return;
+		api.deleteProject(project.id)
+			.then(() => {
+				removeProject(project.id);
+				resetProjectData();
+				setContextMenu(null);
+			})
+			.catch((err) => console.log(err));
+	};
+
+	const handleSceneDelete = () => {
+		if (!scene) return;
+		api.deleteScene(scene.id).then(() => {
+			removeScene(scene.id);
+			setContextMenu(null);
+		});
+	};
+
+	const handleTaskDelete = () => {
+		if (!task) return;
+		api.deleteTask(task.id).then((deletedTask) => {
+			removeTask(deletedTask.id);
+			resetTaskData();
+			setContextMenu(null);
+		});
+	};
+
 	useEffect(() => {
-		const handleContextMenu = (e: MouseEvent) => {
+		const handleContextMenu = (e: globalThis.MouseEvent) => {
 			e.preventDefault();
+
+			const target = (e.target as HTMLElement).closest("[data-type]");
+			if (!target) return;
+
+			const dataType = target.getAttribute("data-type")!;
+
 			setContextMenu({
 				mouseX: e.clientX + 6,
 				mouseY: e.clientY - 6,
 				target: e.target as HTMLElement,
+				type: dataType,
 			});
 		};
 
@@ -42,9 +106,21 @@ const ContextMenu = () => {
 					: undefined
 			}
 		>
-			<MenuItem onClick={handleContextMenuClose}>Add</MenuItem>
-			<MenuItem onClick={handleContextMenuClose}>Next</MenuItem>
-			<MenuItem onClick={handleContextMenuClose}>Delete</MenuItem>
+			{contextMenu?.type === "project" && [
+				<MenuItem key="delete" onClick={handleProjectDelete}>
+					Delete
+				</MenuItem>,
+			]}
+			{contextMenu?.type === "scene" && [
+				<MenuItem key="delete" onClick={handleSceneDelete}>
+					Delete
+				</MenuItem>,
+			]}
+			{contextMenu?.type === "task" && [
+				<MenuItem key="delete" onClick={handleTaskDelete}>
+					Delete
+				</MenuItem>,
+			]}
 		</Menu>
 	);
 };

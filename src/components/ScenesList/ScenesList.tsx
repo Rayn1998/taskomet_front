@@ -54,10 +54,10 @@ const ScenesList: FC = () => {
 					scenes.map((task, i) => {
 						return (
 							<TasksBlockItem
+								dataType="scene"
 								key={i}
 								number={i + 1}
-								name={task.name}
-								priority={task.priority}
+								item={task}
 								handleClick={handleClick}
 								handleDoubleClick={handleDoubleClick}
 								selected={Boolean(task.name === selected)}

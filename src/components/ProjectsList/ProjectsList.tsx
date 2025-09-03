@@ -57,11 +57,10 @@ const ProjectsList = () => {
 					projects.map((task, i) => {
 						return (
 							<TasksBlockItem
+								dataType="project"
 								key={i}
 								number={i + 1}
-								name={task.name}
-								priority={task.priority}
-								description={task.description}
+								item={task}
 								handleClick={handleClick}
 								handleDoubleClick={handleDoubleClick}
 								selected={Boolean(task.name === selected)}

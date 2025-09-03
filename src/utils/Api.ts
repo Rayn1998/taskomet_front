@@ -53,7 +53,13 @@ class Api {
             headers: {
                 "Content-Type": "application/json",
             },
-            body: JSON.stringify({ name, description: description || "" }),
+            body: JSON.stringify({ name, description }),
+        });
+    }
+
+    async deleteProject(id: number) {
+        return await fetch(`${this.url}/projects/${id}`, {
+            method: "DELETE",
         });
     }
 
@@ -77,6 +83,12 @@ class Api {
                 "Content-Type": "application/json",
             },
             body: JSON.stringify({ name, description }),
+        });
+    }
+
+    async deleteScene(sceneId: number) {
+        return await fetch(`${this.url}/projects/:projectId/${sceneId}`, {
+            method: "DELETE",
         });
     }
 

@@ -1,31 +1,56 @@
 import { useState, MouseEvent } from "react";
 
+// STORES
+import { useProjectDataStore } from "@/zustand/projectDataStore";
+import { useSceneDataStore } from "@/zustand/sceneDataStore";
+
+// TYPES
+import IProject from "@shared/types/Project";
+import IScene from "@shared/types/Scene";
+
 interface ITasksBlockItem {
+	dataType: string;
 	number: number;
-	name: string;
-	description?: string;
-	priority: number;
+	item: IProject | IScene;
 	handleClick: (name: string, description: string) => void;
 	handleDoubleClick: (e: MouseEvent<HTMLDivElement>) => void;
 	selected: boolean;
 }
 
 const TasksBlockItem = ({
+	dataType,
 	number,
-	name,
-	priority,
-	description,
+	item,
 	handleClick,
 	handleDoubleClick,
 	selected,
 }: ITasksBlockItem) => {
+	// PROJECT DATA STORE
+	const { setProject } = useProjectDataStore();
+
+	// SCENE DATA STORE
+	const { setScene } = useSceneDataStore();
+
 	const [hover, setHover] = useState<boolean>(false);
+
+	const handleContextClick = () => {
+		switch (dataType) {
+			case "project":
+				setProject(item as IProject);
+				break;
+			case "scene":
+				setScene(item as IScene);
+				break;
+		}
+	};
 
 	return (
 		<div
+			data-type={dataType}
 			className="tasksblock-item"
-			data-name={name}
-			onClick={() => handleClick(name, description!)}
+			data-name={item.name}
+			onContextMenu={handleContextClick}
+			onClick={() => handleClick(item.name, item.description!)}
 			onDoubleClick={(e) => handleDoubleClick(e)}
 			onMouseEnter={() => setHover(true)}
 			onMouseLeave={() => setHover(false)}
@@ -35,10 +60,10 @@ const TasksBlockItem = ({
 			}}
 		>
 			<p className="tasksblock-item-number">{number}</p>
-			<p className="tasksblock-item-name">{name}</p>
+			<p className="tasksblock-item-name">{item.name}</p>
 			<p className="tasksblock-item-status">--заглушка--</p>
 			<p className="tasksblock-item-artists">--</p>
-			<p className="tasksblock-item-priority">{priority}</p>
+			<p className="tasksblock-item-priority">{item.priority}</p>
 		</div>
 	);
 };

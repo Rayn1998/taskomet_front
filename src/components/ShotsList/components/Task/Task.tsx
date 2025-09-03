@@ -23,7 +23,7 @@ const Task = ({ props, orderNum, selected, handleClick }: TaskProps) => {
 	// ARTIST STORE
 	const { getArtist, artists } = useArtistStore();
 	// TASK DATA STORE
-	const setTaskData = useTaskDataStore((state) => state.setData);
+	const { setData: setTaskData, setTask } = useTaskDataStore();
 	const { isOpen: taskViewOpen, setOpenClose: setTaskViewOpenClose } =
 		useTaskInfoStore();
 
@@ -98,7 +98,12 @@ const Task = ({ props, orderNum, selected, handleClick }: TaskProps) => {
 
 	return (
 		<div
+			data-type="task"
 			className="task"
+			onContextMenu={() => {
+				handleClick(name);
+				setTask(props);
+			}}
 			onClick={() => handleClick(name)}
 			onDoubleClick={handleDoubleClick}
 			onMouseEnter={() => setHover(true)}
