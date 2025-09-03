@@ -9,9 +9,10 @@ import Signup from "@/components/Signup/Signup";
 import Error from "@/components/Error/Error";
 import CreateArtistPopup from "@/components/Popups/CreateArtist/CreateArtist";
 import ProtectedRoute from "@/components/ProtectedRoute/ProtectedRoute";
-import CreateProjectPopup from "../Popups/CreateProject/CreateProject";
-import CreateScenePopup from "../Popups/CreateScene/CreateScene";
-import CreateTaskPopup from "../Popups/CreateTask/CreateTask";
+import CreateProjectPopup from "@/components/Popups/CreateProject/CreateProject";
+import CreateScenePopup from "@/components/Popups/CreateScene/CreateScene";
+import CreateTaskPopup from "@/components/Popups/CreateTask/CreateTask";
+import ContextMenu from "@/components/App/components/ContextMenu/ContextMenu";
 
 // MUI
 import Snackbar from "@mui/material/Snackbar";
@@ -25,6 +26,12 @@ import { useArtistStore } from "@/zustand/artistStore";
 import { useSnackBarStore } from "@/zustand/snackBarStore";
 
 const App = () => {
+	// const handleContextMenuClick = (e: MouseEventHandler<HTMLElement>) => {
+	// e.preventDefault();
+	// e.stopPropagation();
+	// setAnchorEl(e.);
+	// };
+
 	const {
 		open: snackBarOpen,
 		message: snackBarMessage,
@@ -34,9 +41,7 @@ const App = () => {
 	// ARTIST STORE
 	const setArtists = useArtistStore((state) => state.setArtists);
 
-	const handleSnackBarClose = () => {
-		setSnackBarOpen(false);
-	};
+	const handleSnackBarClose = () => setSnackBarOpen(false);
 
 	// FOR TESTING
 	// const hydrateAuth = useAuthStore((state) => state.hydrateAuth);
@@ -91,6 +96,7 @@ const App = () => {
 			>
 				<Alert severity="success">{snackBarMessage}</Alert>
 			</Snackbar>
+			<ContextMenu />
 		</div>
 	);
 };
