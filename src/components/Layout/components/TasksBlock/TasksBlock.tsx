@@ -1,10 +1,16 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useLocation } from "react-router-dom";
-
+import { useSnackbar, closeSnackbar } from "notistack";
 import { IChildrenComponent } from "@/types/IChildrenComponent";
+
+// MUI
+import IconButton from "@mui/material/IconButton";
+import CloseIcon from "@mui/icons-material/Close";
 
 // STORES
 import { useTasksStore } from "@/zustand/tasksStore";
+import { useScenesStore } from "@/zustand/scenesStore";
+import { useProjectsStore } from "@/zustand/projectsStore";
 import { useTaskViewStore } from "@/zustand/taskViewStore";
 import { useTaskInfoStore } from "@/zustand/taskInfoStore";
 import { useTaskDataStore } from "@/zustand/taskDataStore";
@@ -12,7 +18,7 @@ import { useProjectDataStore } from "@/zustand/projectDataStore";
 import { useProjectPopupStore } from "@/zustand/projectPopupStore";
 import { useScenePopupStore } from "@/zustand/scenePopupStore";
 import { useTaskPopupStore } from "@/zustand/taskPopupStore";
-import { useSnackBarStore } from "@/zustand/snackBarStore";
+import { useSceneDataStore } from "@/zustand/sceneDataStore";
 
 import Title from "@/components/Layout/components/TasksBlock/components/Title/Title";
 import Description from "@/components/Layout/components/TasksBlock/components/Description/Description";
@@ -36,10 +42,17 @@ const TasksBlock = ({ children }: IChildrenComponent) => {
 	const [createTaskAllowed, setCreateTaskAllowed] = useState<boolean>(false);
 
 	const [taskLocation, setTaskLocation] = useState<boolean>(false);
+	const [sceneLocation, setSceneLocation] = useState<boolean>(false);
 	const [projectsLocation, setprojectsLocation] = useState<boolean>(false);
 
 	// TASKS STORE
-	const removeTask = useTasksStore((state) => state.removeTask);
+	const { removeTask } = useTasksStore();
+
+	// SCENES STORE
+	const { removeScene } = useScenesStore();
+
+	// PROJECTS STORE
+	const { removeProject } = useProjectsStore();
 
 	// TASK DATA STORE
 	const {
@@ -48,23 +61,20 @@ const TasksBlock = ({ children }: IChildrenComponent) => {
 		resetData: resetTaskData,
 	} = useTaskDataStore();
 
+	// SCENE DATA STORE
+	const { data: sceneData, scene } = useSceneDataStore();
+
 	// PROJECT DATA STORE
-	const projectData = useProjectDataStore((state) => state.data);
+	const { data: projectData, project } = useProjectDataStore();
 
 	// TASK POPUP STORE
-	const setOpenCloseTaskPopup = useTaskPopupStore(
-		(state) => state.setOpenClose,
-	);
+	const { setOpenClose: setOpenCloseTaskPopup } = useTaskPopupStore();
 
 	// PROJECT POPUP STORE
-	const setOpenCloseProjectPopup = useProjectPopupStore(
-		(state) => state.setOpenClose,
-	);
+	const { setOpenClose: setOpenCloseProjectPopup } = useProjectPopupStore();
 
 	// SCENE POPUP STORE
-	const setOpenCloseScenePopup = useScenePopupStore(
-		(state) => state.setOpenClose,
-	);
+	const { setOpenClose: setOpenCloseScenePopup } = useScenePopupStore();
 
 	// TASK INFO STORE
 	const {
@@ -76,9 +86,8 @@ const TasksBlock = ({ children }: IChildrenComponent) => {
 	// TASK VIEW STORE
 	const handleClick = useTaskViewStore((state) => state.setChange);
 
-	// SNACKBAR STORE
-	const setOpenSnackBar = useSnackBarStore((state) => state.setOpen);
-	const setSnackBarMessage = useSnackBarStore((state) => state.setMessage);
+	// SNACKBAR
+	const { enqueueSnackbar } = useSnackbar();
 
 	const handleAddButton = () => {
 		if (createProjectAllowed) setOpenCloseProjectPopup();
@@ -87,19 +96,111 @@ const TasksBlock = ({ children }: IChildrenComponent) => {
 	};
 
 	const handleDeleteButton = () => {
-		api.deleteTask(taskDataTask!.id)
-			.then((res) => {
-				setOpenSnackBar(true);
-				setSnackBarMessage(
-					`Task ${res.name} was deleted successfully!`,
-				);
-				removeTask(res.id);
-				resetTaskData();
-			})
-			.catch((err) => {
-				setOpenSnackBar(true);
-				setSnackBarMessage(err.message);
-			});
+		if (taskLocation && taskDataTask) {
+			api.deleteTask(taskDataTask.id)
+				.then((res) => {
+					const snackBarId = enqueueSnackbar(
+						`Task ${res.name} was deleted successfully!`,
+						{
+							variant: "success",
+							action: (
+								<IconButton
+									onClick={() => closeSnackbar(snackBarId)}
+								>
+									<CloseIcon />
+								</IconButton>
+							),
+						},
+					);
+					removeTask(res.id);
+					resetTaskData();
+				})
+				.catch((err) => {
+					const snackBarId = enqueueSnackbar(
+						`There was an error, ${err.message}`,
+						{
+							variant: "error",
+							action: (
+								<IconButton
+									onClick={() => closeSnackbar(snackBarId)}
+								>
+									<CloseIcon />
+								</IconButton>
+							),
+						},
+					);
+				});
+		}
+		if (sceneLocation && scene) {
+			api.deleteScene(scene.id)
+				.then((res) => {
+					const snackBarId = enqueueSnackbar(
+						`Scene ${scene.name} was deleted successfully!`,
+						{
+							variant: "success",
+							action: (
+								<IconButton
+									onClick={() => closeSnackbar(snackBarId)}
+								>
+									<CloseIcon />
+								</IconButton>
+							),
+						},
+					);
+					removeScene(scene.id);
+					resetTaskData();
+				})
+				.catch((err) => {
+					const snackBarId = enqueueSnackbar(
+						`There was an error, ${err.message}`,
+						{
+							variant: "error",
+							action: (
+								<IconButton
+									onClick={() => closeSnackbar(snackBarId)}
+								>
+									<CloseIcon />
+								</IconButton>
+							),
+						},
+					);
+				});
+		}
+		if (projectsLocation && project) {
+			api.deleteProject(project.id)
+				.then((res) => {
+					const snackBarId = enqueueSnackbar(
+						`Scene ${project.name} was deleted successfully!`,
+						{
+							variant: "success",
+							action: (
+								<IconButton
+									onClick={() => closeSnackbar(snackBarId)}
+								>
+									<CloseIcon />
+								</IconButton>
+							),
+						},
+					);
+					removeProject(project.id);
+					resetTaskData();
+				})
+				.catch((err) => {
+					const snackBarId = enqueueSnackbar(
+						`There was an error, ${err.message}`,
+						{
+							variant: "error",
+							action: (
+								<IconButton
+									onClick={() => closeSnackbar(snackBarId)}
+								>
+									<CloseIcon />
+								</IconButton>
+							),
+						},
+					);
+				});
+		}
 	};
 
 	useEffect(() => {
@@ -118,7 +219,7 @@ const TasksBlock = ({ children }: IChildrenComponent) => {
 				.length === 2
 		) {
 			setCreateSceneAllowed(true);
-			// setprojectsLocation(true);
+			setSceneLocation(true);
 		} else {
 			setCreateSceneAllowed(false);
 		}
@@ -180,6 +281,7 @@ const TasksBlock = ({ children }: IChildrenComponent) => {
 				className="layout-tasksblock-right_block"
 				style={{
 					width: taskOpen ? "100%" : "0",
+					height: taskOpen ? "100%" : "0",
 					opacity: taskOpen ? 1 : 0,
 				}}
 			>
@@ -200,6 +302,20 @@ const TasksBlock = ({ children }: IChildrenComponent) => {
 					></div>
 				</div>
 				<div className="layout-info-block">
+					{projectData && projectsLocation && (
+						<>
+							<Title title={projectData.name} />
+							<Description
+								description={projectData.description}
+							/>
+						</>
+					)}
+					{sceneData && sceneLocation && (
+						<>
+							<Title title={sceneData.name} />
+							<Description description={sceneData.description} />
+						</>
+					)}
 					{taskData && taskDataTask && taskLocation && (
 						<>
 							<Title title={taskDataTask.name} />
@@ -209,14 +325,6 @@ const TasksBlock = ({ children }: IChildrenComponent) => {
 							{taskData.map((task, i) => (
 								<Comment task={task} key={i} />
 							))}
-						</>
-					)}
-					{projectData && projectsLocation && (
-						<>
-							<Title title={projectData.name} />
-							<Description
-								description={projectData.description}
-							/>
 						</>
 					)}
 				</div>

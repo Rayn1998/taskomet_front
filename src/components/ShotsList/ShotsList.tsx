@@ -10,6 +10,7 @@ import { api } from "@/utils/Api";
 import { errorDataStore } from "@/zustand/errorDataStore";
 import { useTaskViewStore } from "@/zustand/taskViewStore";
 import { useTasksStore } from "@/zustand/tasksStore";
+import { useTaskDataStore } from "@/zustand/taskDataStore";
 
 const ShotsList: FC = () => {
 	const navigate = useNavigate();
@@ -24,6 +25,9 @@ const ShotsList: FC = () => {
 	// TASKS STORE
 	const { tasks, setTasks } = useTasksStore();
 
+	// TASK DATA STORE
+	const { resetData } = useTaskDataStore();
+
 	const [selected, setSelected] = useState<string>("");
 
 	const handleClick = (name: string) => {
@@ -31,20 +35,20 @@ const ShotsList: FC = () => {
 	};
 
 	useEffect(() => {
+		resetData();
 		const [projectId, sceneId] = location.pathname.split("/").slice(-2);
 		if (projectId && projectId.length > 0) {
-			(async () => {
-				try {
-					const result = await api.getTasks(projectId, sceneId);
+			api.getTasks(projectId, sceneId)
+				.then((result) => {
 					setTasks(result);
-				} catch (err: unknown) {
+				})
+				.catch((err) => {
 					if (err instanceof Error) {
 						setErrorData(err.message);
 						return navigate("/error-page");
 					}
 					navigate("/not-found");
-				}
-			})();
+				});
 		}
 	}, []);
 	return (
@@ -54,8 +58,8 @@ const ShotsList: FC = () => {
 					? tasks.map((shot, i) => {
 							return (
 								<Shot
-									props={shot}
-									key={i}
+									task={shot}
+									key={shot.id}
 									orderNum={i}
 									selected={Boolean(selected === shot.name)}
 									handleClick={handleClick}
@@ -65,8 +69,8 @@ const ShotsList: FC = () => {
 					: tasks.map((shot, i) => {
 							return (
 								<Task
-									key={i}
-									props={shot}
+									key={shot.id}
+									task={shot}
 									orderNum={i}
 									selected={Boolean(selected === shot.name)}
 									handleClick={handleClick}

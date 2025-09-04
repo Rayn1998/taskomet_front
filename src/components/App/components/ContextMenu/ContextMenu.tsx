@@ -1,10 +1,12 @@
 import { useState, useEffect } from "react";
-
+import { useSnackbar, closeSnackbar } from "notistack";
 import { api } from "@/utils/Api";
 
 // MUI
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
+import IconButton from "@mui/material/IconButton";
+import CloseIcon from "@mui/icons-material/Close";
 
 // STORES
 import { useProjectsStore } from "@/zustand/projectsStore";
@@ -40,6 +42,9 @@ const ContextMenu = () => {
 	// TASKS STORE
 	const { removeTask } = useTasksStore();
 
+	// SNACKBAR
+	const { enqueueSnackbar } = useSnackbar();
+
 	const [contextMenu, setContextMenu] = useState<null | IContextMenuData>(
 		null,
 	);
@@ -52,6 +57,19 @@ const ContextMenu = () => {
 				removeProject(project.id);
 				resetProjectData();
 				setContextMenu(null);
+				const snackBarId = enqueueSnackbar(
+					`Project ${project.name} was successfully deleted`,
+					{
+						variant: "success",
+						action: (
+							<IconButton
+								onClick={() => closeSnackbar(snackBarId)}
+							>
+								<CloseIcon />
+							</IconButton>
+						),
+					},
+				);
 			})
 			.catch((err) => console.log(err));
 	};
@@ -61,6 +79,17 @@ const ContextMenu = () => {
 		api.deleteScene(scene.id).then(() => {
 			removeScene(scene.id);
 			setContextMenu(null);
+			const snackBarId = enqueueSnackbar(
+				`Scene ${scene.name} was successfully deleted`,
+				{
+					variant: "success",
+					action: (
+						<IconButton onClick={() => closeSnackbar(snackBarId)}>
+							<CloseIcon />
+						</IconButton>
+					),
+				},
+			);
 		});
 	};
 
@@ -70,6 +99,17 @@ const ContextMenu = () => {
 			removeTask(deletedTask.id);
 			resetTaskData();
 			setContextMenu(null);
+			const snackBarId = enqueueSnackbar(
+				`Task ${task.name} was successfully deleted`,
+				{
+					variant: "success",
+					action: (
+						<IconButton onClick={() => closeSnackbar(snackBarId)}>
+							<CloseIcon />
+						</IconButton>
+					),
+				},
+			);
 		});
 	};
 

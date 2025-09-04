@@ -1,10 +1,13 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
+
+import { snackBar } from "@/utils/snackBar";
 import { api } from "@/utils/Api";
 
-// STATES
+// STORES
 import { useTaskInfoStore } from "@/zustand/taskInfoStore";
 import { useArtistStore } from "@/zustand/artistStore";
 import { useTaskDataStore } from "@/zustand/taskDataStore";
+import { useTasksStore } from "@/zustand/tasksStore";
 
 // MUI
 import DropDown from "@/components/ShotsList/components/DropDown/DropDown";
@@ -12,16 +15,21 @@ import Button from "@mui/material/Button";
 import ArtistSimpleDialog from "@/components/ShotsList/components/ArtistSimpleDialog/ArtistSimpleDialog";
 
 // TYPES | CONSTANTS
+import ITask from "@shared/types/Task";
 import { TaskProps } from "@/components/ShotsList/TaskProps.type";
 import { EStatus, StatusLabels } from "@/types/Status";
 import { EPriority, PriorityLabels } from "@/types/Priority";
 
-const Task = ({ props, orderNum, selected, handleClick }: TaskProps) => {
+const Task = ({ task, orderNum, selected, handleClick }: TaskProps) => {
 	const { name, id, status, executor, priority, scene_name, description } =
-		props;
+		task;
 
 	// ARTIST STORE
 	const { getArtist, artists } = useArtistStore();
+
+	// TASKS STORE
+	const { updateTask } = useTasksStore();
+
 	// TASK DATA STORE
 	const { setData: setTaskData, setTask } = useTaskDataStore();
 	const { isOpen: taskViewOpen, setOpenClose: setTaskViewOpenClose } =
@@ -29,13 +37,6 @@ const Task = ({ props, orderNum, selected, handleClick }: TaskProps) => {
 
 	const [hover, setHover] = useState<boolean>(false);
 	const [artistDialogOpen, setartistDialogOpen] = useState<boolean>(false);
-	const [selectedExecutorId, setSelectedExecutorId] = useState<number | null>(
-		null,
-	);
-	const [selectedStatus, setSelectedStatus] = useState<number>(0);
-	const [selectedPriority, setSelectedPriority] = useState<number>(0);
-	const [selectedExecutorName, setSelectedExecutorName] =
-		useState<string>("NONE");
 
 	const handleOpen = () => {
 		setartistDialogOpen(true);
@@ -44,10 +45,12 @@ const Task = ({ props, orderNum, selected, handleClick }: TaskProps) => {
 	const handleClose = (artistId: number | null) => {
 		setartistDialogOpen(false);
 		if (artistId === null) return;
-		if (typeof artistId === "number" && artistId !== selectedExecutorId) {
+		if (typeof artistId === "number" && artistId !== executor) {
 			api.updateTaskExecutor(id, artistId)
 				.then((id) => {
-					setSelectedExecutorId(id);
+					const updatedTask: ITask = { ...task, executor: id };
+					updateTask(updatedTask);
+					snackBar("Executor was changed", "success");
 				})
 				.catch((err) => console.log(err));
 		}
@@ -56,7 +59,9 @@ const Task = ({ props, orderNum, selected, handleClick }: TaskProps) => {
 	const handleChangeStatus = (status: number) => {
 		api.updateTaskStatus(id, status)
 			.then((newStatus) => {
-				setSelectedStatus(newStatus);
+				const updatedTask: ITask = { ...task, status: newStatus };
+				updateTask(updatedTask);
+				snackBar("Status was changed", "success");
 			})
 			.catch((err) => console.log(err));
 	};
@@ -64,7 +69,9 @@ const Task = ({ props, orderNum, selected, handleClick }: TaskProps) => {
 	const handleChangePriority = (priority: number) => {
 		api.updateTaskPriority(id, priority)
 			.then((newPriority) => {
-				setSelectedPriority(newPriority);
+				const updatedTask: ITask = { ...task, priority: newPriority };
+				updateTask(updatedTask);
+				snackBar("Priority was changed", "success");
 			})
 			.catch((err) => console.log(err));
 	};
@@ -73,24 +80,19 @@ const Task = ({ props, orderNum, selected, handleClick }: TaskProps) => {
 		if (!taskViewOpen) setTaskViewOpenClose();
 	};
 
-	useEffect(() => {
-		if (executor) setSelectedExecutorId(executor);
-		if (status) setSelectedStatus(status);
-		if (priority) setSelectedPriority(priority);
-	}, []);
-
-	useEffect(() => {
-		if (selectedExecutorId) {
-			const artist = getArtist(selectedExecutorId);
-			if (artist) setSelectedExecutorName(artist.name);
+	const artistName = useMemo(() => {
+		if (executor && artists) {
+			const artist = getArtist(executor);
+			return artist ? artist.name : "NONE";
 		}
-	}, [selectedExecutorId, artists]);
+		return "NONE";
+	}, [executor, artists]);
 
 	useEffect(() => {
 		if (taskViewOpen && selected) {
 			api.getTaskData(id)
 				.then((taskData) => {
-					setTaskData(taskData, props);
+					setTaskData(taskData, task);
 				})
 				.catch((err) => console.log(err));
 		}
@@ -102,7 +104,7 @@ const Task = ({ props, orderNum, selected, handleClick }: TaskProps) => {
 			className="task"
 			onContextMenu={() => {
 				handleClick(name);
-				setTask(props);
+				setTask(task);
 			}}
 			onClick={() => handleClick(name)}
 			onDoubleClick={handleDoubleClick}
@@ -120,7 +122,7 @@ const Task = ({ props, orderNum, selected, handleClick }: TaskProps) => {
 			<DropDown<EStatus>
 				label="task-status"
 				items={StatusLabels}
-				selected={selectedStatus}
+				selected={status}
 				onChange={handleChangeStatus}
 			/>
 			<div className="task-artist">
@@ -129,10 +131,10 @@ const Task = ({ props, orderNum, selected, handleClick }: TaskProps) => {
 					variant="contained"
 					onClick={handleOpen}
 				>
-					{selectedExecutorName}
+					{artistName}
 				</Button>
 				<ArtistSimpleDialog
-					selectedExecutor={selectedExecutorId}
+					selectedExecutor={executor}
 					open={artistDialogOpen}
 					onClose={handleClose}
 				/>
@@ -140,7 +142,7 @@ const Task = ({ props, orderNum, selected, handleClick }: TaskProps) => {
 			<DropDown<EPriority>
 				label="priority"
 				items={PriorityLabels}
-				selected={selectedPriority}
+				selected={priority}
 				onChange={handleChangePriority}
 			/>
 		</div>

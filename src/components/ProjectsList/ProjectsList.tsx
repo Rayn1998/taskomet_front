@@ -20,7 +20,8 @@ const ProjectsList = () => {
 	const setErrorData = errorDataStore((state) => state.setMessage);
 
 	// PROJECT DATA STORE
-	const setProjectData = useProjectDataStore((state) => state.setData);
+	const { setData: setProjectData, resetData: resetProjectData } =
+		useProjectDataStore();
 
 	const [selected, setSelected] = useState<string>("");
 
@@ -37,6 +38,7 @@ const ProjectsList = () => {
 	};
 
 	useEffect(() => {
+		resetProjectData();
 		api.getProjects()
 			.then((res) => {
 				setProjects(res);

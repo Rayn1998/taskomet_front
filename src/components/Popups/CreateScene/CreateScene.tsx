@@ -1,5 +1,6 @@
-import { useState } from "react";
+import { useState, FormEvent } from "react";
 import { useLocation } from "react-router-dom";
+import { useSnackbar, closeSnackbar } from "notistack";
 
 // MUI
 import Dialog from "@mui/material/Dialog";
@@ -8,6 +9,8 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogActions from "@mui/material/DialogActions";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
+import IconButton from "@mui/material/IconButton";
+import CloseIcon from "@mui/icons-material/Close";
 
 import { api } from "@/utils/Api";
 
@@ -25,10 +28,14 @@ const CreateScenePopup = () => {
 	// SCENES STORE
 	const { addScene } = useScenesStore();
 
+	// SNACKBAR
+	const { enqueueSnackbar } = useSnackbar();
+
 	const [name, setName] = useState<string>("");
 	const [description, setDescription] = useState<string>("");
 
-	const handleAddScene = () => {
+	const handleAddScene = (e: FormEvent<HTMLFormElement>) => {
+		e.preventDefault();
 		const [projectName] = location.pathname.split("/").slice(-1);
 		if (projectName && projectName.length > 0) {
 			api.createScene(name, description, projectName)
@@ -37,6 +44,19 @@ const CreateScenePopup = () => {
 					setName("");
 					setDescription("");
 					setScenePopupClose();
+					const snackBarId = enqueueSnackbar(
+						"Scene was successfully created",
+						{
+							variant: "success",
+							action: (
+								<IconButton
+									onClick={() => closeSnackbar(snackBarId)}
+								>
+									<CloseIcon />
+								</IconButton>
+							),
+						},
+					);
 				})
 				.catch((err) => {
 					console.log(err);
@@ -50,27 +70,33 @@ const CreateScenePopup = () => {
 	return (
 		<Dialog open={isScenePopupOpen} onClose={handleClose}>
 			<DialogTitle>Create new scene</DialogTitle>
-			<DialogContent
-				sx={{
-					display: "flex",
-					flexDirection: "column",
-					width: "30vw",
-					gap: "1rem",
-				}}
-			>
-				<TextField
-					label="name"
-					value={name}
-					onChange={(e) => setName(e.currentTarget.value)}
-				/>
-				<TextField
-					label="description"
-					value={description}
-					onChange={(e) => setDescription(e.currentTarget.value)}
-				/>
+			<DialogContent>
+				<form
+					id="create-scene-form"
+					onSubmit={handleAddScene}
+					style={{
+						display: "flex",
+						flexDirection: "column",
+						width: "30vw",
+						gap: "1rem",
+					}}
+				>
+					<TextField
+						label="name"
+						value={name}
+						onChange={(e) => setName(e.currentTarget.value)}
+					/>
+					<TextField
+						label="description"
+						value={description}
+						onChange={(e) => setDescription(e.currentTarget.value)}
+					/>
+				</form>
 			</DialogContent>
 			<DialogActions>
-				<Button onClick={handleAddScene}>Add new scene</Button>
+				<Button type="submit" form="create-scene-form">
+					Add new scene
+				</Button>
 			</DialogActions>
 		</Dialog>
 	);

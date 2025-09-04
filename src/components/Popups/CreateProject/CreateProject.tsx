@@ -1,5 +1,5 @@
-import { useState } from "react";
-
+import { useState, FormEvent } from "react";
+import { useSnackbar, closeSnackbar } from "notistack";
 import { api } from "@/utils/Api";
 
 // MUI
@@ -9,6 +9,8 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogActions from "@mui/material/DialogActions";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
+import IconButton from "@mui/material/IconButton";
+import CloseIcon from "@mui/icons-material/Close";
 
 // STORES
 import { useProjectsStore } from "@/zustand/projectsStore";
@@ -25,13 +27,30 @@ const CreateProjectPopup = () => {
 	const { isOpen: isProjectPopupOpen, setClose: setProjectPopupClose } =
 		useProjectPopupStore();
 
-	const handleCreateProject = () => {
+	// SNACKBAR
+	const { enqueueSnackbar } = useSnackbar();
+
+	const handleCreateProject = (e: FormEvent<HTMLFormElement>) => {
+		e.preventDefault();
 		api.createProject(name, description)
 			.then((createdProject) => {
 				addProject(createdProject);
 				setProjectPopupClose();
 				setName("");
 				setDescription("");
+				const snackBarId = enqueueSnackbar(
+					"Project was successfully created",
+					{
+						variant: "success",
+						action: (
+							<IconButton
+								onClick={() => closeSnackbar(snackBarId)}
+							>
+								<CloseIcon />
+							</IconButton>
+						),
+					},
+				);
 			})
 			.catch((err) => console.log(err));
 	};
@@ -42,27 +61,33 @@ const CreateProjectPopup = () => {
 	return (
 		<Dialog open={isProjectPopupOpen} onClose={handleClose}>
 			<DialogTitle>Create new project</DialogTitle>
-			<DialogContent
-				sx={{
-					display: "flex",
-					flexDirection: "column",
-					width: "30vw",
-					gap: "1rem",
-				}}
-			>
-				<TextField
-					label="name"
-					value={name}
-					onChange={(e) => setName(e.currentTarget.value)}
-				/>
-				<TextField
-					label="description"
-					value={description}
-					onChange={(e) => setDescription(e.currentTarget.value)}
-				/>
+			<DialogContent>
+				<form
+					id="create-project-form"
+					onSubmit={handleCreateProject}
+					style={{
+						display: "flex",
+						flexDirection: "column",
+						width: "30vw",
+						gap: "1rem",
+					}}
+				>
+					<TextField
+						label="name"
+						value={name}
+						onChange={(e) => setName(e.currentTarget.value)}
+					/>
+					<TextField
+						label="description"
+						value={description}
+						onChange={(e) => setDescription(e.currentTarget.value)}
+					/>
+				</form>
 			</DialogContent>
 			<DialogActions>
-				<Button onClick={handleCreateProject}>Add new project</Button>
+				<Button type="submit" form="create-project-form">
+					Add new project
+				</Button>
 			</DialogActions>
 		</Dialog>
 	);

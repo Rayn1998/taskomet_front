@@ -1,5 +1,6 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { Routes, Route, Navigate } from "react-router-dom";
+import { SnackbarProvider } from "notistack";
 
 // COMPONENTS
 import ProjectsList from "@/components/ProjectsList/ProjectsList";
@@ -14,34 +15,14 @@ import CreateScenePopup from "@/components/Popups/CreateScene/CreateScene";
 import CreateTaskPopup from "@/components/Popups/CreateTask/CreateTask";
 import ContextMenu from "@/components/App/components/ContextMenu/ContextMenu";
 
-// MUI
-import Snackbar from "@mui/material/Snackbar";
-import Alert from "@mui/material/Alert";
-import Slide from "@mui/material/Slide";
-
 import { api } from "@/utils/Api";
 
 // STORES
 import { useArtistStore } from "@/zustand/artistStore";
-import { useSnackBarStore } from "@/zustand/snackBarStore";
 
 const App = () => {
-	// const handleContextMenuClick = (e: MouseEventHandler<HTMLElement>) => {
-	// e.preventDefault();
-	// e.stopPropagation();
-	// setAnchorEl(e.);
-	// };
-
-	const {
-		open: snackBarOpen,
-		message: snackBarMessage,
-		setOpen: setSnackBarOpen,
-	} = useSnackBarStore();
-
 	// ARTIST STORE
 	const setArtists = useArtistStore((state) => state.setArtists);
-
-	const handleSnackBarClose = () => setSnackBarOpen(false);
 
 	// FOR TESTING
 	// const hydrateAuth = useAuthStore((state) => state.hydrateAuth);
@@ -65,39 +46,39 @@ const App = () => {
 	// FOR DEVELOPING
 	const isAuth = true;
 	return (
-		<div className="app">
-			<Routes>
-				<Route path="/" element={<Navigate to="/projects" replace />} />
-				<Route element={<ProtectedRoute isAuth={isAuth} />}>
-					<Route path="/projects" element={<ProjectsList />} />
+		<SnackbarProvider
+			style={{ fontSize: "1.5rem", cursor: "pointer" }}
+			autoHideDuration={3000}
+		>
+			<div className="app">
+				<Routes>
 					<Route
-						path="/projects/:projectId"
-						element={<ScenesList />}
+						path="/"
+						element={<Navigate to="/projects" replace />}
 					/>
-					<Route
-						path="/projects/:projectId/:sceneId"
-						element={<ShotsList />}
-					/>
-				</Route>
+					<Route element={<ProtectedRoute isAuth={isAuth} />}>
+						<Route path="/projects" element={<ProjectsList />} />
+						<Route
+							path="/projects/:projectId"
+							element={<ScenesList />}
+						/>
+						<Route
+							path="/projects/:projectId/:sceneId"
+							element={<ShotsList />}
+						/>
+					</Route>
 
-				<Route path="/signup" element={<Signup />} />
-				<Route path="/error-page" element={<Error />} />
-				<Route path="/not-found" element={<Error />} />
-			</Routes>
-			<CreateArtistPopup />
-			<CreateProjectPopup />
-			<CreateScenePopup />
-			<CreateTaskPopup />
-			<Snackbar
-				open={snackBarOpen}
-				autoHideDuration={5000}
-				onClose={handleSnackBarClose}
-				slots={{ transition: Slide }}
-			>
-				<Alert severity="success">{snackBarMessage}</Alert>
-			</Snackbar>
-			<ContextMenu />
-		</div>
+					<Route path="/signup" element={<Signup />} />
+					<Route path="/error-page" element={<Error />} />
+					<Route path="/not-found" element={<Error />} />
+				</Routes>
+				<CreateArtistPopup />
+				<CreateProjectPopup />
+				<CreateScenePopup />
+				<CreateTaskPopup />
+				<ContextMenu />
+			</div>
+		</SnackbarProvider>
 	);
 };
 

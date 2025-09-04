@@ -50,7 +50,10 @@ const TasksBlockItem = ({
 			className="tasksblock-item"
 			data-name={item.name}
 			onContextMenu={handleContextClick}
-			onClick={() => handleClick(item.name, item.description!)}
+			onClick={() => {
+				handleClick(item.name, item.description!);
+				handleContextClick();
+			}}
 			onDoubleClick={(e) => handleDoubleClick(e)}
 			onMouseEnter={() => setHover(true)}
 			onMouseLeave={() => setHover(false)}

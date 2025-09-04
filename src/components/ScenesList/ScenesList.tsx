@@ -8,6 +8,7 @@ import { api } from "@/utils/Api";
 // STORES
 import { errorDataStore } from "@/zustand/errorDataStore";
 import { useScenesStore } from "@/zustand/scenesStore";
+import { useSceneDataStore } from "@/zustand/sceneDataStore";
 
 // TYPES
 import IScene from "@shared/types/Scene";
@@ -19,10 +20,15 @@ const ScenesList: FC = () => {
 	// SCENES STORE
 	const { scenes, setScenes } = useScenesStore();
 
+	// SCENE DATA STORE
+	const { setData: setSceneData, resetData: resetSceneData } =
+		useSceneDataStore();
+
 	const [selected, setSelected] = useState<string>("");
 
-	const handleClick = (name: string) => {
+	const handleClick = (name: string, description: string) => {
 		setSelected(name);
+		setSceneData({ name, description });
 	};
 	const navigate = useNavigate();
 	const location = useLocation();
@@ -32,6 +38,7 @@ const ScenesList: FC = () => {
 	};
 
 	useEffect(() => {
+		resetSceneData();
 		const projectId = location.pathname.split("/").pop();
 		if (projectId && projectId.length > 0) {
 			api.getScenes(projectId)
