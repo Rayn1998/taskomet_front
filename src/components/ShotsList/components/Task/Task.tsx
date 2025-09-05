@@ -44,8 +44,7 @@ const Task = ({ task, orderNum, selected, handleClick }: TaskProps) => {
 
 	const handleClose = (artistId: number | null) => {
 		setartistDialogOpen(false);
-		if (artistId === null) return;
-		if (typeof artistId === "number" && artistId !== executor) {
+		if (artistId !== executor) {
 			api.updateTaskExecutor(id, artistId)
 				.then((id) => {
 					const updatedTask: ITask = { ...task, executor: id };

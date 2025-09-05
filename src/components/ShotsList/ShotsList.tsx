@@ -53,7 +53,7 @@ const ShotsList: FC = () => {
 	}, []);
 	return (
 		<Layout>
-			<div className="tasksblock-list">
+			<div className="itemsblock-list">
 				{view
 					? tasks.map((shot, i) => {
 							return (

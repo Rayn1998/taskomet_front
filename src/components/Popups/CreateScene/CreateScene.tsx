@@ -15,7 +15,7 @@ import CloseIcon from "@mui/icons-material/Close";
 import { api } from "@/utils/Api";
 
 // STORE
-import { useScenePopupStore } from "@/zustand/scenePopupStore";
+import { useCreateScenePopupStore } from "./CreateScenePopupStore";
 import { useScenesStore } from "@/zustand/scenesStore";
 
 const CreateScenePopup = () => {
@@ -23,7 +23,7 @@ const CreateScenePopup = () => {
 
 	// SCENE POPUP STORE
 	const { isOpen: isScenePopupOpen, setClose: setScenePopupClose } =
-		useScenePopupStore();
+		useCreateScenePopupStore();
 
 	// SCENES STORE
 	const { addScene } = useScenesStore();

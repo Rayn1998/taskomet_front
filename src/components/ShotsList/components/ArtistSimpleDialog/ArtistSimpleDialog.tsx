@@ -13,7 +13,7 @@ import AddIcon from "@mui/icons-material/Add";
 import { blue } from "@mui/material/colors";
 
 // STORES
-import { useArtistPopupStore } from "@/zustand/artistPopupStore";
+import { useCreateArtistPopupStore } from "@/components/Popups/CreateArtist/CreateArtistPopupStore";
 import { useArtistStore } from "@/zustand/artistStore";
 
 interface ISimpleDialog {
@@ -24,9 +24,9 @@ interface ISimpleDialog {
 
 const ArtistSimpleDialog: FC<ISimpleDialog> = (props) => {
 	// ARTIST STORE
-	const artistList = useArtistStore((state) => state.artists);
+	const { artists: artistList } = useArtistStore();
 
-	const setOpenClose = useArtistPopupStore((state) => state.setOpenClose);
+	const { setOpenClose } = useCreateArtistPopupStore();
 
 	const { onClose, selectedExecutor, open } = props;
 
@@ -34,9 +34,8 @@ const ArtistSimpleDialog: FC<ISimpleDialog> = (props) => {
 		onClose(selectedExecutor);
 	};
 
-	const handleListItemClick = (artistId: number) => {
+	const handleListItemClick = (artistId: number | null) => {
 		onClose(artistId);
-		// setOpenClose();
 	};
 
 	const handleAddArtistClick = () => {
@@ -46,6 +45,21 @@ const ArtistSimpleDialog: FC<ISimpleDialog> = (props) => {
 		<Dialog open={open} onClose={handleClose}>
 			<DialogTitle>Select artist</DialogTitle>
 			<List sx={{ pt: 0 }}>
+				<ListItem disablePadding key="01">
+					<ListItemButton onClick={() => handleListItemClick(null)}>
+						<ListItemAvatar>
+							<Avatar
+								sx={{
+									bgcolor: blue[100],
+									color: blue[600],
+								}}
+							>
+								<PersonIcon />
+							</Avatar>
+						</ListItemAvatar>
+						<ListItemText primary="NONE" />
+					</ListItemButton>
+				</ListItem>
 				{artistList &&
 					artistList.map((artist) => (
 						<ListItem disablePadding key={artist.id}>

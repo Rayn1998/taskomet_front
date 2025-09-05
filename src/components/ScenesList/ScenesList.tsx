@@ -2,7 +2,7 @@ import { FC, MouseEvent, useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 
 import Layout from "@/components/Layout/Layout";
-import TasksBlockItem from "@/components/Layout/components/TasksblockItem/TasksBlockItem";
+import Item from "@/components/Layout/components/Item/Item";
 import { api } from "@/utils/Api";
 
 // STORES
@@ -56,11 +56,11 @@ const ScenesList: FC = () => {
 	}, []);
 	return (
 		<Layout>
-			<div className="tasksblock-list">
+			<div className="itemsblock-list">
 				{scenes &&
 					scenes.map((task, i) => {
 						return (
-							<TasksBlockItem
+							<Item
 								dataType="scene"
 								key={i}
 								number={i + 1}

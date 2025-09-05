@@ -14,7 +14,7 @@ import CloseIcon from "@mui/icons-material/Close";
 
 // STORES
 import { useProjectsStore } from "@/zustand/projectsStore";
-import { useProjectPopupStore } from "@/zustand/projectPopupStore";
+import { useCreateProjectPopupStore } from "./CreateProjectPopupStore";
 
 const CreateProjectPopup = () => {
 	const [name, setName] = useState<string>("");
@@ -25,7 +25,7 @@ const CreateProjectPopup = () => {
 
 	// TASK POPUP STORE
 	const { isOpen: isProjectPopupOpen, setClose: setProjectPopupClose } =
-		useProjectPopupStore();
+		useCreateProjectPopupStore();
 
 	// SNACKBAR
 	const { enqueueSnackbar } = useSnackbar();

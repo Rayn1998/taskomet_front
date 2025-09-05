@@ -1,7 +1,7 @@
 import { useState } from "react";
 
 // STATES
-import { useArtistPopupStore } from "@/zustand/artistPopupStore";
+import { useCreateArtistPopupStore } from "./CreateArtistPopupStore";
 import { useArtistStore } from "@/zustand/artistStore";
 
 // MUI
@@ -19,7 +19,7 @@ const CreateArtistPopup = () => {
 	const addArtist = useArtistStore((state) => state.addArtist);
 
 	// Create Artist Popup states
-	const { isOpen, setClose: handleClose } = useArtistPopupStore();
+	const { isOpen, setClose: handleClose } = useCreateArtistPopupStore();
 
 	// states for form of popup
 	const [name, setName] = useState<string>("");

@@ -1,7 +1,7 @@
 import { MouseEvent, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Layout from "@/components/Layout/Layout";
-import TasksBlockItem from "@/components/Layout/components/TasksblockItem/TasksBlockItem";
+import Item from "@/components/Layout/components/Item/Item";
 
 import { api } from "@/utils/Api";
 
@@ -54,11 +54,11 @@ const ProjectsList = () => {
 	}, []);
 	return (
 		<Layout>
-			<div className="tasksblock-list">
+			<div className="itemsblock-list">
 				{projects &&
 					projects.map((task, i) => {
 						return (
-							<TasksBlockItem
+							<Item
 								dataType="project"
 								key={i}
 								number={i + 1}

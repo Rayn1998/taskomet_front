@@ -8,7 +8,7 @@ import { useSceneDataStore } from "@/zustand/sceneDataStore";
 import IProject from "@shared/types/Project";
 import IScene from "@shared/types/Scene";
 
-interface ITasksBlockItem {
+interface IItem {
 	dataType: string;
 	number: number;
 	item: IProject | IScene;
@@ -17,14 +17,14 @@ interface ITasksBlockItem {
 	selected: boolean;
 }
 
-const TasksBlockItem = ({
+const Item = ({
 	dataType,
 	number,
 	item,
 	handleClick,
 	handleDoubleClick,
 	selected,
-}: ITasksBlockItem) => {
+}: IItem) => {
 	// PROJECT DATA STORE
 	const { setProject } = useProjectDataStore();
 
@@ -47,7 +47,7 @@ const TasksBlockItem = ({
 	return (
 		<div
 			data-type={dataType}
-			className="tasksblock-item"
+			className="item"
 			data-name={item.name}
 			onContextMenu={handleContextClick}
 			onClick={() => {
@@ -62,13 +62,13 @@ const TasksBlockItem = ({
 					selected || hover ? "rgb(45, 50, 60)" : "rgb(35, 37, 44)",
 			}}
 		>
-			<p className="tasksblock-item-number">{number}</p>
-			<p className="tasksblock-item-name">{item.name}</p>
-			<p className="tasksblock-item-status">--заглушка--</p>
-			<p className="tasksblock-item-artists">--</p>
-			<p className="tasksblock-item-priority">{item.priority}</p>
+			<p className="item-number">{number}</p>
+			<p className="item-name">{item.name}</p>
+			<p className="item-status">--заглушка--</p>
+			<p className="item-artists">--</p>
+			<p className="item-priority">{item.priority}</p>
 		</div>
 	);
 };
 
-export default TasksBlockItem;
+export default Item;

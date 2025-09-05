@@ -134,7 +134,7 @@ class Api {
 
     async updateTaskExecutor(
         taskId: number,
-        executorId: number,
+        executorId: number | null,
     ): Promise<number> {
         return this._request<number>(`${this.url}/task-update-executor`, {
             method: "PATCH",

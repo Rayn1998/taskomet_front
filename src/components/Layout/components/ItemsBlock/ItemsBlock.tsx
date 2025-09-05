@@ -15,14 +15,15 @@ import { useTaskViewStore } from "@/zustand/taskViewStore";
 import { useTaskInfoStore } from "@/zustand/taskInfoStore";
 import { useTaskDataStore } from "@/zustand/taskDataStore";
 import { useProjectDataStore } from "@/zustand/projectDataStore";
-import { useProjectPopupStore } from "@/zustand/projectPopupStore";
-import { useScenePopupStore } from "@/zustand/scenePopupStore";
-import { useTaskPopupStore } from "@/zustand/taskPopupStore";
+import { useCreateProjectPopupStore } from "@/components/Popups/CreateProject/CreateProjectPopupStore";
+import { useCreateScenePopupStore } from "@/components/Popups/CreateScene/CreateScenePopupStore";
+import { useCreateTaskPopupStore } from "@/components/Popups/CreateTask/CreateTaskPopupStore";
 import { useSceneDataStore } from "@/zustand/sceneDataStore";
+import { useCreateCommentPopupStore } from "@/components/Popups/CreateComment/CreateCommentPopupStore";
 
-import Title from "@/components/Layout/components/TasksBlock/components/Title/Title";
-import Description from "@/components/Layout/components/TasksBlock/components/Description/Description";
-import Comment from "@/components/Layout/components/TasksBlock/components/Comment/Comment";
+import Title from "@/components/Layout/components/ItemsBlock/components/Title/Title";
+import Description from "@/components/Layout/components/ItemsBlock/components/Description/Description";
+import Comment from "@/components/Layout/components/ItemsBlock/components/Comment/Comment";
 import { api } from "@/utils/Api";
 
 // IMAGES
@@ -32,7 +33,7 @@ import arrow from "@/assets/images/up-arrow.png";
 import info from "@/assets/images/info.png";
 import comment from "@/assets/images/comment.png";
 
-const TasksBlock = ({ children }: IChildrenComponent) => {
+const ItemsBlock = ({ children }: IChildrenComponent) => {
 	const location = useLocation();
 
 	const [createProjectAllowed, setCreateProjectAllowed] =
@@ -68,13 +69,14 @@ const TasksBlock = ({ children }: IChildrenComponent) => {
 	const { data: projectData, project } = useProjectDataStore();
 
 	// TASK POPUP STORE
-	const { setOpenClose: setOpenCloseTaskPopup } = useTaskPopupStore();
+	const { setOpenClose: setOpenCloseTaskPopup } = useCreateTaskPopupStore();
 
 	// PROJECT POPUP STORE
-	const { setOpenClose: setOpenCloseProjectPopup } = useProjectPopupStore();
+	const { setOpenClose: setOpenCloseProjectPopup } =
+		useCreateProjectPopupStore();
 
 	// SCENE POPUP STORE
-	const { setOpenClose: setOpenCloseScenePopup } = useScenePopupStore();
+	const { setOpenClose: setOpenCloseScenePopup } = useCreateScenePopupStore();
 
 	// TASK INFO STORE
 	const {
@@ -85,6 +87,9 @@ const TasksBlock = ({ children }: IChildrenComponent) => {
 
 	// TASK VIEW STORE
 	const handleClick = useTaskViewStore((state) => state.setChange);
+
+	// CREATE COMMENT STORE
+	const { setOpenClose: setOpenCloseComment } = useCreateCommentPopupStore();
 
 	// SNACKBAR
 	const { enqueueSnackbar } = useSnackbar();
@@ -233,42 +238,39 @@ const TasksBlock = ({ children }: IChildrenComponent) => {
 	}, [location]);
 
 	return (
-		<div className="layout-tasksblock">
+		<div className="itemsblock">
 			<div
-				className="layout-tasksblock-left_block"
+				className="itemsblock-left_block"
 				style={{
 					width: taskOpen ? "50%" : "100%",
 				}}
 			>
-				<div className="layout-tasksblock-menu">
+				<div className="itemsblock-menu">
 					<button
-						className="layout-tasksblock-button"
+						className="itemsblock-button"
 						onClick={handleAddButton}
 					>
 						+
 					</button>
 					<div
-						className="layout-structure-icon"
+						className="itemsblock-structure-icon"
 						onClick={handleClick}
 						style={{
 							backgroundImage: `url(${structureImage})`,
 						}}
 					></div>
-					{/* <button className="layout-tasksblock-button">menu</button> */}
+					{/* <button className="itemsblock-button">menu</button> */}
 					{/* <button>order</button> */}
 					{/* <button>filter</button> */}
 					{/* <button>view</button> */}
 					<button
-						className="layout-tasksblock-button"
+						className="itemsblock-button"
 						onClick={infoOpenClose}
 					>
-						<img
-							className="layout-tasksblock-button__image"
-							src={info}
-						/>
+						<img className="itemsblock-button__image" src={info} />
 					</button>
 				</div>
-				<div className="layout-tasksblock-ordering">
+				<div className="itemsblock-ordering">
 					<div>Порядок</div>
 					<div>Имя</div>
 					<div>Статус</div>
@@ -278,30 +280,30 @@ const TasksBlock = ({ children }: IChildrenComponent) => {
 				{children}
 			</div>
 			<div
-				className="layout-tasksblock-right_block"
+				className="itemsblock-right_block"
 				style={{
 					width: taskOpen ? "100%" : "0",
-					height: taskOpen ? "100%" : "0",
 					opacity: taskOpen ? 1 : 0,
 				}}
 			>
-				<div className="layout-tasksblock-right_block-buttons">
+				<div className="itemsblock-right_block-buttons">
 					<div
-						className="layout-tasksblock-right_block-hide"
+						className="itemsblock-right_block-hide"
 						style={{ backgroundImage: `url(${arrow})` }}
 						onClick={closeTask}
 					></div>
 					<div
-						className="layout-tasksblock-right_block-add"
+						className="itemsblock-right_block-add"
 						style={{ backgroundImage: `url(${comment})` }}
+						onClick={setOpenCloseComment}
 					></div>
 					<div
-						className="layout-tasksblock-right_block-delete"
+						className="itemsblock-right_block-delete"
 						style={{ backgroundImage: `url(${trash})` }}
 						onClick={handleDeleteButton}
 					></div>
 				</div>
-				<div className="layout-info-block">
+				<div className="itemsblock-info-block">
 					{projectData && projectsLocation && (
 						<>
 							<Title title={projectData.name} />
@@ -333,4 +335,4 @@ const TasksBlock = ({ children }: IChildrenComponent) => {
 	);
 };
 
-export default TasksBlock;
+export default ItemsBlock;

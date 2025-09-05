@@ -1,0 +1,104 @@
+@use "@/scss/variables" as *;
+
+.itemsblock {
+    padding: 1rem;
+    margin-top: 1rem;
+    min-width: 100%;
+    min-height: 20rem;
+    background-color: $background-forward;
+    color: #fff;
+    font-size: 1.2rem;
+    display: flex;
+    gap: 1rem;
+
+    .itemsblock-left_block {
+        width: 50%;
+        transition: 0.5s all ease-in;
+
+        .itemsblock-menu {
+            display: flex;
+            padding: 1rem;
+            justify-content: flex-end;
+            gap: 1rem;
+            border-radius: 1rem 1rem 0 0;
+            border-bottom: 0.1rem solid $background;
+
+            .itemsblock-button {
+                filter: invert(1);
+                min-width: 4rem;
+                background-color: transparent;
+
+                .itemsblock-button__image {
+                    max-width: 3rem;
+                    max-height: 3rem;
+                }
+            }
+
+            .itemsblock-structure-icon {
+                border-radius: 0;
+                @include image-icon;
+                @include hover;
+            }
+        }
+
+        .itemsblock-ordering {
+            display: flex;
+            padding: 1rem;
+            justify-content: space-between;
+            border-radius: 1rem 1rem 0 0;
+            border-bottom: 0.1rem solid $background;
+
+            div:nth-child(1) {
+                width: 10%;
+            }
+            div {
+                text-align: center;
+                width: 22.4%;
+            }
+        }
+    }
+
+    .itemsblock-right_block {
+        overflow-y: scroll;
+        min-height: 100%;
+        max-width: 50%;
+        outline: 0.1rem solid cyan;
+        position: relative;
+        transition: 0.5s all ease-in;
+        overflow-y: scroll;
+
+        .itemsblock-right_block-buttons {
+            position: absolute;
+            top: 1rem;
+            left: 1rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+
+            .itemsblock-right_block-hide,
+            .itemsblock-right_block-add,
+            .itemsblock-right_block-delete {
+                @include hover;
+                border-radius: 0;
+                width: 3rem;
+                height: 3rem;
+                background-size: cover;
+                background-position: center;
+                background-repeat: no-repeat;
+                filter: saturate(100);
+            }
+
+            .itemsblock-right_block-hide {
+                transform: rotate(90deg);
+            }
+
+            .itemsblock-right_block-add {
+                filter: invert(1);
+            }
+        }
+
+        .itemsblock-info-block {
+            flex: 1;
+        }
+    }
+}

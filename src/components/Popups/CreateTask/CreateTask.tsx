@@ -11,7 +11,7 @@ import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 
 // STORES
-import { useTaskPopupStore } from "@/zustand/taskPopupStore";
+import { useCreateTaskPopupStore } from "./CreateTaskPopupStore";
 import { useTasksStore } from "@/zustand/tasksStore";
 
 import { api } from "@/utils/Api";
@@ -21,7 +21,7 @@ const CreateTaskPopup = () => {
 
 	// TASK POPUP STORE
 	const { isOpen: isTaskPopupOpen, setClose: setTaskPopupClose } =
-		useTaskPopupStore();
+		useCreateTaskPopupStore();
 
 	// TASKS STORE
 	const addTask = useTasksStore((state) => state.addTask);

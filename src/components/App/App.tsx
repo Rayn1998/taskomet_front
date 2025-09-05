@@ -13,6 +13,7 @@ import ProtectedRoute from "@/components/ProtectedRoute/ProtectedRoute";
 import CreateProjectPopup from "@/components/Popups/CreateProject/CreateProject";
 import CreateScenePopup from "@/components/Popups/CreateScene/CreateScene";
 import CreateTaskPopup from "@/components/Popups/CreateTask/CreateTask";
+import CreateComment from "@/components/Popups/CreateComment/CreateComment";
 import ContextMenu from "@/components/App/components/ContextMenu/ContextMenu";
 
 import { api } from "@/utils/Api";
@@ -76,6 +77,7 @@ const App = () => {
 				<CreateProjectPopup />
 				<CreateScenePopup />
 				<CreateTaskPopup />
+				<CreateComment />
 				<ContextMenu />
 			</div>
 		</SnackbarProvider>
