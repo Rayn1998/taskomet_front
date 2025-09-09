@@ -191,6 +191,13 @@ class Api {
         });
     }
 
+    async sendFile(file: FormData) {
+        return await fetch(`${this.url}/task-upload`, {
+            method: "POST",
+            body: file,
+        });
+    }
+
     async checkServerConnection() {
         const response = await fetch(`${this.url}/check-server`, {
             method: "GET",

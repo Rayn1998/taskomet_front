@@ -1,0 +1,29 @@
+.create-comment-popup {
+    .create-comment-content {
+        max-height: 70vh;
+        overflow-y: scroll;
+    }
+
+    .create-comment-input-section {
+        padding: 1rem;
+        min-height: 10rem;
+        outline: 0.15rem dashed blue;
+        display: flex;
+        justify-content: space-between;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        cursor: pointer;
+    }
+
+    .create-comment-preview {
+        max-height: 15rem;
+        width: fit-content;
+    }
+
+    .delete-icon {
+        // position: absolute;
+        // top: 0;
+        // right: 0;
+    }
+}
