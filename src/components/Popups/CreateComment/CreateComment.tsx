@@ -1,4 +1,4 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { useDropzone } from "react-dropzone";
 
 import { api } from "@/utils/Api";
@@ -16,8 +16,15 @@ import DeleteIcon from "@mui/icons-material/Delete";
 
 // STORES
 import { useCreateCommentPopupStore } from "./CreateCommentPopupStore";
+import { useTaskDataStore } from "@/zustand/taskDataStore";
 
 const CreateComment = () => {
+	// TASK DATA STORE
+	const { task, data } = useTaskDataStore();
+
+	// CREATE COMMENT POPUP STORE
+	const { isOpen, setClose: setPopupClose } = useCreateCommentPopupStore();
+
 	const onDrop = useCallback((acceptedFiles: File[]) => {
 		const file = new FileReader();
 
@@ -40,7 +47,6 @@ const CreateComment = () => {
 	const [imagePreview, setImagePreview] = useState<
 		string | ArrayBuffer | null
 	>(null);
-	const { isOpen, setClose: setPopupClose } = useCreateCommentPopupStore();
 
 	const handleClose = () => {
 		setImagePreview(null);
@@ -55,7 +61,7 @@ const CreateComment = () => {
 
 		const formData = new FormData();
 
-		formData.append("image", acceptedFiles[0]);
+		formData.append("data", acceptedFiles[0]);
 
 		await api
 			.sendFile(formData)
@@ -65,6 +71,10 @@ const CreateComment = () => {
 			})
 			.catch((err) => console.log(err));
 	};
+
+	useEffect(() => {
+		console.log(task, data);
+	}, [task, data]);
 
 	return (
 		<Dialog open={isOpen} className="create-comment-popup">

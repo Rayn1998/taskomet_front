@@ -7,6 +7,15 @@ interface ITaskDataProps {
 	task: ITaskData;
 }
 
+// В зависимости от типа task_data нужно отрисовывать разные варианты: просто комментарий,
+// дейлиз с видео, постановка задачи с картинкой, изменение статуса
+enum TypeOfData {
+	SettingTheTask,
+	Comment,
+	Dailies,
+	Status,
+}
+
 const Comment = ({ task }: ITaskDataProps) => {
 	const [author, setAuthor] = useState<string>("");
 	const getArtist = useArtistStore((state) => state.getArtist);
@@ -28,7 +37,7 @@ const Comment = ({ task }: ITaskDataProps) => {
 					<div className="comment-author">{author}</div>
 					<div className="comment-date">{`${new Date(
 						task.created_at,
-					).toDateString()}`}</div>
+					).toLocaleString()}`}</div>
 				</div>
 				<div className="comment-text-block">
 					<div className="comment-text">{task.text}</div>
