@@ -2,6 +2,7 @@ import { useState, useCallback, useEffect } from "react";
 import { useDropzone } from "react-dropzone";
 
 import { api } from "@/utils/Api";
+import { formatSQLTimestamp } from "@/utils/formatSQLTimestamp";
 
 // MUI
 import Dialog from "@mui/material/Dialog";
@@ -19,10 +20,32 @@ import { useCreateCommentPopupStore } from "./CreateCommentPopupStore";
 import { useTaskDataStore } from "@/zustand/taskDataStore";
 
 // TYPES
-import ITaskData from "@shared/types/TaskData";
+import ITaskData, { TaskDataMin } from "@shared/types/TaskData";
 import { TypeOfData } from "@/types/TypeOfData";
+import { EStatus, StatusLabels } from "@/types/Status";
+
+const hours = [
+	["0h", 0],
+	["0.5h", 0.5],
+	["1.5h", 1.5],
+	["2h", 2],
+	["2.5h", 2.5],
+	["3h", 3],
+	["3.5h", 3.5],
+	["4h", 4],
+	["4.5h", 4.5],
+	["5h", 5],
+	["5.5h", 5.5],
+	["6h", 6],
+	["6.5h", 6.5],
+	["7h", 7],
+	["7.5h", 7.5],
+	["8h", 8],
+];
 
 const CreateComment = () => {
+	const [spentHours, setSpentHours] = useState<number>(0);
+	const [status, setStatus] = useState<number>(0);
 	// TASK DATA STORE
 	const { task, data, addData: addTaskData } = useTaskDataStore();
 
@@ -58,29 +81,16 @@ const CreateComment = () => {
 		setPopupClose();
 	};
 
-	function formatSQLTimestamp(date: Date) {
-		const pad = (n: number, z = 2) => n.toString().padStart(z, "0");
-
-		const year = date.getFullYear();
-		const month = pad(date.getMonth() + 1); // месяц от 0
-		const day = pad(date.getDate());
-
-		const hours = pad(date.getHours());
-		const minutes = pad(date.getMinutes());
-		const seconds = pad(date.getSeconds());
-		const ms = pad(date.getMilliseconds(), 3); // 3 цифры для миллисекунд
-
-		return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}.${ms}`;
-	}
-
 	const handleSubmit = async (e: React.SyntheticEvent) => {
 		e.preventDefault();
 
-		const taskData: Omit<ITaskData, "id" | "media"> = {
+		const taskData: TaskDataMin = {
 			type: TypeOfData.Dailies,
 			task_id: task!.id,
 			created_at: formatSQLTimestamp(new Date()),
 			created_by: 1,
+			status,
+			spent_hours: spentHours,
 		};
 
 		if (typeof acceptedFiles[0] === "undefined") return;
@@ -100,6 +110,11 @@ const CreateComment = () => {
 			})
 			.catch((err) => console.log(err));
 	};
+
+	const statuses = [];
+	for (const [obj, label] of Object.entries(StatusLabels)) {
+		statuses.push([obj, label]);
+	}
 
 	return (
 		<Dialog open={isOpen} className="create-comment-popup">
@@ -185,24 +200,29 @@ const CreateComment = () => {
 				)}
 			</DialogContent>
 			<DialogActions>
-				<NativeSelect>
-					<option>0h</option>
-					<option>0.5h</option>
-					<option>1h</option>
-					<option>1.5h</option>
-					<option>2h</option>
-					<option>2.5h</option>
-					<option>3h</option>
-					<option>3.5h</option>
-					<option>4h</option>
-					<option>4.5h</option>
-					<option>5h</option>
-					<option>5.5h</option>
-					<option>6h</option>
-					<option>6.5h</option>
-					<option>7h</option>
-					<option>7.5h</option>
-					<option>8h</option>
+				<NativeSelect
+					value={spentHours}
+					onChange={(e) => setSpentHours(+e.target.value)}
+				>
+					{hours.map(([label, value], i) => {
+						return (
+							<option key={i} value={value}>
+								{label}
+							</option>
+						);
+					})}
+				</NativeSelect>
+				<NativeSelect
+					value={status}
+					onChange={(e) => setStatus(+e.target.value)}
+				>
+					{statuses.map(([statusNum, label], i) => {
+						return (
+							<option key={i} value={statusNum}>
+								{label}
+							</option>
+						);
+					})}
 				</NativeSelect>
 				<Button
 					onClick={handleSubmit}

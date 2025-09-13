@@ -2,6 +2,7 @@ import { useState, useEffect, useMemo } from "react";
 
 import { snackBar } from "@/utils/snackBar";
 import { api } from "@/utils/Api";
+import { formatSQLTimestamp } from "@/utils/formatSQLTimestamp";
 
 // STORES
 import { useTaskInfoStore } from "@/zustand/taskInfoStore";
@@ -19,6 +20,8 @@ import ITask from "@shared/types/Task";
 import { TaskProps } from "@/components/ShotsList/TaskProps.type";
 import { EStatus, StatusLabels } from "@/types/Status";
 import { EPriority, PriorityLabels } from "@/types/Priority";
+import { TypeOfData } from "@/types/TypeOfData";
+import { TaskDataMin } from "@shared/types/TaskData";
 
 const Task = ({ task, orderNum, selected, handleClick }: TaskProps) => {
 	const { name, id, status, executor, priority, scene_name, description } =
@@ -31,7 +34,11 @@ const Task = ({ task, orderNum, selected, handleClick }: TaskProps) => {
 	const { updateTask } = useTasksStore();
 
 	// TASK DATA STORE
-	const { setData: setTaskData, setTask } = useTaskDataStore();
+	const {
+		setData: setTaskData,
+		setTask,
+		addData: addTaskData,
+	} = useTaskDataStore();
 	const { isOpen: taskViewOpen, setOpenClose: setTaskViewOpenClose } =
 		useTaskInfoStore();
 
@@ -56,10 +63,20 @@ const Task = ({ task, orderNum, selected, handleClick }: TaskProps) => {
 	};
 
 	const handleChangeStatus = (status: number) => {
-		api.updateTaskStatus(id, status)
-			.then((newStatus) => {
-				const updatedTask: ITask = { ...task, status: newStatus };
+		const taskData: TaskDataMin = {
+			type: TypeOfData.Status,
+			task_id: id,
+			created_at: formatSQLTimestamp(new Date()),
+			created_by: 1,
+			status,
+			spent_hours: 0,
+		};
+		api.updateTaskStatus(taskData)
+			.then((res) => {
+				const { status } = res;
+				const updatedTask: ITask = { ...task, status };
 				updateTask(updatedTask);
+				addTaskData(res);
 				snackBar("Status was changed", "success");
 			})
 			.catch((err) => console.log(err));

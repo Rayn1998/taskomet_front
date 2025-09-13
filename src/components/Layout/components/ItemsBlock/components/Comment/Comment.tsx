@@ -1,5 +1,8 @@
 import { useState, useEffect } from "react";
+
+// STORES
 import { useArtistStore } from "@/zustand/artistStore";
+import { useTasksStore } from "@/zustand/tasksStore";
 
 // TYPES
 import ITaskData from "@shared/types/TaskData";
@@ -8,17 +11,19 @@ import {
 	TypeOfDataLabels,
 	TypeOfData,
 } from "@/types/TypeOfData";
+import { EStatus, StatusLabels, StatusColors } from "@/types/Status";
 
 interface ITaskDataProps {
 	task: ITaskData;
 }
 
-// В зависимости от типа task_data нужно отрисовывать разные варианты: просто комментарий,
-// дейлиз с видео, постановка задачи с картинкой, изменение статуса
-
 const Comment = ({ task }: ITaskDataProps) => {
 	const type = task.type as TypeOfData;
+	const statusLabel = StatusLabels[task.status as EStatus];
+	const statusColor = StatusColors[task.status as EStatus];
 	const [author, setAuthor] = useState<string>("");
+
+	const getTask = useTasksStore((state) => state.getTask);
 	const getArtist = useArtistStore((state) => state.getArtist);
 
 	useEffect(() => {
@@ -57,6 +62,16 @@ const Comment = ({ task }: ITaskDataProps) => {
 				{task.text && task.text.length > 0 && (
 					<div className="comment-text-block">
 						<div className="comment-text">{task.text}</div>
+					</div>
+				)}
+				{task.status !== undefined && (
+					<div
+						className="comment-status"
+						style={{
+							backgroundColor: statusColor,
+						}}
+					>
+						{statusLabel}
 					</div>
 				)}
 			</div>

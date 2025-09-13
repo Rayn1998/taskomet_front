@@ -1,7 +1,7 @@
 import IProject from "@shared/types/Project";
 import IScene from "@shared/types/Scene";
 import ITask from "@shared/types/Task";
-import ITaskData from "@shared/types/TaskData";
+import ITaskData, { TaskDataMin } from "@shared/types/TaskData";
 import IArtist from "@shared/types/Artist";
 
 class Api {
@@ -145,13 +145,13 @@ class Api {
         });
     }
 
-    async updateTaskStatus(taskId: number, status: number): Promise<number> {
-        return this._request<number>(`${this.url}/task/task-update-status`, {
+    async updateTaskStatus(taskData: TaskDataMin): Promise<ITaskData> {
+        return this._request<ITaskData>(`${this.url}/task/task-update-status`, {
             method: "PATCH",
             headers: {
                 "Content-Type": "application/json",
             },
-            body: JSON.stringify({ taskId, status }),
+            body: JSON.stringify({ taskData }),
         });
     }
 

@@ -22,7 +22,8 @@ const DropDown = <K extends number>({
 	const [status, setStatus] = useState<K>(selected as K);
 
 	const handleChange = (e: SelectChangeEvent<K>) => {
-		onChange(e.target.value as K);
+		const value = Number(e.target.value);
+		onChange(value as K);
 	};
 
 	useEffect(() => {
