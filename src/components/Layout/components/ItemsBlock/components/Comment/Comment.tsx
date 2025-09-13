@@ -1,7 +1,13 @@
 import { useState, useEffect } from "react";
 import { useArtistStore } from "@/zustand/artistStore";
 
+// TYPES
 import ITaskData from "@shared/types/TaskData";
+import {
+	TypeOfDataColor,
+	TypeOfDataLabels,
+	TypeOfData,
+} from "@/types/TypeOfData";
 
 interface ITaskDataProps {
 	task: ITaskData;
@@ -9,14 +15,9 @@ interface ITaskDataProps {
 
 // В зависимости от типа task_data нужно отрисовывать разные варианты: просто комментарий,
 // дейлиз с видео, постановка задачи с картинкой, изменение статуса
-enum TypeOfData {
-	SettingTheTask,
-	Comment,
-	Dailies,
-	Status,
-}
 
 const Comment = ({ task }: ITaskDataProps) => {
+	const type = task.type as TypeOfData;
 	const [author, setAuthor] = useState<string>("");
 	const getArtist = useArtistStore((state) => state.getArtist);
 
@@ -31,7 +32,14 @@ const Comment = ({ task }: ITaskDataProps) => {
 
 	return (
 		<div className="comment">
-			<div className="comment-badge">COMMENT</div>
+			<div
+				className="comment-badge"
+				style={{
+					backgroundColor: TypeOfDataColor[type],
+				}}
+			>
+				{TypeOfDataLabels[type]}
+			</div>
 			<div className="comment-block">
 				<div className="comment-date-author-block">
 					<div className="comment-author">{author}</div>
@@ -39,9 +47,18 @@ const Comment = ({ task }: ITaskDataProps) => {
 						task.created_at,
 					).toLocaleString()}`}</div>
 				</div>
-				<div className="comment-text-block">
-					<div className="comment-text">{task.text}</div>
-				</div>
+				{type === TypeOfData.Dailies && (
+					<video
+						className="comment-dailies-video"
+						controls
+						src={`http://localhost:3001/${task.media}`}
+					/>
+				)}
+				{task.text && task.text.length > 0 && (
+					<div className="comment-text-block">
+						<div className="comment-text">{task.text}</div>
+					</div>
+				)}
 			</div>
 		</div>
 	);

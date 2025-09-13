@@ -18,9 +18,13 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import { useCreateCommentPopupStore } from "./CreateCommentPopupStore";
 import { useTaskDataStore } from "@/zustand/taskDataStore";
 
+// TYPES
+import ITaskData from "@shared/types/TaskData";
+import { TypeOfData } from "@/types/TypeOfData";
+
 const CreateComment = () => {
 	// TASK DATA STORE
-	const { task, data } = useTaskDataStore();
+	const { task, data, addData: addTaskData } = useTaskDataStore();
 
 	// CREATE COMMENT POPUP STORE
 	const { isOpen, setClose: setPopupClose } = useCreateCommentPopupStore();
@@ -54,27 +58,48 @@ const CreateComment = () => {
 		setPopupClose();
 	};
 
+	function formatSQLTimestamp(date: Date) {
+		const pad = (n: number, z = 2) => n.toString().padStart(z, "0");
+
+		const year = date.getFullYear();
+		const month = pad(date.getMonth() + 1); // месяц от 0
+		const day = pad(date.getDate());
+
+		const hours = pad(date.getHours());
+		const minutes = pad(date.getMinutes());
+		const seconds = pad(date.getSeconds());
+		const ms = pad(date.getMilliseconds(), 3); // 3 цифры для миллисекунд
+
+		return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}.${ms}`;
+	}
+
 	const handleSubmit = async (e: React.SyntheticEvent) => {
 		e.preventDefault();
+
+		const taskData: Omit<ITaskData, "id" | "media"> = {
+			type: TypeOfData.Dailies,
+			task_id: task!.id,
+			created_at: formatSQLTimestamp(new Date()),
+			created_by: 1,
+		};
 
 		if (typeof acceptedFiles[0] === "undefined") return;
 
 		const formData = new FormData();
 
-		formData.append("data", acceptedFiles[0]);
+		formData.append("file", acceptedFiles[0]);
+		formData.append("data", JSON.stringify(taskData));
 
 		await api
-			.sendFile(formData)
-			.then((_) => {
+			.sendDailies(formData)
+			.then((res) => {
+				console.log(res);
+				addTaskData(res);
 				setPopupClose();
 				setImagePreview(null);
 			})
 			.catch((err) => console.log(err));
 	};
-
-	useEffect(() => {
-		console.log(task, data);
-	}, [task, data]);
 
 	return (
 		<Dialog open={isOpen} className="create-comment-popup">

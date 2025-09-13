@@ -5,6 +5,7 @@
     margin-top: 1rem;
     min-width: 100%;
     min-height: 20rem;
+    max-height: 80vh;
     background-color: $background-forward;
     color: #fff;
     font-size: 1.2rem;
@@ -59,21 +60,24 @@
     }
 
     .itemsblock-right_block {
-        overflow-y: scroll;
+        overflow-y: auto;
         min-height: 100%;
         max-width: 50%;
         outline: 0.1rem solid cyan;
         position: relative;
         transition: 0.5s all ease-in;
-        overflow-y: scroll;
+        display: flex;
 
         .itemsblock-right_block-buttons {
-            position: absolute;
-            top: 1rem;
-            left: 1rem;
+            position: sticky;
+            top: 0rem;
+            left: 0rem;
+            padding-top: 1rem;
+            padding-left: 1rem;
             display: flex;
             flex-direction: column;
             gap: 1rem;
+            width: fit-content;
 
             .itemsblock-right_block-hide,
             .itemsblock-right_block-add,
@@ -98,7 +102,7 @@
         }
 
         .itemsblock-info-block {
-            flex: 1;
+            width: 100%;
         }
     }
 }

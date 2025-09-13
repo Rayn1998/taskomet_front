@@ -123,7 +123,7 @@ class Api {
     }
 
     async deleteTask(id: number): Promise<ITask> {
-        return this._request<ITask>(`${this.url}/delete-task`, {
+        return this._request<ITask>(`${this.url}/task/delete-task`, {
             method: "DELETE",
             headers: {
                 "Content-Type": "application/json",
@@ -136,7 +136,7 @@ class Api {
         taskId: number,
         executorId: number | null,
     ): Promise<number> {
-        return this._request<number>(`${this.url}/task-update-executor`, {
+        return this._request<number>(`${this.url}/task/task-update-executor`, {
             method: "PATCH",
             headers: {
                 "Content-Type": "application/json",
@@ -146,7 +146,7 @@ class Api {
     }
 
     async updateTaskStatus(taskId: number, status: number): Promise<number> {
-        return this._request<number>(`${this.url}/task-update-status`, {
+        return this._request<number>(`${this.url}/task/task-update-status`, {
             method: "PATCH",
             headers: {
                 "Content-Type": "application/json",
@@ -159,7 +159,7 @@ class Api {
         taskId: number,
         priority: number,
     ): Promise<number> {
-        return this._request<number>(`${this.url}/task-update-priority`, {
+        return this._request<number>(`${this.url}/task/task-update-priority`, {
             method: "PATCH",
             headers: {
                 "Content-Type": "application/json",
@@ -170,7 +170,7 @@ class Api {
 
     async getTaskData(taskId: number): Promise<ITaskData[]> {
         return this._request<ITaskData[]>(
-            `${this.url}/task-data?id=${taskId}`,
+            `${this.url}/task/task-data?id=${taskId}`,
             {
                 method: "GET",
             },
@@ -191,11 +191,12 @@ class Api {
         });
     }
 
-    async sendFile(file: FormData) {
-        return await fetch(`${this.url}/task-upload`, {
+    async sendDailies(file: FormData): Promise<ITaskData> {
+        const data = await fetch(`${this.url}/task/task-dailies`, {
             method: "POST",
             body: file,
         });
+        return data.json() as unknown as ITaskData;
     }
 
     async checkServerConnection() {

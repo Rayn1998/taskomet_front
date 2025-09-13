@@ -30,7 +30,7 @@ const App = () => {
 	// useEffect(() => {
 	//     hydrateAuth();
 	// }, []);
-	// const isAuth = Boolean(useAuthStore((state) => state.auth));a
+	// const isAuth = Boolean(useAuthStore((state) => state.auth));
 
 	useEffect(() => {
 		api.getArtists()

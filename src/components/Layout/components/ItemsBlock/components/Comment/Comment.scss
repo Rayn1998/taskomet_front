@@ -1,7 +1,6 @@
 .comment {
     background-color: rgb(76, 140, 145);
     margin: 1.5rem;
-    margin-left: 5rem;
     padding: 1rem;
     display: flex;
     position: relative;
@@ -11,7 +10,6 @@
         position: absolute;
         top: -0.5rem;
         left: -0.5rem;
-        background-color: rgb(128, 0, 0);
         padding: 0.5rem;
     }
     .comment-block {
@@ -34,6 +32,11 @@
                 min-height: fit-content;
                 min-width: 10rem;
             }
+        }
+
+        .comment-dailies-video {
+            width: 100%;
+            margin-top: 1rem;
         }
 
         .comment-text-block {

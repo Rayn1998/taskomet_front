@@ -2,8 +2,10 @@
 
 .itemsblock-list {
     max-height: 63vh;
-    overflow-y: scroll;
+    overflow-y: auto;
+    overflow-x: hidden;
     padding: 1rem;
+    box-sizing: border-box;
 
     .shot-accordion {
         border-radius: 0;
