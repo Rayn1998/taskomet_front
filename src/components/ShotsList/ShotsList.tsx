@@ -51,6 +51,7 @@ const ShotsList: FC = () => {
 				});
 		}
 	}, []);
+
 	return (
 		<Layout>
 			<div className="itemsblock-list">

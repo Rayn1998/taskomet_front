@@ -5,7 +5,7 @@ import ITaskData, { TaskDataMin } from "@shared/types/TaskData";
 import IArtist from "@shared/types/Artist";
 
 class Api {
-    url: string;
+    private url: string;
 
     constructor(url: string) {
         this.url = url;
@@ -191,12 +191,20 @@ class Api {
         });
     }
 
-    async sendDailies(file: FormData): Promise<ITaskData> {
-        const data = await fetch(`${this.url}/task/task-dailies`, {
+    async sendComment(comment: FormData): Promise<ITaskData> {
+        const data = await fetch(`${this.url}/task/task-comment`, {
             method: "POST",
-            body: file,
+            body: comment,
         });
         return data.json() as unknown as ITaskData;
+    }
+
+    async deleteComment(commentId: number): Promise<boolean> {
+        const res = await fetch(`${this.url}/task/task-comment/${commentId}`, {
+            method: "DELETE",
+        });
+
+        return res.ok ? true : false;
     }
 
     async checkServerConnection() {

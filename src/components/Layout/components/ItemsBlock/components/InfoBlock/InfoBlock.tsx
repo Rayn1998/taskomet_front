@@ -1,7 +1,7 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useLocation } from "react-router-dom";
 
-import { useSnackBar } from "@/components/SnackBar/SnackBar";
+import { snackBar } from "@/utils/snackBar";
 import { checkLocation } from "@/components/Layout/utils/checkLocation";
 import { api } from "@/utils/Api";
 
@@ -26,11 +26,11 @@ import comment from "@/assets/images/comment.png";
 
 const InfoBlock = ({ blockOpen }: { blockOpen: boolean }) => {
 	const location = useLocation();
-	const { showSnack, showSnackError } = useSnackBar();
 
 	const [taskLocation, setTaskLocation] = useState<boolean>(false);
 	const [sceneLocation, setSceneLocation] = useState<boolean>(false);
 	const [projectsLocation, setprojectsLocation] = useState<boolean>(false);
+	const [forbidden, setForbidden] = useState<boolean>(false);
 
 	const { removeTask } = useTasksStore();
 	const { removeProject } = useProjectsStore();
@@ -49,55 +49,55 @@ const InfoBlock = ({ blockOpen }: { blockOpen: boolean }) => {
 		if (taskLocation && taskDataTask) {
 			api.deleteTask(taskDataTask.id)
 				.then((res) => {
-					showSnack({
-						success: true,
-						variant: "success",
-						successMessage: `Task ${res.name} was deleted successfully!`,
-						successCBs: [
-							removeTask.bind(null, res.id),
-							resetTaskData,
-						],
-					});
+					snackBar(
+						`Task ${res.name} was deleted successfully!`,
+						"success",
+						[removeTask.bind(null, res.id), resetTaskData],
+					);
 				})
 				.catch((err) => {
-					showSnackError(err);
+					snackBar("Error while deleting the task", "error");
 				});
 		}
 		if (sceneLocation && scene) {
 			api.deleteScene(scene.id)
 				.then((_) => {
-					showSnack({
-						success: true,
-						variant: "success",
-						successMessage: `Scene ${scene.name} was deleted successfully!`,
-						successCBs: [
-							removeScene.bind(null, scene.id),
-							resetTaskData,
-						],
-					});
+					snackBar(
+						`Scene ${scene.name} was deleted successfully!`,
+						"success",
+						[removeScene.bind(null, scene.id), resetTaskData],
+					);
 				})
 				.catch((err) => {
-					showSnackError(err);
+					snackBar("Error while deleting the scene", "error");
 				});
 		}
 		if (projectsLocation && project) {
 			api.deleteProject(project.id)
 				.then((_) => {
-					showSnack({
-						success: true,
-						variant: "success",
-						successMessage: `Project ${project.name} was deleted successfully!`,
-						successCBs: [
-							removeProject.bind(null, project.id),
-							resetTaskData,
-						],
-					});
+					snackBar(
+						`Project ${project.name} was deleted successfully!`,
+						"success",
+						[removeProject.bind(null, project.id), resetTaskData],
+					);
 				})
 				.catch((err) => {
-					showSnackError(err);
+					snackBar("Error while deleting the project", "error");
 				});
 		}
 	};
+
+	useEffect(() => {
+		if (taskLocation && taskData) {
+			setForbidden(false);
+		} else {
+			setForbidden(true);
+		}
+	}, [taskLocation, taskData]);
+
+	const handleOpenComment = useCallback(() => {
+		if (!forbidden) setOpenCloseComment();
+	}, [forbidden]);
 
 	useEffect(() => {
 		const checkedLocation = checkLocation(location);
@@ -121,8 +121,11 @@ const InfoBlock = ({ blockOpen }: { blockOpen: boolean }) => {
 				></div>
 				<div
 					className="itemsblock-right_block-add"
-					style={{ backgroundImage: `url(${comment})` }}
-					onClick={setOpenCloseComment}
+					style={{
+						backgroundImage: `url(${comment})`,
+						opacity: forbidden ? 0.5 : 1,
+					}}
+					onClick={handleOpenComment}
 				></div>
 				<div
 					className="itemsblock-right_block-delete"

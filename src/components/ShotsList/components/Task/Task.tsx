@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, useCallback } from "react";
 
 import { snackBar } from "@/utils/snackBar";
 import { api } from "@/utils/Api";
@@ -18,7 +18,7 @@ import ArtistSimpleDialog from "@/components/ShotsList/components/ArtistSimpleDi
 // TYPES | CONSTANTS
 import ITask from "@shared/types/Task";
 import { TaskProps } from "@/components/ShotsList/TaskProps.type";
-import { EStatus, StatusLabels } from "@/types/Status";
+import { EStatus, StatusLabels, StatusColors } from "@/types/Status";
 import { EPriority, PriorityLabels } from "@/types/Priority";
 import { TypeOfData } from "@/types/TypeOfData";
 import { TaskDataMin } from "@shared/types/TaskData";
@@ -104,6 +104,16 @@ const Task = ({ task, orderNum, selected, handleClick }: TaskProps) => {
 		return "NONE";
 	}, [executor, artists]);
 
+	const lighten = useCallback((color: string) => {
+		if (!color) return;
+		let match = color.match(/\d+/g);
+		if (!match) return color;
+
+		const [r, g, b] = match.map((color) => Number(color) * 1.1);
+
+		return `rgb(${r}, ${g}, ${b})`;
+	}, []);
+
 	useEffect(() => {
 		if (taskViewOpen && selected) {
 			api.getTaskData(id)
@@ -128,7 +138,9 @@ const Task = ({ task, orderNum, selected, handleClick }: TaskProps) => {
 			onMouseLeave={() => setHover(false)}
 			style={{
 				backgroundColor:
-					hover || selected ? "rgb(45, 50, 60)" : "rgb(35, 37, 44)",
+					hover || selected
+						? lighten(StatusColors[status as EStatus])
+						: StatusColors[status as EStatus],
 			}}
 		>
 			<div className="task-number">{orderNum + 1}</div>

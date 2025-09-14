@@ -1,4 +1,16 @@
 .create-comment-popup {
+    .create-comment-header {
+        display: flex;
+        justify-content: space-between;
+
+        .create-comment-type {
+            margin-right: 1rem;
+            padding: 1rem;
+            width: 15rem;
+            height: 1.5rem;
+            align-self: center;
+        }
+    }
     .create-comment-content {
         max-height: 70vh;
         overflow-y: scroll;

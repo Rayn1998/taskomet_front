@@ -13,7 +13,7 @@ export const TypeOfDataLabels: Record<TypeOfData, string> = {
 };
 
 export const TypeOfDataColor: Record<TypeOfData, string> = {
-    [TypeOfData.Comment]: "rgb(180, 20, 20)",
+    [TypeOfData.Comment]: "rgb(100, 100, 100)",
     [TypeOfData.Dailies]: "rgb(200, 200, 20)",
     [TypeOfData.SettingTheTask]: "rgb(140, 140, 140)",
     [TypeOfData.Status]: "rgb(0, 120, 230)",

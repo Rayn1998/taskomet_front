@@ -74,13 +74,13 @@ const ItemsBlock = ({ children }: IChildrenComponent) => {
 					>
 						+
 					</button>
-					<div
+					{/* <div
 						className="itemsblock-structure-icon"
 						onClick={handleClick}
 						style={{
 							backgroundImage: `url(${structureImage})`,
 						}}
-					></div>
+					></div> */}
 					{/* <button className="itemsblock-button">menu</button> */}
 					{/* <button>order</button> */}
 					{/* <button>filter</button> */}

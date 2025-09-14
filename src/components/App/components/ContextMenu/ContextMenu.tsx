@@ -1,12 +1,10 @@
 import { useState, useEffect } from "react";
-import { useSnackbar, closeSnackbar } from "notistack";
 import { api } from "@/utils/Api";
+import { snackBar } from "@/utils/snackBar";
 
 // MUI
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
-import IconButton from "@mui/material/IconButton";
-import CloseIcon from "@mui/icons-material/Close";
 
 // STORES
 import { useProjectsStore } from "@/zustand/projectsStore";
@@ -15,6 +13,7 @@ import { useScenesStore } from "@/zustand/scenesStore";
 import { useSceneDataStore } from "@/zustand/sceneDataStore";
 import { useTaskDataStore } from "@/zustand/taskDataStore";
 import { useTasksStore } from "@/zustand/tasksStore";
+import { useCommentStore } from "@/zustand/commentStore";
 
 interface IContextMenuData {
 	mouseX: number;
@@ -37,13 +36,17 @@ const ContextMenu = () => {
 	const { scene } = useSceneDataStore();
 
 	// TASK DATA STORE
-	const { task, resetData: resetTaskData } = useTaskDataStore();
+	const {
+		task,
+		resetData: resetTaskData,
+		removeOneData,
+	} = useTaskDataStore();
 
 	// TASKS STORE
 	const { removeTask } = useTasksStore();
 
-	// SNACKBAR
-	const { enqueueSnackbar } = useSnackbar();
+	// COMMENT STORE
+	const { commentId, resetCommentId } = useCommentStore();
 
 	const [contextMenu, setContextMenu] = useState<null | IContextMenuData>(
 		null,
@@ -57,18 +60,9 @@ const ContextMenu = () => {
 				removeProject(project.id);
 				resetProjectData();
 				setContextMenu(null);
-				const snackBarId = enqueueSnackbar(
+				snackBar(
 					`Project ${project.name} was successfully deleted`,
-					{
-						variant: "success",
-						action: (
-							<IconButton
-								onClick={() => closeSnackbar(snackBarId)}
-							>
-								<CloseIcon />
-							</IconButton>
-						),
-					},
+					"success",
 				);
 			})
 			.catch((err) => console.log(err));
@@ -79,17 +73,7 @@ const ContextMenu = () => {
 		api.deleteScene(scene.id).then(() => {
 			removeScene(scene.id);
 			setContextMenu(null);
-			const snackBarId = enqueueSnackbar(
-				`Scene ${scene.name} was successfully deleted`,
-				{
-					variant: "success",
-					action: (
-						<IconButton onClick={() => closeSnackbar(snackBarId)}>
-							<CloseIcon />
-						</IconButton>
-					),
-				},
-			);
+			snackBar(`Scene ${scene.name} was successfully deleted`, "success");
 		});
 	};
 
@@ -99,17 +83,17 @@ const ContextMenu = () => {
 			removeTask(deletedTask.id);
 			resetTaskData();
 			setContextMenu(null);
-			const snackBarId = enqueueSnackbar(
-				`Task ${task.name} was successfully deleted`,
-				{
-					variant: "success",
-					action: (
-						<IconButton onClick={() => closeSnackbar(snackBarId)}>
-							<CloseIcon />
-						</IconButton>
-					),
-				},
-			);
+			snackBar(`Task ${task.name} was successfully deleted`, "success");
+		});
+	};
+
+	const handleComentDelete = () => {
+		if (!commentId) return;
+		api.deleteComment(commentId).then((_) => {
+			removeOneData(commentId);
+			resetCommentId();
+			setContextMenu(null);
+			snackBar("Comment was successfully deleted", "success");
 		});
 	};
 
@@ -158,6 +142,11 @@ const ContextMenu = () => {
 			]}
 			{contextMenu?.type === "task" && [
 				<MenuItem key="delete" onClick={handleTaskDelete}>
+					Delete
+				</MenuItem>,
+			]}
+			{contextMenu?.type === "comment" && [
+				<MenuItem key="delete" onClick={handleComentDelete}>
 					Delete
 				</MenuItem>,
 			]}
