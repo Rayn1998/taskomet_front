@@ -13,11 +13,14 @@ import TextareaAutosize from "@mui/material/TextareaAutosize";
 import Button from "@mui/material/Button";
 import NativeSelect from "@mui/material/NativeSelect";
 import DeleteIcon from "@mui/icons-material/Delete";
+import CircularProgress from "@mui/material/CircularProgress";
+import CheckCircle from "@mui/icons-material/CheckCircle";
 
 // STORES
 import { useCreateCommentPopupStore } from "./CreateCommentPopupStore";
 import { useTasksStore } from "@/zustand/tasksStore";
 import { useTaskDataStore } from "@/zustand/taskDataStore";
+import { useTaskSpentHours } from "@/zustand/taskSpentHoursStore";
 
 // TYPES
 import { TaskDataMin } from "@shared/types/TaskData";
@@ -27,6 +30,7 @@ import { EStatus, StatusLabels } from "@/types/Status";
 const hours: [label: string, value: number][] = [
 	["0h", 0],
 	["0.5h", 0.5],
+	["1h", 1],
 	["1.5h", 1.5],
 	["2h", 2],
 	["2.5h", 2.5],
@@ -44,37 +48,52 @@ const hours: [label: string, value: number][] = [
 ];
 
 const CreateComment = () => {
-	const [text, setText] = useState<string>("");
-	const [spentHours, setSpentHours] = useState<number>(0);
-	const [status, setStatus] = useState<EStatus>(EStatus.NoStatus);
-	const [typeOfComment, setTypeOfComment] = useState<TypeOfData>(
-		TypeOfData.Dailies,
-	);
 	// TASKS STORE
 	const { updateTask } = useTasksStore();
 
 	// TASK DATA STORE
 	const { task, addData: addTaskData } = useTaskDataStore();
 
+	// TASK SPENT HOURS STORE
+	const { updateHoursData } = useTaskSpentHours();
+
 	// CREATE COMMENT POPUP STORE
 	const { isOpen, setClose: setPopupClose } = useCreateCommentPopupStore();
 
-	const onDrop = useCallback((acceptedFiles: File[]) => {
-		const file = new FileReader();
+	const [text, setText] = useState<string>("");
+	const [spentHours, setSpentHours] = useState<number>(0);
+	const [status, setStatus] = useState<EStatus>(EStatus.NoStatus);
+	const [typeOfComment, setTypeOfComment] = useState<TypeOfData>(
+		TypeOfData.Dailies,
+	);
+	const [loading, setLoading] = useState<boolean>(false);
+	const [hideInputArea, setHideInputArea] = useState<boolean>(false);
+	const [files, setFiles] = useState<File[]>([]);
 
-		file.onload = () => {
-			if (acceptedFiles[0].type.startsWith("image"))
-				setImagePreview(file.result);
-			if (acceptedFiles[0].type.startsWith("video"))
-				setVideoPreview(file.result);
+	const onDrop = useCallback((acceptedFiles: File[]) => {
+		if (!acceptedFiles || acceptedFiles.length === 0) return;
+
+		const file = acceptedFiles[0];
+		setFiles(acceptedFiles);
+
+		const fileReader = new FileReader();
+		fileReader.onload = () => {
+			setHideInputArea(true);
+			if (file.type.startsWith("image"))
+				setImagePreview(fileReader.result);
+			if (
+				file.type.startsWith("video") &&
+				file.name.split(".").pop()?.toLowerCase() !== "mov"
+			)
+				setVideoPreview(fileReader.result);
 		};
 
-		file.readAsDataURL(acceptedFiles[0]);
+		fileReader.readAsDataURL(file);
 	}, []);
-	const { acceptedFiles, getRootProps, getInputProps, isDragActive } =
-		useDropzone({
-			onDrop,
-		});
+	const { getRootProps, getInputProps, isDragActive } = useDropzone({
+		onDrop,
+		multiple: false,
+	});
 	const [videoPreview, setVideoPreview] = useState<
 		string | ArrayBuffer | null
 	>(null);
@@ -87,7 +106,9 @@ const CreateComment = () => {
 		setVideoPreview(null);
 		setText("");
 		setSpentHours(0);
+		setHideInputArea(false);
 		setPopupClose();
+		setFiles([]);
 	};
 
 	const handleSubmit = async (e: React.SyntheticEvent) => {
@@ -95,6 +116,11 @@ const CreateComment = () => {
 
 		if (!task) return;
 		const task_id = task.id;
+
+		typeOfComment ===
+			(TypeOfData.SettingTheTask ||
+				TypeOfData.Comment ||
+				TypeOfData.Status) && setSpentHours(0);
 
 		const taskData: TaskDataMin = {
 			type: typeOfComment,
@@ -107,9 +133,10 @@ const CreateComment = () => {
 		};
 
 		const formData = new FormData();
+		setLoading(true);
 
-		if (typeof acceptedFiles[0] !== "undefined") {
-			formData.append("file", acceptedFiles[0]);
+		if (typeof files[0] !== "undefined") {
+			formData.append("file", files[0]);
 		}
 
 		formData.append("data", JSON.stringify(taskData));
@@ -117,13 +144,26 @@ const CreateComment = () => {
 		await api
 			.sendComment(formData)
 			.then((res) => {
-				const { status } = res;
+				const { status, spent_hours } = res;
+				updateHoursData({
+					taskId: res.task_id,
+					commentId: res.id,
+					hours: spentHours,
+				});
 				addTaskData(res);
-				const newTask = { ...task, status };
+				const newTask = {
+					...task,
+					status,
+					spent_hours: Number(spent_hours),
+				};
 				updateTask(newTask);
 				handleClose();
 			})
-			.catch((err) => console.log(err));
+			.catch((err) => console.log(err))
+			.finally(() => {
+				setLoading(false);
+				setFiles([]);
+			});
 	};
 
 	const statuses = [];
@@ -135,8 +175,26 @@ const CreateComment = () => {
 		typesOfComment.push([obj, label]);
 	}
 
+	useEffect(() => {
+		task?.status && setStatus(task.status);
+	}, [task]);
+
+	// useEffect(() => {
+	// 	const handler = (e: KeyboardEvent) => {
+	// 		if (e.key === "Escape") console.log("dwad");
+	// 	};
+	// 	window.addEventListener("keyup", handler);
+	// 	return () => window.removeEventListener("keyup", handler);
+	// }, []);
+
 	return (
-		<Dialog open={isOpen} className="create-comment-popup">
+		<Dialog
+			open={isOpen}
+			className="create-comment-popup"
+			onKeyUp={(e) => {
+				if (e.key === "Escape") setPopupClose();
+			}}
+		>
 			<div className="create-comment-header">
 				<DialogTitle>Add new comment</DialogTitle>
 				<NativeSelect
@@ -176,7 +234,8 @@ const CreateComment = () => {
 
 				{typeOfComment !== TypeOfData.Status &&
 					!imagePreview &&
-					!videoPreview && (
+					!videoPreview &&
+					!hideInputArea && (
 						<div
 							className="create-comment-input-section"
 							{...getRootProps()}
@@ -209,6 +268,8 @@ const CreateComment = () => {
 						onClick={() => {
 							setImagePreview(null);
 							setVideoPreview(null);
+							setFiles([]);
+							setHideInputArea(false);
 						}}
 					/>
 				)}
@@ -221,6 +282,12 @@ const CreateComment = () => {
 				{videoPreview && (
 					<video src={videoPreview as string} controls />
 				)}
+				{hideInputArea &&
+					!loading && [
+						<p>File ready to be uploaded</p>,
+						<CheckCircle color="success" fontSize="large" />,
+					]}
+				{loading && <CircularProgress />}
 			</DialogContent>
 			<DialogActions>
 				{typeOfComment === TypeOfData.Dailies && (

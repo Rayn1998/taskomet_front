@@ -24,6 +24,11 @@ import arrow from "@/assets/images/up-arrow.png";
 import trash from "@/assets/images/delete.png";
 import comment from "@/assets/images/comment.png";
 
+// TYPES
+import { TypeOfData } from "@/types/TypeOfData";
+import { EStatus } from "@/types/Status";
+import { formatSQLTimestamp } from "@/utils/formatSQLTimestamp";
+
 const InfoBlock = ({ blockOpen }: { blockOpen: boolean }) => {
 	const location = useLocation();
 
@@ -44,6 +49,20 @@ const InfoBlock = ({ blockOpen }: { blockOpen: boolean }) => {
 		data: taskData,
 	} = useTaskDataStore();
 	const { setOpenClose: setOpenCloseComment } = useCreateCommentPopupStore();
+
+	// useEffect(() => {
+	// 	if (!taskDataTask) return;
+	// 	if (taskData.length === 0) {
+	// 		api.updateTaskStatus({
+	// 			type: TypeOfData.Status,
+	// 			task_id: taskDataTask.id,
+	// 			created_at: formatSQLTimestamp(new Date()),
+	// 			created_by: 1,
+	// 			status: EStatus.NoStatus,
+	// 			spent_hours: null,
+	// 		});
+	// 	}
+	// }, [taskData]);
 
 	const handleDeleteButton = () => {
 		if (taskLocation && taskDataTask) {
@@ -150,9 +169,18 @@ const InfoBlock = ({ blockOpen }: { blockOpen: boolean }) => {
 					<>
 						<Title title={taskDataTask.name} />
 						<Description description={taskDataTask.description} />
-						{taskData.map((task, i) => (
-							<Comment task={task} key={i} />
-						))}
+						{taskData.map((task, i, tasks) => {
+							const isFirst = i === 0;
+							const statusChanged =
+								isFirst || task.status !== tasks[i - 1]?.status;
+							return (
+								<Comment
+									statusChanged={statusChanged}
+									task={task}
+									key={i}
+								/>
+							);
+						})}
 					</>
 				)}
 			</div>

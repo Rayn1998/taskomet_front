@@ -1,10 +1,14 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, MouseEvent } from "react";
 
 // STORES
 import { useArtistStore } from "@/zustand/artistStore";
-import { useCommentStore } from "@/zustand/commentStore";
+import { useTasksStore } from "@/zustand/tasksStore";
+import { useCommentDataStore } from "@/zustand/commentStore";
+import { useTaskSpentHours } from "@/zustand/taskSpentHoursStore";
+import { useImagePreviewPopup } from "@/components/Popups/ImagePreview/ImagePreviewStore";
 
 // TYPES
+import ITask from "@shared/types/Task";
 import ITaskData from "@shared/types/TaskData";
 import {
 	TypeOfDataColor,
@@ -15,31 +19,51 @@ import { EStatus, StatusLabels, StatusColors } from "@/types/Status";
 
 interface ITaskDataProps {
 	task: ITaskData;
+	statusChanged: boolean;
 }
 
-const Comment = ({ task }: ITaskDataProps) => {
-	const type = task.type as TypeOfData;
-	const statusLabel = StatusLabels[task.status as EStatus];
-	const statusColor = StatusColors[task.status as EStatus];
+const Comment = ({ task: taskData, statusChanged }: ITaskDataProps) => {
+	const type = taskData.type as TypeOfData;
+	const statusLabel = StatusLabels[taskData.status as EStatus];
+	const statusColor = StatusColors[taskData.status as EStatus];
+	const [task, setTask] = useState<ITask | null>(null);
 	const [author, setAuthor] = useState<string>("");
+	const ext = taskData.media?.split(".").slice(-1)[0];
+	const mp4 = ext === "mp4";
 
-	const { setCommentId: setComment } = useCommentStore();
+	const {
+		setOpenClose: setImagePreviewOpenClose,
+		setSrc: setImagePreviewSrc,
+	} = useImagePreviewPopup();
+	const getTask = useTasksStore((state) => state.getTask);
+	const { setCommentData } = useCommentDataStore();
+	// const { updateHoursData } = useTaskSpentHours();
 	const getArtist = useArtistStore((state) => state.getArtist);
 
+	const handleImageClick = (e: MouseEvent<HTMLImageElement>) => {
+		setImagePreviewSrc(`http://localhost:3001/${taskData.media}`);
+		setImagePreviewOpenClose();
+	};
+
 	useEffect(() => {
-		if (task && task.created_by) {
-			const artist = getArtist(task.created_by);
+		if (taskData && taskData.created_by) {
+			const artist = getArtist(taskData.created_by);
 			if (artist) {
 				setAuthor(artist.name);
 			}
 		}
-	}, [getArtist, setAuthor, task]);
+	}, [getArtist, setAuthor, taskData]);
+
+	useEffect(() => {
+		const task = getTask(taskData.task_id);
+		task && setTask(task);
+	}, []);
 
 	return (
 		<div
 			className="comment"
 			data-type="comment"
-			onContextMenu={() => setComment(task.id)}
+			onContextMenu={() => setCommentData(taskData)}
 		>
 			<div
 				className="comment-badge"
@@ -50,39 +74,83 @@ const Comment = ({ task }: ITaskDataProps) => {
 				{TypeOfDataLabels[type]}
 			</div>
 			<div className="comment-block">
-				<div className="comment-date-author-block">
-					<div className="comment-author">{author}</div>
-					<div className="comment-date">{`${new Date(
-						task.created_at,
-					).toLocaleString()}`}</div>
+				<div className="comment-block-header">
+					{ext && <div className="comment-block-ext">{ext}</div>}
+					{Number(taskData.spent_hours) !== 0 && (
+						<div className="comment-spent-hours">
+							{Number(taskData.spent_hours) + "h"}
+						</div>
+					)}
+					<div className="comment-date-author-block">
+						<div className="comment-author">{author}</div>
+						<div className="comment-date">{`${new Date(
+							taskData.created_at,
+						).toLocaleString()}`}</div>
+					</div>
 				</div>
-				{type === TypeOfData.Dailies && (
+
+				{type === TypeOfData.SettingTheTask &&
+					taskData.media &&
+					mp4 && (
+						<video
+							className="comment-dailies-video"
+							controls
+							src={`http://localhost:3001/${taskData.media}`}
+						/>
+					)}
+				{type === TypeOfData.SettingTheTask &&
+					taskData.media &&
+					!mp4 && (
+						<img
+							className="comment-image"
+							src={`http://localhost:3001/${taskData.media}`}
+							alt="image"
+							onClick={handleImageClick}
+						/>
+					)}
+				{type === TypeOfData.Dailies && taskData.media && mp4 && (
 					<video
 						className="comment-dailies-video"
 						controls
-						src={`http://localhost:3001/${task.media}`}
+						src={`http://localhost:3001/${taskData.media}`}
 					/>
 				)}
-				{type === TypeOfData.Comment && task.media && (
+				{type === TypeOfData.Dailies && taskData.media && !mp4 && (
 					<img
 						className="comment-image"
-						src={`http://localhost:3001/${task.media}`}
+						src={`http://localhost:3001/${taskData.media}`}
 						alt="image"
+						onClick={handleImageClick}
 					/>
 				)}
-				{task.text && task.text.length > 0 && (
+				{type === TypeOfData.Comment && taskData.media && mp4 && (
+					<video
+						className="comment-dailies-video"
+						controls
+						src={`http://localhost:3001/${taskData.media}`}
+					/>
+				)}
+				{type === TypeOfData.Comment && taskData.media && !mp4 && (
+					<img
+						className="comment-image"
+						src={`http://localhost:3001/${taskData.media}`}
+						alt="image"
+						onClick={handleImageClick}
+					/>
+				)}
+				{taskData.text && taskData.text.length > 0 && (
 					<div className="comment-text-block">
-						<div className="comment-text">{task.text}</div>
+						<div className="comment-text">{taskData.text}</div>
 					</div>
 				)}
-				{task.status !== undefined && (
+				{statusChanged && taskData.status !== undefined && (
 					<div
 						className="comment-status"
 						style={{
 							backgroundColor: statusColor,
 						}}
 					>
-						{statusLabel}
+						Status changed to {">>"} {statusLabel}
 					</div>
 				)}
 			</div>

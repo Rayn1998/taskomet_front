@@ -15,6 +15,9 @@ import CreateScenePopup from "@/components/Popups/CreateScene/CreateScene";
 import CreateTaskPopup from "@/components/Popups/CreateTask/CreateTask";
 import CreateComment from "@/components/Popups/CreateComment/CreateComment";
 import ContextMenu from "@/components/App/components/ContextMenu/ContextMenu";
+import ImagePreviewPopup from "@/components/Popups/ImagePreview/ImagePreview";
+
+import { useAuthStore } from "@/zustand/authStore";
 
 import { api } from "@/utils/Api";
 
@@ -28,7 +31,7 @@ const App = () => {
 	// FOR TESTING
 	// const hydrateAuth = useAuthStore((state) => state.hydrateAuth);
 	// useEffect(() => {
-	//     hydrateAuth();
+	// 	hydrateAuth();
 	// }, []);
 	// const isAuth = Boolean(useAuthStore((state) => state.auth));
 
@@ -79,6 +82,8 @@ const App = () => {
 				<CreateTaskPopup />
 				<CreateComment />
 				<ContextMenu />
+				<ImagePreviewPopup />
+				{/* <TelegramAuth /> */}
 			</div>
 		</SnackbarProvider>
 	);

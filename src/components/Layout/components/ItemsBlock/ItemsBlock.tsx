@@ -97,6 +97,7 @@ const ItemsBlock = ({ children }: IChildrenComponent) => {
 					<div>Имя</div>
 					<div>Статус</div>
 					<div>Исполнители</div>
+					<div>Часы</div>
 					<div>Приоритет</div>
 				</div>
 				{children}

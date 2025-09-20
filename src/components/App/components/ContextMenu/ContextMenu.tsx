@@ -13,7 +13,8 @@ import { useScenesStore } from "@/zustand/scenesStore";
 import { useSceneDataStore } from "@/zustand/sceneDataStore";
 import { useTaskDataStore } from "@/zustand/taskDataStore";
 import { useTasksStore } from "@/zustand/tasksStore";
-import { useCommentStore } from "@/zustand/commentStore";
+import { useCommentDataStore } from "@/zustand/commentStore";
+import { useTaskSpentHours } from "@/zustand/taskSpentHoursStore";
 
 interface IContextMenuData {
 	mouseX: number;
@@ -46,7 +47,10 @@ const ContextMenu = () => {
 	const { removeTask } = useTasksStore();
 
 	// COMMENT STORE
-	const { commentId, resetCommentId } = useCommentStore();
+	const { commentData, resetCommentData } = useCommentDataStore();
+
+	// TASK SPENT HOURS STORE
+	const { updateHoursData } = useTaskSpentHours();
 
 	const [contextMenu, setContextMenu] = useState<null | IContextMenuData>(
 		null,
@@ -88,13 +92,27 @@ const ContextMenu = () => {
 	};
 
 	const handleComentDelete = () => {
-		if (!commentId) return;
-		api.deleteComment(commentId).then((_) => {
-			removeOneData(commentId);
-			resetCommentId();
-			setContextMenu(null);
-			snackBar("Comment was successfully deleted", "success");
-		});
+		if (!commentData) return;
+
+		api.deleteComment(commentData.id)
+			.then((res) => {
+				if (res) {
+					removeOneData(commentData.id);
+					updateHoursData({
+						taskId: commentData.task_id,
+						commentId: commentData.id,
+						hours: -Number(commentData.spent_hours),
+					});
+					resetCommentData();
+					setContextMenu(null);
+					snackBar("Comment was successfully deleted", "success");
+				} else {
+					throw new Error("Can't delete comment");
+				}
+			})
+			.catch((err) => {
+				snackBar(err.message, "error");
+			});
 	};
 
 	useEffect(() => {

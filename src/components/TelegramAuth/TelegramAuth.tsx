@@ -14,11 +14,11 @@ const TelegramAuth: FC = () => {
 
 	useEffect(() => {
 		window.onTelegramAuth = function (user) {
-			alert(
-				`Logged in as ${user.first_name} ${user.last_name} (${user.id}${
-					user.username ? ", @" + user.username : ""
-				})`,
-			);
+			// alert(
+			// 	`Logged in as ${user.first_name} ${user.last_name} (${user.id}${
+			// 		user.username ? ", @" + user.username : ""
+			// 	})`,
+			// );
 			localStorage.setItem("user", `${JSON.stringify(user)}`);
 			setAuth(user);
 			navigate("/projects");

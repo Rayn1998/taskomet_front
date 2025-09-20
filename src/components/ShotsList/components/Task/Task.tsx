@@ -9,6 +9,7 @@ import { useTaskInfoStore } from "@/zustand/taskInfoStore";
 import { useArtistStore } from "@/zustand/artistStore";
 import { useTaskDataStore } from "@/zustand/taskDataStore";
 import { useTasksStore } from "@/zustand/tasksStore";
+import { useTaskSpentHours } from "@/zustand/taskSpentHoursStore";
 
 // MUI
 import DropDown from "@/components/ShotsList/components/DropDown/DropDown";
@@ -24,8 +25,16 @@ import { TypeOfData } from "@/types/TypeOfData";
 import { TaskDataMin } from "@shared/types/TaskData";
 
 const Task = ({ task, orderNum, selected, handleClick }: TaskProps) => {
-	const { name, id, status, executor, priority, scene_name, description } =
-		task;
+	const {
+		name,
+		id,
+		status,
+		executor,
+		priority,
+		scene_name,
+		description,
+		spent_hours,
+	} = task;
 
 	// ARTIST STORE
 	const { getArtist, artists } = useArtistStore();
@@ -42,8 +51,36 @@ const Task = ({ task, orderNum, selected, handleClick }: TaskProps) => {
 	const { isOpen: taskViewOpen, setOpenClose: setTaskViewOpenClose } =
 		useTaskInfoStore();
 
+	// TASK SPENT HOURS STORE
+	const {
+		spentHoursData: spentHoursFromStore,
+		updateHoursData,
+		resetHoursData,
+	} = useTaskSpentHours();
+
 	const [hover, setHover] = useState<boolean>(false);
 	const [artistDialogOpen, setartistDialogOpen] = useState<boolean>(false);
+	const [spentHours, setSpentHours] = useState<number>(0);
+
+	useEffect(() => {
+		if (spentHoursFromStore && id === spentHoursFromStore.taskId) {
+			const newHours = +spentHours + spentHoursFromStore.hours;
+			if (newHours < 0) {
+				setSpentHours(0);
+			} else {
+				setSpentHours(newHours);
+			}
+			resetHoursData();
+		}
+	}, [spentHoursFromStore]);
+
+	useEffect(() => {
+		if (spent_hours === 0 || spent_hours === null) {
+			setSpentHours(0);
+		} else {
+			setSpentHours(spent_hours);
+		}
+	}, []);
 
 	const handleOpen = () => {
 		setartistDialogOpen(true);
@@ -69,7 +106,7 @@ const Task = ({ task, orderNum, selected, handleClick }: TaskProps) => {
 			created_at: formatSQLTimestamp(new Date()),
 			created_by: 1,
 			status,
-			spent_hours: 0,
+			spent_hours: null,
 		};
 		api.updateTaskStatus(taskData)
 			.then((res) => {
@@ -167,6 +204,7 @@ const Task = ({ task, orderNum, selected, handleClick }: TaskProps) => {
 					onClose={handleClose}
 				/>
 			</div>
+			<p className="task-spent-hours">{spentHours}</p>
 			<DropDown<EPriority>
 				label="priority"
 				items={PriorityLabels}

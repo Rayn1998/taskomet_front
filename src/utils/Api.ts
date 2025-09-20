@@ -207,6 +207,10 @@ class Api {
         return res.ok ? true : false;
     }
 
+    async download(fileName: string) {
+        return await fetch(`${this.url}/download/${fileName}`);
+    }
+
     async checkServerConnection() {
         const response = await fetch(`${this.url}/check-server`, {
             method: "GET",

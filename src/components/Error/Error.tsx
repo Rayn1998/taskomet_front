@@ -9,7 +9,7 @@ import { errorDataStore } from "@/zustand/errorDataStore";
 import { useArtistStore } from "@/zustand/artistStore";
 
 // IMAGES
-import errorPenguine from "@/assets/images/error-penguine.gif";
+import ErrorIcon from "./ErrorIcon";
 
 const Error: FC = () => {
 	const navigate = useNavigate();
@@ -60,11 +60,7 @@ const Error: FC = () => {
 	return (
 		<div className="error-page">
 			<div className="error-page-info">{error}</div>
-			<img
-				className="error-page-gif"
-				src={errorPenguine}
-				alt="gif of penguine"
-			/>
+			<ErrorIcon />
 			<p>Auto retry to establish server connection in ...</p>
 			<Button variant="contained" size="large" onClick={tryNowClick}>
 				Try now

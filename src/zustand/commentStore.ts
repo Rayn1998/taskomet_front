@@ -1,13 +1,14 @@
 import { create } from "zustand";
+import ITaskData from "@shared/types/TaskData";
 
-interface ICommentStore {
-    commentId: number | null;
-    setCommentId: (id: number) => void;
-    resetCommentId: () => void;
+interface ICommentDataStore {
+    commentData: ITaskData | null;
+    setCommentData: (data: ITaskData) => void;
+    resetCommentData: () => void;
 }
 
-export const useCommentStore = create<ICommentStore>((set) => ({
-    commentId: null,
-    setCommentId: (id) => set({ commentId: id }),
-    resetCommentId: () => set({ commentId: null }),
+export const useCommentDataStore = create<ICommentDataStore>((set) => ({
+    commentData: null,
+    setCommentData: (data) => set({ commentData: data }),
+    resetCommentData: () => set({ commentData: null }),
 }));
