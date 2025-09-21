@@ -2,14 +2,12 @@ import { useState, useEffect, MouseEvent } from "react";
 
 // STORES
 import { useArtistStore } from "@/zustand/artistStore";
-import { useTasksStore } from "@/zustand/tasksStore";
 import { useCommentDataStore } from "@/zustand/commentStore";
-import { useTaskSpentHours } from "@/zustand/taskSpentHoursStore";
 import { useImagePreviewPopup } from "@/components/Popups/ImagePreview/ImagePreviewStore";
 
 // TYPES
-import ITask from "@shared/types/Task";
-import ITaskData from "@shared/types/TaskData";
+import type ITask from "@shared/types/Task";
+import type ITaskData from "@shared/types/TaskData";
 import {
 	TypeOfDataColor,
 	TypeOfDataLabels,
@@ -18,15 +16,19 @@ import {
 import { EStatus, StatusLabels, StatusColors } from "@/types/Status";
 
 interface ITaskDataProps {
-	task: ITaskData;
+	taskData: ITaskData;
+	relatedTaskId: number;
 	statusChanged: boolean;
 }
 
-const Comment = ({ task: taskData, statusChanged }: ITaskDataProps) => {
+const Comment = ({
+	taskData,
+	relatedTaskId,
+	statusChanged,
+}: ITaskDataProps) => {
 	const type = taskData.type as TypeOfData;
 	const statusLabel = StatusLabels[taskData.status as EStatus];
 	const statusColor = StatusColors[taskData.status as EStatus];
-	const [task, setTask] = useState<ITask | null>(null);
 	const [author, setAuthor] = useState<string>("");
 	const ext = taskData.media?.split(".").slice(-1)[0];
 	const mp4 = ext === "mp4";
@@ -35,9 +37,7 @@ const Comment = ({ task: taskData, statusChanged }: ITaskDataProps) => {
 		setOpenClose: setImagePreviewOpenClose,
 		setSrc: setImagePreviewSrc,
 	} = useImagePreviewPopup();
-	const getTask = useTasksStore((state) => state.getTask);
 	const { setCommentData } = useCommentDataStore();
-	// const { updateHoursData } = useTaskSpentHours();
 	const getArtist = useArtistStore((state) => state.getArtist);
 
 	const handleImageClick = (e: MouseEvent<HTMLImageElement>) => {
@@ -54,16 +54,11 @@ const Comment = ({ task: taskData, statusChanged }: ITaskDataProps) => {
 		}
 	}, [getArtist, setAuthor, taskData]);
 
-	useEffect(() => {
-		const task = getTask(taskData.task_id);
-		task && setTask(task);
-	}, []);
-
 	return (
 		<div
 			className="comment"
 			data-type="comment"
-			onContextMenu={() => setCommentData(taskData)}
+			onContextMenu={() => setCommentData(taskData, relatedTaskId)}
 		>
 			<div
 				className="comment-badge"

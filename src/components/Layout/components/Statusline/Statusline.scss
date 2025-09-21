@@ -1,4 +1,4 @@
-@use '@/scss/variables' as *;
+@use "@/scss/variables" as *;
 
 .statusline {
     min-height: 4rem;
@@ -15,7 +15,7 @@
     .statusline-back {
         @include image-icon;
         @include hover;
-        background-image: url('../../../../assets/images/back-button.png');
+        background-image: url("../../../../assets/images/back-button.png");
     }
 
     .statusline-path {

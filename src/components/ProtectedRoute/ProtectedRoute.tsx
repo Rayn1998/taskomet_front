@@ -1,16 +1,19 @@
-import { FC } from 'react';
-import { Navigate, Outlet } from 'react-router-dom';
+import { FC } from "react";
+import { Navigate, Outlet } from "react-router-dom";
 
 interface IProtectedRouteProps {
-    isAuth: boolean;
-    redirectingPath?: string;
+	isAuth: boolean;
+	redirectingPath?: string;
 }
 
-const ProtectedRoute: FC<IProtectedRouteProps> = ({ isAuth, redirectingPath = '/signup' }) => {
-    if (!isAuth) {
-        return <Navigate to='/signup' replace />;
-    }
-    return <Outlet />;
+const ProtectedRoute: FC<IProtectedRouteProps> = ({
+	isAuth,
+	redirectingPath = "/signup",
+}) => {
+	if (!isAuth) {
+		return <Navigate to={redirectingPath} replace />;
+	}
+	return <Outlet />;
 };
 
 export default ProtectedRoute;

@@ -5,19 +5,19 @@ import { api } from "@/utils/Api";
 import Button from "@mui/material/Button";
 
 // STORES
-import { errorDataStore } from "@/zustand/errorDataStore";
+import { useErrorDataStore } from "@/zustand/errorDataStore";
 import { useArtistStore } from "@/zustand/artistStore";
 
 // IMAGES
 import ErrorIcon from "./ErrorIcon";
 
-const Error: FC = () => {
+const ErrorComponent: FC = () => {
 	const navigate = useNavigate();
 	const [error, setError] = useState<string>("");
 	const [time, setTime] = useState<number>(30);
 
 	// ERROR DATA STORE
-	const errorData = errorDataStore((state) => state.message);
+	const errorData = useErrorDataStore((state) => state.errorMessage);
 
 	// ARTIST STORE
 	const setArtists = useArtistStore((state) => state.setArtists);
@@ -73,4 +73,4 @@ const Error: FC = () => {
 	);
 };
 
-export default Error;
+export default ErrorComponent;

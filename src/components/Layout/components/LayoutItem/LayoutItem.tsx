@@ -5,28 +5,28 @@ import { useProjectDataStore } from "@/zustand/projectDataStore";
 import { useSceneDataStore } from "@/zustand/sceneDataStore";
 
 // TYPES
-import IProject from "@shared/types/Project";
-import IScene from "@shared/types/Scene";
+import type IProject from "@shared/types/Project";
+import type IScene from "@shared/types/Scene";
 
-interface IItem {
+interface ILayoutItem<T extends IProject | IScene> {
 	dataType: string;
 	number: number;
-	item: IProject | IScene;
-	handleClick: (name: string, description: string) => void;
+	item: T;
+	handleClick: (item: T) => void;
 	handleDoubleClick: (e: MouseEvent<HTMLDivElement>) => void;
 	selected: boolean;
 }
 
-const Item = ({
+const LayoutItem = <T extends IProject | IScene>({
 	dataType,
 	number,
 	item,
 	handleClick,
 	handleDoubleClick,
 	selected,
-}: IItem) => {
+}: ILayoutItem<T>) => {
 	// PROJECT DATA STORE
-	const { setProject } = useProjectDataStore();
+	const { setProjectData } = useProjectDataStore();
 
 	// SCENE DATA STORE
 	const { setScene } = useSceneDataStore();
@@ -36,7 +36,7 @@ const Item = ({
 	const handleContextClick = () => {
 		switch (dataType) {
 			case "project":
-				setProject(item as IProject);
+				setProjectData(item as IProject);
 				break;
 			case "scene":
 				setScene(item as IScene);
@@ -51,7 +51,7 @@ const Item = ({
 			data-name={item.name}
 			onContextMenu={handleContextClick}
 			onClick={() => {
-				handleClick(item.name, item.description!);
+				handleClick(item);
 				handleContextClick();
 			}}
 			onDoubleClick={(e) => handleDoubleClick(e)}
@@ -71,4 +71,4 @@ const Item = ({
 	);
 };
 
-export default Item;
+export default LayoutItem;

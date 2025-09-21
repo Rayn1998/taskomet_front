@@ -7,17 +7,22 @@ const Statusline: FC = () => {
 	const [path, setPath] = useState<string[]>([]);
 
 	const handleClick = (e: MouseEvent<HTMLSpanElement>) => {
-		const targetPath: string = e.currentTarget.innerText;
-		setPath(
-			path.slice(
-				0,
-				path.findIndex((el) => el === targetPath.split(" ")[1]) + 1,
-			),
+		const targetPath: string = e.currentTarget.innerText.split(" ")[1];
+		const newPath = path.slice(
+			0,
+			path.findIndex((el) => el === targetPath) + 1,
 		);
+
+		setPath(newPath);
+		navigate(`/projects/${newPath.join("/")}`);
 	};
 
 	const handleBack = () => {
-		setPath(path.slice(0, -1));
+		if (path.length > 0) {
+			const newPath = path.slice(0, -1);
+			setPath(newPath);
+			navigate(`/projects/${newPath.join("/")}`);
+		}
 	};
 
 	useEffect(() => {
@@ -27,9 +32,6 @@ const Statusline: FC = () => {
 		setPath(paramsValues);
 	}, []);
 
-	useEffect(() => {
-		navigate(`/projects/${path.join("/")}`);
-	}, [path]);
 	return (
 		<div className="statusline">
 			<div

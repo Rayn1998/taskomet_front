@@ -1,0 +1,39 @@
+@use "@/scss/variables" as *;
+
+.sidebar {
+    min-width: 5rem;
+    background-color: $background-forward;
+    padding: 0.5rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+
+    .sidebar-image {
+        @include image-icon;
+        @include hover;
+
+        .sidebar-icon {
+            min-width: 100%;
+            min-height: 100%;
+        }
+        // filter: invert(0.5);
+        // cursor: pointer;
+        // min-width: 3rem;
+        // min-height: 3rem;
+        // position: relative;
+
+        // &::after {
+        //     content: "";
+        //     position: absolute;
+        //     top: 0;
+        //     left: 0;
+        //     width: 100%;
+        //     height: 100%;
+        //     background-color: red;
+        // }
+        // &:hover {
+        //     opacity: 0.5;
+        // }
+    }
+}

@@ -2,12 +2,12 @@ import { FC, useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 
 import Layout from "@/components/Layout/Layout";
-import Shot from "@/components/ShotsList/components/Shot/Shot";
-import Task from "@/components/ShotsList/components/Task/Task";
+import Shot from "@/components/Shot/Shot";
+import Task from "@/components/Task/Task";
 import { api } from "@/utils/Api";
 
 // STORES
-import { errorDataStore } from "@/zustand/errorDataStore";
+import { useErrorDataStore } from "@/zustand/errorDataStore";
 import { useTaskViewStore } from "@/zustand/taskViewStore";
 import { useTasksStore } from "@/zustand/tasksStore";
 import { useTaskDataStore } from "@/zustand/taskDataStore";
@@ -20,13 +20,13 @@ const ShotsList: FC = () => {
 	const view = useTaskViewStore((state) => state.change);
 
 	// ERROR DATA STORE
-	const setErrorData = errorDataStore((state) => state.setMessage);
+	const { setErrorMessage } = useErrorDataStore();
 
 	// TASKS STORE
 	const { tasks, setTasks } = useTasksStore();
 
 	// TASK DATA STORE
-	const { resetData } = useTaskDataStore();
+	const { resetTaskData } = useTaskDataStore();
 
 	const [selected, setSelected] = useState<string>("");
 
@@ -35,7 +35,7 @@ const ShotsList: FC = () => {
 	};
 
 	useEffect(() => {
-		resetData();
+		resetTaskData();
 		const [projectId, sceneId] = location.pathname.split("/").slice(-2);
 		if (projectId && projectId.length > 0) {
 			api.getTasks(projectId, sceneId)
@@ -44,7 +44,7 @@ const ShotsList: FC = () => {
 				})
 				.catch((err) => {
 					if (err instanceof Error) {
-						setErrorData(err.message);
+						setErrorMessage(err.message);
 						return navigate("/error-page");
 					}
 					navigate("/not-found");

@@ -38,6 +38,7 @@ const CreateTaskPopup = () => {
 				.then((newTask) => {
 					newTask.project_name = projectName;
 					newTask.scene_name = sceneName.toUpperCase();
+					newTask.spent_hours = 0;
 					addTask(newTask);
 					setName("");
 					setDescription("");

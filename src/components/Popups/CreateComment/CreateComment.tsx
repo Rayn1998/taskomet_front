@@ -20,10 +20,9 @@ import CheckCircle from "@mui/icons-material/CheckCircle";
 import { useCreateCommentPopupStore } from "./CreateCommentPopupStore";
 import { useTasksStore } from "@/zustand/tasksStore";
 import { useTaskDataStore } from "@/zustand/taskDataStore";
-import { useTaskSpentHours } from "@/zustand/taskSpentHoursStore";
 
 // TYPES
-import { TaskDataMin } from "@shared/types/TaskData";
+import type { TaskDataMin } from "@shared/types/TaskData";
 import { TypeOfData, TypeOfDataLabels } from "@/types/TypeOfData";
 import { EStatus, StatusLabels } from "@/types/Status";
 
@@ -49,13 +48,10 @@ const hours: [label: string, value: number][] = [
 
 const CreateComment = () => {
 	// TASKS STORE
-	const { updateTask } = useTasksStore();
+	const { tasks, updateTask } = useTasksStore();
 
 	// TASK DATA STORE
-	const { task, addData: addTaskData } = useTaskDataStore();
-
-	// TASK SPENT HOURS STORE
-	const { updateHoursData } = useTaskSpentHours();
+	const { taskData, addTaskData } = useTaskDataStore();
 
 	// CREATE COMMENT POPUP STORE
 	const { isOpen, setClose: setPopupClose } = useCreateCommentPopupStore();
@@ -114,15 +110,14 @@ const CreateComment = () => {
 	const handleSubmit = async (e: React.SyntheticEvent) => {
 		e.preventDefault();
 
-		if (!task) return;
-		const task_id = task.id;
-
+		if (!taskData) return;
+		const task_id = taskData[0].task_id;
 		typeOfComment ===
 			(TypeOfData.SettingTheTask ||
 				TypeOfData.Comment ||
 				TypeOfData.Status) && setSpentHours(0);
 
-		const taskData: TaskDataMin = {
+		const taskDataToBeSent: TaskDataMin = {
 			type: typeOfComment,
 			task_id,
 			created_at: formatSQLTimestamp(new Date()),
@@ -139,22 +134,21 @@ const CreateComment = () => {
 			formData.append("file", files[0]);
 		}
 
-		formData.append("data", JSON.stringify(taskData));
+		formData.append("data", JSON.stringify(taskDataToBeSent));
 
 		await api
 			.sendComment(formData)
 			.then((res) => {
 				const { status, spent_hours } = res;
-				updateHoursData({
-					taskId: res.task_id,
-					commentId: res.id,
-					hours: spentHours,
-				});
 				addTaskData(res);
+				const relatedToDataTask = tasks.find(
+					(task) => task.id === task_id,
+				)!;
 				const newTask = {
-					...task,
+					...relatedToDataTask,
 					status,
-					spent_hours: Number(spent_hours),
+					spent_hours:
+						+relatedToDataTask.spent_hours + Number(spent_hours),
 				};
 				updateTask(newTask);
 				handleClose();
@@ -175,17 +169,9 @@ const CreateComment = () => {
 		typesOfComment.push([obj, label]);
 	}
 
-	useEffect(() => {
-		task?.status && setStatus(task.status);
-	}, [task]);
-
 	// useEffect(() => {
-	// 	const handler = (e: KeyboardEvent) => {
-	// 		if (e.key === "Escape") console.log("dwad");
-	// 	};
-	// 	window.addEventListener("keyup", handler);
-	// 	return () => window.removeEventListener("keyup", handler);
-	// }, []);
+	// 	relatedToDataTask?.status && setStatus(relatedToDataTask.status);
+	// }, [relatedToDataTask]);
 
 	return (
 		<Dialog

@@ -8,9 +8,10 @@ import Typography from "@mui/material/Typography";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import Button from "@mui/material/Button";
 
-import Task from "@/components/ShotsList/components/Task/Task";
+import Task from "@/components/Task/Task";
 
-import { TaskProps } from "@/components/ShotsList/TaskProps.type";
+// TYPES
+import type { TaskProps } from "@/components/ShotsList/TaskProps.type";
 
 const Shot: FC<TaskProps> = ({ task, orderNum, selected, handleClick }) => {
 	const { name, id, ...rest } = task;

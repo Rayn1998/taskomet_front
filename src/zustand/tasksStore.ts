@@ -25,10 +25,11 @@ export const useTasksStore = create<ITaskStore>((set, get) => ({
         set((state) => ({
             tasks: state.tasks.filter((task) => task.id !== id),
         })),
-    updateTask: (updatedTask) =>
+    updateTask: (updatedTask) => {
         set((state) => ({
             tasks: state.tasks.map((task) =>
                 task.id === updatedTask.id ? updatedTask : task,
             ),
-        })),
+        }));
+    },
 }));

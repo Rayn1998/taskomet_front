@@ -9,20 +9,19 @@ import { useTaskInfoStore } from "@/zustand/taskInfoStore";
 import { useArtistStore } from "@/zustand/artistStore";
 import { useTaskDataStore } from "@/zustand/taskDataStore";
 import { useTasksStore } from "@/zustand/tasksStore";
-import { useTaskSpentHours } from "@/zustand/taskSpentHoursStore";
 
 // MUI
-import DropDown from "@/components/ShotsList/components/DropDown/DropDown";
+import DropDown from "@/components/DropDown/DropDown";
 import Button from "@mui/material/Button";
-import ArtistSimpleDialog from "@/components/ShotsList/components/ArtistSimpleDialog/ArtistSimpleDialog";
+import ArtistSimpleDialog from "@/components/ArtistSimpleDialog/ArtistSimpleDialog";
 
 // TYPES | CONSTANTS
-import ITask from "@shared/types/Task";
-import { TaskProps } from "@/components/ShotsList/TaskProps.type";
+import type ITask from "@shared/types/Task";
+import type { TaskProps } from "@/components/ShotsList/TaskProps.type";
 import { EStatus, StatusLabels, StatusColors } from "@/types/Status";
 import { EPriority, PriorityLabels } from "@/types/Priority";
 import { TypeOfData } from "@/types/TypeOfData";
-import { TaskDataMin } from "@shared/types/TaskData";
+import type { TaskDataMin } from "@shared/types/TaskData";
 
 const Task = ({ task, orderNum, selected, handleClick }: TaskProps) => {
 	const {
@@ -43,36 +42,13 @@ const Task = ({ task, orderNum, selected, handleClick }: TaskProps) => {
 	const { updateTask } = useTasksStore();
 
 	// TASK DATA STORE
-	const {
-		setData: setTaskData,
-		setTask,
-		addData: addTaskData,
-	} = useTaskDataStore();
+	const { setTaskData, addTaskData } = useTaskDataStore();
 	const { isOpen: taskViewOpen, setOpenClose: setTaskViewOpenClose } =
 		useTaskInfoStore();
-
-	// TASK SPENT HOURS STORE
-	const {
-		spentHoursData: spentHoursFromStore,
-		updateHoursData,
-		resetHoursData,
-	} = useTaskSpentHours();
 
 	const [hover, setHover] = useState<boolean>(false);
 	const [artistDialogOpen, setartistDialogOpen] = useState<boolean>(false);
 	const [spentHours, setSpentHours] = useState<number>(0);
-
-	useEffect(() => {
-		if (spentHoursFromStore && id === spentHoursFromStore.taskId) {
-			const newHours = +spentHours + spentHoursFromStore.hours;
-			if (newHours < 0) {
-				setSpentHours(0);
-			} else {
-				setSpentHours(newHours);
-			}
-			resetHoursData();
-		}
-	}, [spentHoursFromStore]);
 
 	useEffect(() => {
 		if (spent_hours === 0 || spent_hours === null) {
@@ -80,7 +56,7 @@ const Task = ({ task, orderNum, selected, handleClick }: TaskProps) => {
 		} else {
 			setSpentHours(spent_hours);
 		}
-	}, []);
+	}, [spent_hours]);
 
 	const handleOpen = () => {
 		setartistDialogOpen(true);
@@ -155,7 +131,7 @@ const Task = ({ task, orderNum, selected, handleClick }: TaskProps) => {
 		if (taskViewOpen && selected) {
 			api.getTaskData(id)
 				.then((taskData) => {
-					setTaskData(taskData, task);
+					setTaskData(taskData);
 				})
 				.catch((err) => console.log(err));
 		}
@@ -167,7 +143,7 @@ const Task = ({ task, orderNum, selected, handleClick }: TaskProps) => {
 			className="task"
 			onContextMenu={() => {
 				handleClick(name);
-				setTask(task);
+				// setRelatedToDataTask(task);
 			}}
 			onClick={() => handleClick(name)}
 			onDoubleClick={handleDoubleClick}

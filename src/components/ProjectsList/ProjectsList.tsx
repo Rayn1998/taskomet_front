@@ -1,14 +1,17 @@
 import { MouseEvent, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Layout from "@/components/Layout/Layout";
-import Item from "@/components/Layout/components/Item/Item";
+import LayoutItem from "@/components/Layout/components/LayoutItem/LayoutItem";
 
 import { api } from "@/utils/Api";
 
 // STORES
-import { errorDataStore } from "@/zustand/errorDataStore";
+import { useErrorDataStore } from "@/zustand/errorDataStore";
 import { useProjectsStore } from "@/zustand/projectsStore";
 import { useProjectDataStore } from "@/zustand/projectDataStore";
+
+// TYPES
+import type IProject from "@shared/types/Project";
 
 const ProjectsList = () => {
 	const navigate = useNavigate();
@@ -17,17 +20,16 @@ const ProjectsList = () => {
 	const { projects, setProjects } = useProjectsStore();
 
 	// ERROR DATA STORE
-	const setErrorData = errorDataStore((state) => state.setMessage);
+	const { setErrorMessage } = useErrorDataStore();
 
 	// PROJECT DATA STORE
-	const { setData: setProjectData, resetData: resetProjectData } =
-		useProjectDataStore();
+	const { setProjectData, resetProjectData } = useProjectDataStore();
 
 	const [selected, setSelected] = useState<string>("");
 
-	const handleClick = (name: string, description: string) => {
-		setSelected(name);
-		setProjectData({ name, description });
+	const handleClick = (project: IProject) => {
+		setSelected(project.name);
+		setProjectData(project);
 	};
 
 	const handleDoubleClick = (e: MouseEvent<HTMLDivElement>) => {
@@ -45,27 +47,25 @@ const ProjectsList = () => {
 			})
 			.catch((err) => {
 				if (err instanceof Error) {
-					console.log(err.message);
-					setErrorData(err.message);
+					setErrorMessage(err.message);
 					return navigate("/error-page");
 				}
-				navigate("/not-found");
 			});
 	}, []);
 	return (
 		<Layout>
 			<div className="itemsblock-list">
 				{projects &&
-					projects.map((task, i) => {
+					projects.map((project, i) => {
 						return (
-							<Item
+							<LayoutItem<IProject>
 								dataType="project"
 								key={i}
 								number={i + 1}
-								item={task}
+								item={project}
 								handleClick={handleClick}
 								handleDoubleClick={handleDoubleClick}
-								selected={Boolean(task.name === selected)}
+								selected={Boolean(project.name === selected)}
 							/>
 						);
 					})}

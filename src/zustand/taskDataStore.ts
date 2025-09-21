@@ -3,30 +3,26 @@ import ITaskData from "@shared/types/TaskData";
 import ITask from "@shared/types/Task";
 
 interface ITaskDataStore {
-    data: ITaskData[];
-    task: ITask | null;
-    setTask: (task: ITask) => void;
-    setData: (data: ITaskData[], task: ITask) => void;
-    removeOneData: (id: number) => void;
-    addData: (data: ITaskData) => void;
-    resetData: () => void;
+    taskData: ITaskData[];
+    setTaskData: (data: ITaskData[]) => void;
+    removeOneTaskData: (id: number) => void;
+    addTaskData: (data: ITaskData) => void;
+    resetTaskData: () => void;
 }
 
 export const useTaskDataStore = create<ITaskDataStore>((set) => ({
-    data: [],
-    task: null,
-    setTask: (task) => set({ task }),
-    setData: (data, task) => set({ data, task }),
-    removeOneData: (id) =>
+    taskData: [],
+    setTaskData: (data) => set({ taskData: data }),
+    removeOneTaskData: (id) =>
         set((state) => ({
-            data:
-                state.data.length > 0
-                    ? state.data.filter((data) => data.id !== id)
+            taskData:
+                state.taskData.length > 0
+                    ? state.taskData.filter((data) => data.id !== id)
                     : [],
         })),
-    addData: (data) =>
+    addTaskData: (data) =>
         set((state) => ({
-            data: [...state.data, data],
+            taskData: [...state.taskData, data],
         })),
-    resetData: () => set({ data: [], task: null }),
+    resetTaskData: () => set({ taskData: [] }),
 }));

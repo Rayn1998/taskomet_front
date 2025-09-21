@@ -104,6 +104,15 @@ class Api {
         );
     }
 
+    async getMyTasks(executorId: number): Promise<ITask[]> {
+        return this._request<ITask[]>(`${this.url}/my-tasks/${executorId}`, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+            },
+        });
+    }
+
     async createTask(
         name: string,
         description: string,

@@ -1,13 +1,13 @@
 import { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 
-import InfoBlock from "@/components/Layout/components/ItemsBlock/components/InfoBlock/InfoBlock";
+import InfoBlock from "@/components/InfoBlock/InfoBlock";
 
 // TYPES
-import { IChildrenComponent } from "@/types/IChildrenComponent";
+import type { IChildrenComponent } from "@/types/IChildrenComponent";
 
 // UTILS
-import { checkLocation } from "@/components/Layout/utils/checkLocation";
+import { checkLocation } from "@/utils/checkLocation";
 
 // STORES
 import { useTaskViewStore } from "@/zustand/taskViewStore";
@@ -28,6 +28,7 @@ const ItemsBlock = ({ children }: IChildrenComponent) => {
 	const [createSceneAllowed, setCreateSceneAllowed] =
 		useState<boolean>(false);
 	const [createTaskAllowed, setCreateTaskAllowed] = useState<boolean>(false);
+	const [myTasksLocation, setMyTasksLocation] = useState<boolean>(false);
 
 	// TASK POPUP STORE
 	const { setOpenClose: setOpenCloseTaskPopup } = useCreateTaskPopupStore();
@@ -57,6 +58,7 @@ const ItemsBlock = ({ children }: IChildrenComponent) => {
 		checkedLocation.project && setCreateProjectAllowed(true);
 		checkedLocation.scene && setCreateSceneAllowed(true);
 		checkedLocation.task && setCreateTaskAllowed(true);
+		checkedLocation.myTasks && setMyTasksLocation(true);
 	}, [location]);
 
 	return (
@@ -69,6 +71,7 @@ const ItemsBlock = ({ children }: IChildrenComponent) => {
 			>
 				<div className="itemsblock-menu">
 					<button
+						style={{ display: myTasksLocation ? "none" : "block" }}
 						className="itemsblock-button"
 						onClick={handleAddButton}
 					>

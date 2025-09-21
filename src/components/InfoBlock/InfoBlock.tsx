@@ -1,13 +1,13 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useMemo } from "react";
 import { useLocation } from "react-router-dom";
 
 import { snackBar } from "@/utils/snackBar";
-import { checkLocation } from "@/components/Layout/utils/checkLocation";
+import { checkLocation } from "@/utils/checkLocation";
 import { api } from "@/utils/Api";
 
-import Title from "@/components/Layout/components/ItemsBlock/components/Title/Title";
-import Description from "@/components/Layout/components/ItemsBlock/components/Description/Description";
-import Comment from "@/components/Layout/components/ItemsBlock/components/Comment/Comment";
+import Title from "@/components/InfoBlock/components/Title/Title";
+import Description from "@/components/InfoBlock/components/Description/Description";
+import Comment from "@/components/InfoBlock/components/Comment/Comment";
 
 // STORES
 import { useTaskInfoStore } from "@/zustand/taskInfoStore";
@@ -25,6 +25,7 @@ import trash from "@/assets/images/delete.png";
 import comment from "@/assets/images/comment.png";
 
 // TYPES
+import type ITask from "@shared/types/Task";
 import { TypeOfData } from "@/types/TypeOfData";
 import { EStatus } from "@/types/Status";
 import { formatSQLTimestamp } from "@/utils/formatSQLTimestamp";
@@ -33,29 +34,28 @@ const InfoBlock = ({ blockOpen }: { blockOpen: boolean }) => {
 	const location = useLocation();
 
 	const [taskLocation, setTaskLocation] = useState<boolean>(false);
+	const [myTasksLocation, setMyTasksLocation] = useState<boolean>(false);
 	const [sceneLocation, setSceneLocation] = useState<boolean>(false);
 	const [projectsLocation, setprojectsLocation] = useState<boolean>(false);
-	const [forbidden, setForbidden] = useState<boolean>(false);
+	const [forbiddenComment, setForbiddenComment] = useState<boolean>(false);
+	const [relatedToDataTask, setRelatedToDataTask] = useState<ITask | null>(
+		null,
+	);
 
-	const { removeTask } = useTasksStore();
+	const { tasks, removeTask } = useTasksStore();
 	const { removeProject } = useProjectsStore();
 	const { removeScene } = useScenesStore();
 	const { setClose: closeTask } = useTaskInfoStore();
-	const { data: projectData, project } = useProjectDataStore();
+	const { projectData } = useProjectDataStore();
 	const { data: sceneData, scene } = useSceneDataStore();
-	const {
-		task: taskDataTask,
-		resetData: resetTaskData,
-		data: taskData,
-	} = useTaskDataStore();
+	const { resetTaskData, taskData } = useTaskDataStore();
 	const { setOpenClose: setOpenCloseComment } = useCreateCommentPopupStore();
 
 	// useEffect(() => {
-	// 	if (!taskDataTask) return;
 	// 	if (taskData.length === 0) {
 	// 		api.updateTaskStatus({
 	// 			type: TypeOfData.Status,
-	// 			task_id: taskDataTask.id,
+	// 			task_id: taskData[0].task_id,
 	// 			created_at: formatSQLTimestamp(new Date()),
 	// 			created_by: 1,
 	// 			status: EStatus.NoStatus,
@@ -65,8 +65,11 @@ const InfoBlock = ({ blockOpen }: { blockOpen: boolean }) => {
 	// }, [taskData]);
 
 	const handleDeleteButton = () => {
-		if (taskLocation && taskDataTask) {
-			api.deleteTask(taskDataTask.id)
+		const relatedToDataTask = tasks.find(
+			(task) => task.id === taskData[0].task_id,
+		);
+		if (taskLocation && relatedToDataTask) {
+			api.deleteTask(relatedToDataTask.id)
 				.then((res) => {
 					snackBar(
 						`Task ${res.name} was deleted successfully!`,
@@ -91,13 +94,16 @@ const InfoBlock = ({ blockOpen }: { blockOpen: boolean }) => {
 					snackBar("Error while deleting the scene", "error");
 				});
 		}
-		if (projectsLocation && project) {
-			api.deleteProject(project.id)
+		if (projectsLocation && projectData) {
+			api.deleteProject(projectData.id)
 				.then((_) => {
 					snackBar(
-						`Project ${project.name} was deleted successfully!`,
+						`Project ${projectData.name} was deleted successfully!`,
 						"success",
-						[removeProject.bind(null, project.id), resetTaskData],
+						[
+							removeProject.bind(null, projectData.id),
+							resetTaskData,
+						],
 					);
 				})
 				.catch((err) => {
@@ -107,22 +113,27 @@ const InfoBlock = ({ blockOpen }: { blockOpen: boolean }) => {
 	};
 
 	useEffect(() => {
-		if (taskLocation && taskData) {
-			setForbidden(false);
+		if ((taskLocation || myTasksLocation) && taskData.length > 0) {
+			setForbiddenComment(false);
+			const relatedTask = tasks.find(
+				(task) => task.id === taskData[0].task_id,
+			);
+			if (relatedTask) setRelatedToDataTask(relatedTask);
 		} else {
-			setForbidden(true);
+			setForbiddenComment(true);
 		}
-	}, [taskLocation, taskData]);
+	}, [taskLocation, taskData, myTasksLocation]);
 
 	const handleOpenComment = useCallback(() => {
-		if (!forbidden) setOpenCloseComment();
-	}, [forbidden]);
+		if (!forbiddenComment) setOpenCloseComment();
+	}, [forbiddenComment]);
 
 	useEffect(() => {
 		const checkedLocation = checkLocation(location);
 		checkedLocation.project && setprojectsLocation(true);
 		checkedLocation.scene && setSceneLocation(true);
 		checkedLocation.task && setTaskLocation(true);
+		checkedLocation.myTasks && setMyTasksLocation(true);
 	}, [location]);
 	return (
 		<div
@@ -142,7 +153,7 @@ const InfoBlock = ({ blockOpen }: { blockOpen: boolean }) => {
 					className="itemsblock-right_block-add"
 					style={{
 						backgroundImage: `url(${comment})`,
-						opacity: forbidden ? 0.5 : 1,
+						opacity: forbiddenComment ? 0.5 : 1,
 					}}
 					onClick={handleOpenComment}
 				></div>
@@ -165,24 +176,30 @@ const InfoBlock = ({ blockOpen }: { blockOpen: boolean }) => {
 						<Description description={sceneData.description} />
 					</>
 				)}
-				{taskData && taskDataTask && taskLocation && (
-					<>
-						<Title title={taskDataTask.name} />
-						<Description description={taskDataTask.description} />
-						{taskData.map((task, i, tasks) => {
-							const isFirst = i === 0;
-							const statusChanged =
-								isFirst || task.status !== tasks[i - 1]?.status;
-							return (
-								<Comment
-									statusChanged={statusChanged}
-									task={task}
-									key={i}
-								/>
-							);
-						})}
-					</>
-				)}
+				{taskData &&
+					relatedToDataTask &&
+					(taskLocation || myTasksLocation) && (
+						<>
+							<Title title={relatedToDataTask.name} />
+							<Description
+								description={relatedToDataTask.description}
+							/>
+							{taskData.map((data, i, tasks) => {
+								const isFirst = i === 0;
+								const statusChanged =
+									isFirst ||
+									data.status !== tasks[i - 1]?.status;
+								return (
+									<Comment
+										statusChanged={statusChanged}
+										taskData={data}
+										relatedTaskId={relatedToDataTask.id}
+										key={i}
+									/>
+								);
+							})}
+						</>
+					)}
 			</div>
 		</div>
 	);

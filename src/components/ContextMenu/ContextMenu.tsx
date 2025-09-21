@@ -14,7 +14,6 @@ import { useSceneDataStore } from "@/zustand/sceneDataStore";
 import { useTaskDataStore } from "@/zustand/taskDataStore";
 import { useTasksStore } from "@/zustand/tasksStore";
 import { useCommentDataStore } from "@/zustand/commentStore";
-import { useTaskSpentHours } from "@/zustand/taskSpentHoursStore";
 
 interface IContextMenuData {
 	mouseX: number;
@@ -28,7 +27,7 @@ const ContextMenu = () => {
 	const { removeProject } = useProjectsStore();
 
 	// PROJECT DATA STORE
-	const { project, resetData: resetProjectData } = useProjectDataStore();
+	const { projectData, resetProjectData } = useProjectDataStore();
 
 	// SCENES STORE
 	const { removeScene } = useScenesStore();
@@ -37,20 +36,14 @@ const ContextMenu = () => {
 	const { scene } = useSceneDataStore();
 
 	// TASK DATA STORE
-	const {
-		task,
-		resetData: resetTaskData,
-		removeOneData,
-	} = useTaskDataStore();
+	const { taskData, resetTaskData, removeOneTaskData } = useTaskDataStore();
 
 	// TASKS STORE
-	const { removeTask } = useTasksStore();
+	const { tasks, removeTask, updateTask } = useTasksStore();
 
 	// COMMENT STORE
-	const { commentData, resetCommentData } = useCommentDataStore();
-
-	// TASK SPENT HOURS STORE
-	const { updateHoursData } = useTaskSpentHours();
+	const { commentData, relatedTaskId, resetCommentData } =
+		useCommentDataStore();
 
 	const [contextMenu, setContextMenu] = useState<null | IContextMenuData>(
 		null,
@@ -58,14 +51,14 @@ const ContextMenu = () => {
 	const handleContextMenuClose = () => setContextMenu(null);
 
 	const handleProjectDelete = () => {
-		if (!project) return;
-		api.deleteProject(project.id)
+		if (!projectData) return;
+		api.deleteProject(projectData.id)
 			.then(() => {
-				removeProject(project.id);
+				removeProject(projectData.id);
 				resetProjectData();
 				setContextMenu(null);
 				snackBar(
-					`Project ${project.name} was successfully deleted`,
+					`Project ${projectData.name} was successfully deleted`,
 					"success",
 				);
 			})
@@ -82,27 +75,40 @@ const ContextMenu = () => {
 	};
 
 	const handleTaskDelete = () => {
-		if (!task) return;
-		api.deleteTask(task.id).then((deletedTask) => {
+		const relatedToDataTask = tasks.find(
+			(task) => task.id === taskData[0].task_id,
+		);
+		if (!relatedToDataTask) return;
+		api.deleteTask(relatedToDataTask.id).then((deletedTask) => {
 			removeTask(deletedTask.id);
 			resetTaskData();
 			setContextMenu(null);
-			snackBar(`Task ${task.name} was successfully deleted`, "success");
+			snackBar(
+				`Task ${relatedToDataTask.name} was successfully deleted`,
+				"success",
+			);
 		});
 	};
 
 	const handleComentDelete = () => {
-		if (!commentData) return;
+		if (!commentData || !relatedTaskId) return;
 
 		api.deleteComment(commentData.id)
 			.then((res) => {
 				if (res) {
-					removeOneData(commentData.id);
-					updateHoursData({
-						taskId: commentData.task_id,
-						commentId: commentData.id,
-						hours: -Number(commentData.spent_hours),
-					});
+					const deletedHours = commentData.spent_hours;
+					if (deletedHours) {
+						const relatedTask = tasks.find(
+							(task) => task.id === relatedTaskId,
+						)!;
+						const newHours = relatedTask.spent_hours - deletedHours;
+						const newTask = {
+							...relatedTask,
+							spent_hours: newHours,
+						};
+						updateTask(newTask);
+					}
+					removeOneTaskData(commentData.id);
 					resetCommentData();
 					setContextMenu(null);
 					snackBar("Comment was successfully deleted", "success");
