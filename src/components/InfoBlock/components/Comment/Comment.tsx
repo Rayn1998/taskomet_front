@@ -31,6 +31,7 @@ const Comment = ({
 	const [author, setAuthor] = useState<string>("");
 	const ext = taskData.media?.split(".").slice(-1)[0];
 	const mp4 = ext === "mp4";
+	const pathToBack = "https://clever-breads-train.loca.lt";
 
 	const {
 		setOpenClose: setImagePreviewOpenClose,
@@ -40,7 +41,7 @@ const Comment = ({
 	const getArtist = useArtistStore((state) => state.getArtist);
 
 	const handleImageClick = (e: MouseEvent<HTMLImageElement>) => {
-		setImagePreviewSrc(`https://popular-bird-83.loca.lt/${taskData.media}`);
+		setImagePreviewSrc(`${pathToBack}/${taskData.media}`);
 		setImagePreviewOpenClose();
 	};
 
@@ -91,7 +92,7 @@ const Comment = ({
 						<video
 							className="comment-dailies-video"
 							controls
-							src={`https://popular-bird-83.loca.lt/${taskData.media}`}
+							src={`${pathToBack}/${taskData.media}`}
 						/>
 					)}
 				{type === TypeOfData.SettingTheTask &&
@@ -99,7 +100,7 @@ const Comment = ({
 					!mp4 && (
 						<img
 							className="comment-image"
-							src={`https://popular-bird-83.loca.lt/${taskData.media}`}
+							src={`${pathToBack}/${taskData.media}`}
 							alt="image"
 							onClick={handleImageClick}
 						/>
@@ -108,13 +109,13 @@ const Comment = ({
 					<video
 						className="comment-dailies-video"
 						controls
-						src={`https://popular-bird-83.loca.lt/${taskData.media}`}
+						src={`${pathToBack}/${taskData.media}`}
 					/>
 				)}
 				{type === TypeOfData.Dailies && taskData.media && !mp4 && (
 					<img
 						className="comment-image"
-						src={`https://popular-bird-83.loca.lt/${taskData.media}`}
+						src={`${pathToBack}/${taskData.media}`}
 						alt="image"
 						onClick={handleImageClick}
 					/>
@@ -123,13 +124,13 @@ const Comment = ({
 					<video
 						className="comment-dailies-video"
 						controls
-						src={`https://popular-bird-83.loca.lt/${taskData.media}`}
+						src={`${pathToBack}/${taskData.media}`}
 					/>
 				)}
 				{type === TypeOfData.Comment && taskData.media && !mp4 && (
 					<img
 						className="comment-image"
-						src={`https://popular-bird-83.loca.lt/${taskData.media}`}
+						src={`${pathToBack}/${taskData.media}`}
 						alt="image"
 						onClick={handleImageClick}
 					/>

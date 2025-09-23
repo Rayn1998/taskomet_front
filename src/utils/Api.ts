@@ -238,4 +238,4 @@ class Api {
     }
 }
 
-export const api = new Api("https://popular-bird-83.loca.lt");
+export const api = new Api("https://clever-breads-train.loca.lt");
