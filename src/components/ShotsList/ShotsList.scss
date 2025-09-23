@@ -1,31 +1,23 @@
 @use "@/scss/variables" as *;
 
-.itemsblock-list {
-    max-height: 63vh;
-    overflow-y: auto;
-    overflow-x: hidden;
-    padding: 1rem;
-    box-sizing: border-box;
+.shot-accordion {
+    border-radius: 0;
+    background-color: $background;
+    color: #fff;
 
-    .shot-accordion {
-        border-radius: 0;
-        background-color: $background;
+    .shot-accordion-expand-icon {
         color: #fff;
+    }
 
-        .shot-accordion-expand-icon {
-            color: #fff;
-        }
+    .shot-accordion-details {
+        padding-left: 5rem;
+        border-radius: 0;
+        background-color: $background-forward-light;
 
-        .shot-accordion-details {
-            padding-left: 5rem;
-            border-radius: 0;
-            background-color: $background-forward-light;
-
-            .shot-tasks-block {
-                display: flex;
-                flex-direction: column;
-                gap: 1rem;
-            }
+        .shot-tasks-block {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
         }
     }
 }

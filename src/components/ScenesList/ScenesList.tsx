@@ -55,23 +55,21 @@ const ScenesList: FC = () => {
 		}
 	}, []);
 	return (
-		<Layout>
-			<div className="itemsblock-list">
-				{scenes &&
-					scenes.map((scene, i) => {
-						return (
-							<LayoutItem<IScene>
-								dataType="scene"
-								key={i}
-								number={i + 1}
-								item={scene}
-								handleClick={handleClick}
-								handleDoubleClick={handleDoubleClick}
-								selected={Boolean(scene.name === selected)}
-							/>
-						);
-					})}
-			</div>
+		<Layout isHeader isStatusline order menu>
+			{scenes &&
+				scenes.map((scene, i) => {
+					return (
+						<LayoutItem<IScene>
+							dataType="scene"
+							key={i}
+							number={i + 1}
+							item={scene}
+							handleClick={handleClick}
+							handleDoubleClick={handleDoubleClick}
+							selected={Boolean(scene.name === selected)}
+						/>
+					);
+				})}
 		</Layout>
 	);
 };

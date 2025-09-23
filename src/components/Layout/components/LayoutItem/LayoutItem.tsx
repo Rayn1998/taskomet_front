@@ -58,14 +58,18 @@ const LayoutItem = <T extends IProject | IScene>({
 			onMouseEnter={() => setHover(true)}
 			onMouseLeave={() => setHover(false)}
 			style={{
-				backgroundColor:
-					selected || hover ? "rgb(45, 50, 60)" : "rgb(35, 37, 44)",
+				backgroundColor: hover
+					? "rgb(5, 55, 80)"
+					: selected
+					? "rgb(10, 80, 80)"
+					: "rgb(45, 50, 60)",
 			}}
 		>
 			<p className="item-number">{number}</p>
 			<p className="item-name">{item.name}</p>
 			<p className="item-status">--заглушка--</p>
 			<p className="item-artists">--</p>
+			<p className="item-hours">--</p>
 			<p className="item-priority">{item.priority}</p>
 		</div>
 	);

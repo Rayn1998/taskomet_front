@@ -1,16 +1,18 @@
 import { FC } from "react";
 import { Navigate, Outlet } from "react-router-dom";
 
+// STORES
+import { useAuthStore } from "@/zustand/authStore";
+
 interface IProtectedRouteProps {
-	isAuth: boolean;
 	redirectingPath?: string;
 }
 
 const ProtectedRoute: FC<IProtectedRouteProps> = ({
-	isAuth,
 	redirectingPath = "/signup",
 }) => {
-	if (!isAuth) {
+	const { auth } = useAuthStore();
+	if (!auth) {
 		return <Navigate to={redirectingPath} replace />;
 	}
 	return <Outlet />;

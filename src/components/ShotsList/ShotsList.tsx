@@ -53,32 +53,30 @@ const ShotsList: FC = () => {
 	}, []);
 
 	return (
-		<Layout>
-			<div className="itemsblock-list">
-				{view
-					? tasks.map((shot, i) => {
-							return (
-								<Shot
-									task={shot}
-									key={shot.id}
-									orderNum={i}
-									selected={Boolean(selected === shot.name)}
-									handleClick={handleClick}
-								/>
-							);
-					  })
-					: tasks.map((shot, i) => {
-							return (
-								<Task
-									key={shot.id}
-									task={shot}
-									orderNum={i}
-									selected={Boolean(selected === shot.name)}
-									handleClick={handleClick}
-								/>
-							);
-					  })}
-			</div>
+		<Layout isHeader isStatusline order menu>
+			{view
+				? tasks.map((shot, i) => {
+						return (
+							<Shot
+								task={shot}
+								key={shot.id}
+								orderNum={i}
+								selected={Boolean(selected === shot.name)}
+								handleClick={handleClick}
+							/>
+						);
+				  })
+				: tasks.map((shot, i) => {
+						return (
+							<Task
+								key={shot.id}
+								task={shot}
+								orderNum={i}
+								selected={Boolean(selected === shot.name)}
+								handleClick={handleClick}
+							/>
+						);
+				  })}
 		</Layout>
 	);
 };

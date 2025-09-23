@@ -38,6 +38,15 @@ class Api {
         });
     }
 
+    async getArtist(tg_id: number): Promise<IArtist> {
+        return this._request<IArtist>(`${this.url}/get-artist/${tg_id}`, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+            },
+        });
+    }
+
     async getProjects(): Promise<IProject[]> {
         return this._request<IProject[]>(`${this.url}/projects`, {
             method: "GET",
@@ -155,6 +164,7 @@ class Api {
     }
 
     async updateTaskStatus(taskData: TaskDataMin): Promise<ITaskData> {
+        console.log(taskData);
         return this._request<ITaskData>(`${this.url}/task/task-update-status`, {
             method: "PATCH",
             headers: {
@@ -186,17 +196,13 @@ class Api {
         );
     }
 
-    async createArtist(
-        name: string,
-        role: number,
-        tgid: string,
-    ): Promise<IArtist> {
+    async createArtist(props: Omit<IArtist, "id">): Promise<IArtist> {
         return this._request<IArtist>(`${this.url}/create-artist`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
             },
-            body: JSON.stringify({ name, role, tgid }),
+            body: JSON.stringify({ ...props }),
         });
     }
 
@@ -221,6 +227,7 @@ class Api {
     }
 
     async checkServerConnection() {
+        console.log(this.url);
         const response = await fetch(`${this.url}/check-server`, {
             method: "GET",
         });
@@ -231,4 +238,4 @@ class Api {
     }
 }
 
-export const api = new Api("http://127.0.0.1:3001");
+export const api = new Api("https://popular-bird-83.loca.lt");

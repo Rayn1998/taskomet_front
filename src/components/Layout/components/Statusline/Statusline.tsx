@@ -1,7 +1,7 @@
-import { FC, useState, MouseEvent, useEffect } from "react";
+import { useState, MouseEvent, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 
-const Statusline: FC = () => {
+const Statusline = ({ isStatusLine }: { isStatusLine: boolean }) => {
 	const navigate = useNavigate();
 	const params = useParams();
 	const [path, setPath] = useState<string[]>([]);
@@ -31,7 +31,7 @@ const Statusline: FC = () => {
 		);
 		setPath(paramsValues);
 	}, []);
-
+	if (!isStatusLine) return <></>;
 	return (
 		<div className="statusline">
 			<div

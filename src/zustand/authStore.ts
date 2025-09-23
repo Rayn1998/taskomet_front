@@ -1,18 +1,26 @@
 import { create } from "zustand";
 
+import type IArtist from "@shared/types/Artist";
+import type ITelegramAuthData from "@shared/types/TgAuthData";
+
 interface IAuthState {
-    auth: any;
-    setAuth: (auth: any) => void;
-    hydrateAuth: () => void;
+    auth: IArtist | null;
+    tgAuth: ITelegramAuthData | null;
+    loggedIn: boolean;
+    setAuth: (auth: IArtist) => void;
+    setTgAuth: (tgAuth: ITelegramAuthData) => void;
+    setLoggedIn: (loggedIn: boolean) => void;
+    resetAuth: () => void;
+    resetTgAuth: () => void;
 }
 
 export const useAuthStore = create<IAuthState>((set) => ({
     auth: null,
+    tgAuth: null,
+    loggedIn: false,
     setAuth: (auth) => set({ auth }),
-    hydrateAuth: () => {
-        const authData = localStorage.getItem("user");
-        if (authData) {
-            set({ auth: JSON.parse(authData) });
-        }
-    },
+    setTgAuth: (tgAuth) => set({ tgAuth }),
+    setLoggedIn: (loggedIn) => set({ loggedIn }),
+    resetAuth: () => set({ auth: null }),
+    resetTgAuth: () => set({ tgAuth: null }),
 }));

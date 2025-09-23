@@ -16,11 +16,21 @@ import { useCreateProjectPopupStore } from "@/components/Popups/CreateProject/Cr
 import { useCreateScenePopupStore } from "@/components/Popups/CreateScene/CreateScenePopupStore";
 import { useCreateTaskPopupStore } from "@/components/Popups/CreateTask/CreateTaskPopupStore";
 
+// TYPES
+import type { ILayoutProps } from "@/components/Layout/Layout";
+
 // IMAGES
 import structureImage from "@/assets/images/structure.png";
 import info from "@/assets/images/info.png";
 
-const ItemsBlock = ({ children }: IChildrenComponent) => {
+const ItemsBlock = ({
+	children,
+	order,
+	menu,
+	canvas,
+	isHeader,
+	isStatusline,
+}: ILayoutProps) => {
 	const location = useLocation();
 
 	const [createProjectAllowed, setCreateProjectAllowed] =
@@ -61,51 +71,65 @@ const ItemsBlock = ({ children }: IChildrenComponent) => {
 		checkedLocation.myTasks && setMyTasksLocation(true);
 	}, [location]);
 
+	const itemsBlockHeight = isHeader && isStatusline ? "79%" : "89%";
+
 	return (
-		<div className="itemsblock">
+		<div className="itemsblock" style={{ height: itemsBlockHeight }}>
 			<div
 				className="itemsblock-left_block"
 				style={{
 					width: taskOpen ? "50%" : "100%",
 				}}
 			>
-				<div className="itemsblock-menu">
-					<button
-						style={{ display: myTasksLocation ? "none" : "block" }}
-						className="itemsblock-button"
-						onClick={handleAddButton}
-					>
-						+
-					</button>
-					{/* <div
+				{menu && (
+					<div className="itemsblock-menu">
+						<button
+							style={{
+								display: myTasksLocation ? "none" : "block",
+							}}
+							className="itemsblock-button"
+							onClick={handleAddButton}
+						>
+							+
+						</button>
+						{/* <div
 						className="itemsblock-structure-icon"
 						onClick={handleClick}
 						style={{
 							backgroundImage: `url(${structureImage})`,
 						}}
 					></div> */}
-					{/* <button className="itemsblock-button">menu</button> */}
-					{/* <button>order</button> */}
-					{/* <button>filter</button> */}
-					{/* <button>view</button> */}
-					<button
-						className="itemsblock-button"
-						onClick={infoOpenClose}
-					>
-						<img className="itemsblock-button__image" src={info} />
-					</button>
-				</div>
-				<div className="itemsblock-ordering">
-					<div>Порядок</div>
-					<div>Имя</div>
-					<div>Статус</div>
-					<div>Исполнители</div>
-					<div>Часы</div>
-					<div>Приоритет</div>
-				</div>
-				{children}
+						{/* <button className="itemsblock-button">menu</button> */}
+						{/* <button>order</button> */}
+						{/* <button>filter</button> */}
+						{/* <button>view</button> */}
+						<button
+							className="itemsblock-button"
+							onClick={infoOpenClose}
+						>
+							<img
+								className="itemsblock-button__image"
+								src={info}
+							/>
+						</button>
+					</div>
+				)}
+				{canvas && <div className="itemsblock-canvas">{children}</div>}
+				{order && (
+					<div className="itemsblock-order">
+						<div>Порядок</div>
+						<div>Имя</div>
+						<div>Статус</div>
+						<div>Исполнители</div>
+						<div>Часы</div>
+						<div>Приоритет</div>
+					</div>
+				)}
+				{menu && order && !canvas && (
+					<div className="itemsblock-list">{children}</div>
+				)}
 			</div>
-			<InfoBlock blockOpen={taskOpen} />
+			{!canvas && <InfoBlock blockOpen={taskOpen} />}
 		</div>
 	);
 };

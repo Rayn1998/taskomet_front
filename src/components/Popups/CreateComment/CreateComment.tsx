@@ -20,6 +20,7 @@ import CheckCircle from "@mui/icons-material/CheckCircle";
 import { useCreateCommentPopupStore } from "./CreateCommentPopupStore";
 import { useTasksStore } from "@/zustand/tasksStore";
 import { useTaskDataStore } from "@/zustand/taskDataStore";
+import { useAuthStore } from "@/zustand/authStore";
 
 // TYPES
 import type { TaskDataMin } from "@shared/types/TaskData";
@@ -47,11 +48,14 @@ const hours: [label: string, value: number][] = [
 ];
 
 const CreateComment = () => {
+	// AUTH STORE
+	const { auth } = useAuthStore();
+
 	// TASKS STORE
 	const { tasks, updateTask } = useTasksStore();
 
 	// TASK DATA STORE
-	const { taskData, addTaskData } = useTaskDataStore();
+	const { taskData, addTaskData, relatedTaskId } = useTaskDataStore();
 
 	// CREATE COMMENT POPUP STORE
 	const { isOpen, setClose: setPopupClose } = useCreateCommentPopupStore();
@@ -110,8 +114,7 @@ const CreateComment = () => {
 	const handleSubmit = async (e: React.SyntheticEvent) => {
 		e.preventDefault();
 
-		if (!taskData) return;
-		const task_id = taskData[0].task_id;
+		if (!taskData || !relatedTaskId || !auth) return;
 		typeOfComment ===
 			(TypeOfData.SettingTheTask ||
 				TypeOfData.Comment ||
@@ -119,9 +122,9 @@ const CreateComment = () => {
 
 		const taskDataToBeSent: TaskDataMin = {
 			type: typeOfComment,
-			task_id,
+			task_id: relatedTaskId,
 			created_at: formatSQLTimestamp(new Date()),
-			created_by: 1,
+			created_by: auth.id,
 			status,
 			spent_hours: spentHours,
 			text,
@@ -142,7 +145,7 @@ const CreateComment = () => {
 				const { status, spent_hours } = res;
 				addTaskData(res);
 				const relatedToDataTask = tasks.find(
-					(task) => task.id === task_id,
+					(task) => task.id === relatedTaskId,
 				)!;
 				const newTask = {
 					...relatedToDataTask,

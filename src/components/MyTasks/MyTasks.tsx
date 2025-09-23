@@ -7,10 +7,14 @@ import { api } from "@/utils/Api";
 
 // STORES
 import { useTasksStore } from "@/zustand/tasksStore";
+import { useAuthStore } from "@/zustand/authStore";
 
 const MyTasks = () => {
 	// TASKS STORE
 	const { tasks, setTasks } = useTasksStore();
+
+	// AUTH STORE
+	const { auth } = useAuthStore();
 
 	const [selected, setSelected] = useState<string>("");
 
@@ -19,23 +23,25 @@ const MyTasks = () => {
 	};
 
 	useEffect(() => {
-		api.getMyTasks(1)
-			.then((tasks) => {
-				setTasks(tasks);
-			})
-			.catch((err) => console.error(err));
-	}, []);
+		if (auth !== null) {
+			api.getMyTasks(auth.id)
+				.then((tasks) => {
+					setTasks(tasks);
+				})
+				.catch((err) => console.error(err));
+		}
+	}, [auth]);
 	return (
-		<Layout>
+		<Layout isHeader order menu>
 			<div className="itemsblock-list">
 				{tasks &&
-					tasks.map((shot, i) => {
+					tasks.map((task, i) => {
 						return (
 							<Task
-								key={shot.id}
-								task={shot}
+								key={task.id}
+								task={task}
 								orderNum={i}
-								selected={Boolean(selected === shot.name)}
+								selected={Boolean(selected === task.name)}
 								handleClick={handleClick}
 							/>
 						);

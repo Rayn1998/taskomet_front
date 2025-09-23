@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, useMemo } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useLocation } from "react-router-dom";
 
 import { snackBar } from "@/utils/snackBar";
@@ -26,9 +26,6 @@ import comment from "@/assets/images/comment.png";
 
 // TYPES
 import type ITask from "@shared/types/Task";
-import { TypeOfData } from "@/types/TypeOfData";
-import { EStatus } from "@/types/Status";
-import { formatSQLTimestamp } from "@/utils/formatSQLTimestamp";
 
 const InfoBlock = ({ blockOpen }: { blockOpen: boolean }) => {
 	const location = useLocation();
@@ -48,28 +45,15 @@ const InfoBlock = ({ blockOpen }: { blockOpen: boolean }) => {
 	const { setClose: closeTask } = useTaskInfoStore();
 	const { projectData } = useProjectDataStore();
 	const { data: sceneData, scene } = useSceneDataStore();
-	const { resetTaskData, taskData } = useTaskDataStore();
+	const { resetTaskData, taskData, relatedTaskId } = useTaskDataStore();
 	const { setOpenClose: setOpenCloseComment } = useCreateCommentPopupStore();
 
-	// useEffect(() => {
-	// 	if (taskData.length === 0) {
-	// 		api.updateTaskStatus({
-	// 			type: TypeOfData.Status,
-	// 			task_id: taskData[0].task_id,
-	// 			created_at: formatSQLTimestamp(new Date()),
-	// 			created_by: 1,
-	// 			status: EStatus.NoStatus,
-	// 			spent_hours: null,
-	// 		});
-	// 	}
-	// }, [taskData]);
-
 	const handleDeleteButton = () => {
-		const relatedToDataTask = tasks.find(
-			(task) => task.id === taskData[0].task_id,
-		);
-		if (taskLocation && relatedToDataTask) {
-			api.deleteTask(relatedToDataTask.id)
+		// const relatedToDataTask = tasks.find(
+		// 	(task) => task.id === taskData[0].task_id,
+		// );
+		if (taskLocation && relatedTaskId) {
+			api.deleteTask(relatedTaskId)
 				.then((res) => {
 					snackBar(
 						`Task ${res.name} was deleted successfully!`,
@@ -113,12 +97,10 @@ const InfoBlock = ({ blockOpen }: { blockOpen: boolean }) => {
 	};
 
 	useEffect(() => {
-		if ((taskLocation || myTasksLocation) && taskData.length > 0) {
+		if ((taskLocation || myTasksLocation) && taskData && relatedTaskId) {
 			setForbiddenComment(false);
-			const relatedTask = tasks.find(
-				(task) => task.id === taskData[0].task_id,
-			);
-			if (relatedTask) setRelatedToDataTask(relatedTask);
+			const relatedTask = tasks.find((task) => task.id === relatedTaskId);
+			if (relatedTask !== undefined) setRelatedToDataTask(relatedTask);
 		} else {
 			setForbiddenComment(true);
 		}

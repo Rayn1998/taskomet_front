@@ -1,4 +1,5 @@
 import { useState, useEffect, useMemo, useCallback } from "react";
+import { useLocation } from "react-router-dom";
 
 import { snackBar } from "@/utils/snackBar";
 import { api } from "@/utils/Api";
@@ -9,6 +10,7 @@ import { useTaskInfoStore } from "@/zustand/taskInfoStore";
 import { useArtistStore } from "@/zustand/artistStore";
 import { useTaskDataStore } from "@/zustand/taskDataStore";
 import { useTasksStore } from "@/zustand/tasksStore";
+import { useAuthStore } from "@/zustand/authStore";
 
 // MUI
 import DropDown from "@/components/DropDown/DropDown";
@@ -34,6 +36,11 @@ const Task = ({ task, orderNum, selected, handleClick }: TaskProps) => {
 		description,
 		spent_hours,
 	} = task;
+
+	const location = useLocation();
+
+	// AUTH STORE
+	const { auth } = useAuthStore();
 
 	// ARTIST STORE
 	const { getArtist, artists } = useArtistStore();
@@ -80,7 +87,7 @@ const Task = ({ task, orderNum, selected, handleClick }: TaskProps) => {
 			type: TypeOfData.Status,
 			task_id: id,
 			created_at: formatSQLTimestamp(new Date()),
-			created_by: 1,
+			created_by: auth!.id,
 			status,
 			spent_hours: null,
 		};
@@ -106,7 +113,11 @@ const Task = ({ task, orderNum, selected, handleClick }: TaskProps) => {
 	};
 
 	const handleDoubleClick = () => {
-		if (!taskViewOpen) setTaskViewOpenClose();
+		if (
+			location.pathname.split("/").slice(1)[0] !== "artists-loading" &&
+			!taskViewOpen
+		)
+			setTaskViewOpenClose();
 	};
 
 	const artistName = useMemo(() => {
@@ -131,7 +142,7 @@ const Task = ({ task, orderNum, selected, handleClick }: TaskProps) => {
 		if (taskViewOpen && selected) {
 			api.getTaskData(id)
 				.then((taskData) => {
-					setTaskData(taskData);
+					setTaskData(taskData, id);
 				})
 				.catch((err) => console.log(err));
 		}

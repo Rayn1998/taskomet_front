@@ -26,14 +26,15 @@ const CreateArtistPopup = () => {
 	const [tgId, setTgId] = useState<string>("");
 
 	const handleClick = () => {
-		api.createArtist(name, 0, tgId)
-			.then((newArtist) => {
-				setName("");
-				setTgId("");
-				handleClose();
-				addArtist(newArtist);
-			})
-			.catch((err) => console.log(err));
+		console.log("CREATE ARTIST");
+		// api.createArtist(name, 0, tgId)
+		// 	.then((newArtist) => {
+		// 		setName("");
+		// 		setTgId("");
+		// 		handleClose();
+		// 		addArtist(newArtist);
+		// 	})
+		// 	.catch((err) => console.log(err));
 	};
 	return (
 		<Dialog onClose={handleClose} open={isOpen}>

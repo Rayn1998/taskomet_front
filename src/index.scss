@@ -1,4 +1,5 @@
-@use "components/App/App";
+@use "components/App/App.scss";
+@use "components/ArtistsLoading/ArtistsLoading";
 @use "components/DropDown/DropDown";
 @use "components/Error/Error";
 @use "components/Infoblock/components/Comment/Comment";
@@ -8,9 +9,9 @@
 @use "components/Layout/components/Header/Header";
 @use "components/Layout/components/LayoutItem/LayoutItem";
 @use "components/Layout/components/ItemsBlock/ItemsBlock";
+@use "components/Layout/components/Sidebar/Sidebar";
 @use "components/Layout/components/Statusline/Statusline";
 @use "components/ShotsList/ShotsList";
-@use "components/Sidebar/Sidebar";
 @use "components/Signup/Signup";
 @use "components/ProjectsList/ProjectsList";
 @use "components/Task/Task";
@@ -26,6 +27,10 @@
     border-radius: 1rem;
     font-family: "Roboto", "Arial", sans-serif;
     font-weight: 400;
+}
+
+#root {
+    height: 100vh;
 }
 
 html {

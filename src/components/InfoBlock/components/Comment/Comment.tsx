@@ -6,7 +6,6 @@ import { useCommentDataStore } from "@/zustand/commentStore";
 import { useImagePreviewPopup } from "@/components/Popups/ImagePreview/ImagePreviewStore";
 
 // TYPES
-import type ITask from "@shared/types/Task";
 import type ITaskData from "@shared/types/TaskData";
 import {
 	TypeOfDataColor,
@@ -41,7 +40,7 @@ const Comment = ({
 	const getArtist = useArtistStore((state) => state.getArtist);
 
 	const handleImageClick = (e: MouseEvent<HTMLImageElement>) => {
-		setImagePreviewSrc(`http://localhost:3001/${taskData.media}`);
+		setImagePreviewSrc(`https://popular-bird-83.loca.lt/${taskData.media}`);
 		setImagePreviewOpenClose();
 	};
 
@@ -77,7 +76,9 @@ const Comment = ({
 						</div>
 					)}
 					<div className="comment-date-author-block">
-						<div className="comment-author">{author}</div>
+						<div className="comment-author">
+							<p className="comment-author-text">{author}</p>
+						</div>
 						<div className="comment-date">{`${new Date(
 							taskData.created_at,
 						).toLocaleString()}`}</div>
@@ -90,7 +91,7 @@ const Comment = ({
 						<video
 							className="comment-dailies-video"
 							controls
-							src={`http://localhost:3001/${taskData.media}`}
+							src={`https://popular-bird-83.loca.lt/${taskData.media}`}
 						/>
 					)}
 				{type === TypeOfData.SettingTheTask &&
@@ -98,7 +99,7 @@ const Comment = ({
 					!mp4 && (
 						<img
 							className="comment-image"
-							src={`http://localhost:3001/${taskData.media}`}
+							src={`https://popular-bird-83.loca.lt/${taskData.media}`}
 							alt="image"
 							onClick={handleImageClick}
 						/>
@@ -107,13 +108,13 @@ const Comment = ({
 					<video
 						className="comment-dailies-video"
 						controls
-						src={`http://localhost:3001/${taskData.media}`}
+						src={`https://popular-bird-83.loca.lt/${taskData.media}`}
 					/>
 				)}
 				{type === TypeOfData.Dailies && taskData.media && !mp4 && (
 					<img
 						className="comment-image"
-						src={`http://localhost:3001/${taskData.media}`}
+						src={`https://popular-bird-83.loca.lt/${taskData.media}`}
 						alt="image"
 						onClick={handleImageClick}
 					/>
@@ -122,13 +123,13 @@ const Comment = ({
 					<video
 						className="comment-dailies-video"
 						controls
-						src={`http://localhost:3001/${taskData.media}`}
+						src={`https://popular-bird-83.loca.lt/${taskData.media}`}
 					/>
 				)}
 				{type === TypeOfData.Comment && taskData.media && !mp4 && (
 					<img
 						className="comment-image"
-						src={`http://localhost:3001/${taskData.media}`}
+						src={`https://popular-bird-83.loca.lt/${taskData.media}`}
 						alt="image"
 						onClick={handleImageClick}
 					/>

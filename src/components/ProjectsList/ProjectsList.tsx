@@ -53,23 +53,21 @@ const ProjectsList = () => {
 			});
 	}, []);
 	return (
-		<Layout>
-			<div className="itemsblock-list">
-				{projects &&
-					projects.map((project, i) => {
-						return (
-							<LayoutItem<IProject>
-								dataType="project"
-								key={i}
-								number={i + 1}
-								item={project}
-								handleClick={handleClick}
-								handleDoubleClick={handleDoubleClick}
-								selected={Boolean(project.name === selected)}
-							/>
-						);
-					})}
-			</div>
+		<Layout isHeader isStatusline order menu>
+			{projects &&
+				projects.map((project, i) => {
+					return (
+						<LayoutItem<IProject>
+							dataType="project"
+							key={i}
+							number={i + 1}
+							item={project}
+							handleClick={handleClick}
+							handleDoubleClick={handleDoubleClick}
+							selected={Boolean(project.name === selected)}
+						/>
+					);
+				})}
 		</Layout>
 	);
 };
