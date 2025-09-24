@@ -1,5 +1,7 @@
 {
-    "name": "frontend",
+    "name": "taskomet-frontend",
+    "author": "Yuriy Bodolanov",
+    "description": "task manager specialized for advertisement VFX post-production needs",
     "version": "0.1.0",
     "private": true,
     "dependencies": {

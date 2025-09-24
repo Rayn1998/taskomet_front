@@ -1,4 +1,6 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
+import { useLocation } from "react-router-dom";
+
 import Layout from "@/components/Layout/Layout";
 import Task from "@/components/Task/Task";
 
@@ -12,45 +14,46 @@ import ListItemText from "@mui/material/ListItemText";
 import ListItemAvatar from "@mui/material/ListItemAvatar";
 // import Checkbox from "@mui/material/Checkbox";
 import Avatar from "@mui/material/Avatar";
+import LinearProgress from "@mui/material/LinearProgress";
 
 //STORES
 import { useArtistStore } from "@/zustand/artistStore";
 import { useTaskInfoStore } from "@/zustand/taskInfoStore";
 import { useTasksStore } from "@/zustand/tasksStore";
 
-// TODO
-/* 
-1. Сделать лоадер
-2. Убирать полученные таски сразу после клика на другого артиста
-3. По двойному клику на таск переводить на my-tasks и сделать фокус на кликнутом с открытым инфоблоком
-*/
-
 const ArtistsLoading = () => {
-	const { setClose: setTaskInfoClose } = useTaskInfoStore();
+	const location = useLocation();
+
+	const { setOpenClose: setTaskInfoOpenClose } = useTaskInfoStore();
 
 	const { artists } = useArtistStore();
-	useEffect(() => {
-		setTaskInfoClose();
-	}, []);
 
-	const { tasks, setTasks } = useTasksStore();
+	const { tasks, setTasks, lastPath, resetTasks } = useTasksStore();
 
 	const [hoverId, setHoverId] = useState<number | null>(null);
 	const [selected, setSelected] = useState<number | null>(null);
 	const [selectedTask, setSelectedTask] = useState<string>("");
 
-	const handleClick = (id: number) => {
-		setSelected(id);
-		api.getMyTasks(id)
-			.then((tasks) => {
-				setTasks(tasks);
-			})
-			.catch((err) => console.log(err));
-	};
+	const handleClick = useCallback(
+		(id: number) => {
+			setSelected(id);
+			resetTasks();
+			api.getMyTasks(id)
+				.then((tasks) => {
+					setTasks(tasks, location.pathname);
+				})
+				.catch((err) => console.log(err));
+		},
+		[selected],
+	);
 
 	const handleTaskClick = (name: string) => {
 		setSelectedTask(name);
 	};
+
+	useEffect(() => {
+		setTaskInfoOpenClose(false);
+	}, []);
 
 	return (
 		<Layout isHeader canvas>
@@ -63,49 +66,55 @@ const ArtistsLoading = () => {
 						bgcolor: "rgb(42, 44, 51)",
 					}}
 				>
-					{artists &&
-						artists.map((artist) => {
-							const isSelected = selected === artist.id;
-							const isHovered = hoverId === artist.id;
-							const labelId = `checkbox-list-secondary-label-${artist.id}`;
-							return (
-								<ListItem
-									onMouseEnter={() => setHoverId(artist.id)}
-									onMouseLeave={() => setHoverId(null)}
-									onClick={() => handleClick(artist.id)}
-									key={artist.id}
-									style={{
-										backgroundColor: isHovered
-											? "rgb(5, 55, 80)"
-											: isSelected
-											? "rgb(10, 80, 80)"
-											: "rgb(45, 50, 60)",
-									}}
-								>
-									<ListItemButton>
-										<ListItemAvatar>
-											<Avatar
-												alt={`Avatar ${artist.name}`}
-												src={artist.photo_url}
-											/>
-										</ListItemAvatar>
-										<ListItemText
-											id={labelId}
-											primary={artist.name}
-											sx={{
-												"& .MuiTypography-root": {
-													fontSize: "1rem",
-												},
-											}}
+					{!artists && <LinearProgress />}
+					{artists?.map((artist) => {
+						const isSelected = selected === artist.id;
+						const isHovered = hoverId === artist.id;
+						const labelId = `checkbox-list-secondary-label-${artist.id}`;
+						return (
+							<ListItem
+								onMouseEnter={() => setHoverId(artist.id)}
+								onMouseLeave={() => setHoverId(null)}
+								onClick={() => handleClick(artist.id)}
+								key={artist.id}
+								style={{
+									backgroundColor: isSelected
+										? "rgb(10, 80, 80)"
+										: isHovered
+										? "rgb(5, 55, 80)"
+										: "rgb(45, 50, 60)",
+								}}
+							>
+								<ListItemButton>
+									<ListItemAvatar>
+										<Avatar
+											alt={`Avatar ${artist.name}`}
+											src={artist.photo_url}
 										/>
-									</ListItemButton>
-								</ListItem>
-							);
-						})}
+									</ListItemAvatar>
+									<ListItemText
+										id={labelId}
+										primary={artist.name}
+										sx={{
+											"& .MuiTypography-root": {
+												fontSize: "1rem",
+											},
+										}}
+									/>
+								</ListItemButton>
+							</ListItem>
+						);
+					})}
 				</List>
 				<div className="artists-loading-tasks">
-					{tasks &&
-						tasks.map((task, i) => {
+					{!selected && (
+						<p className="empty-declaration">
+							Select an artist to get his tasks assigned
+						</p>
+					)}
+					{selected && !tasks && <LinearProgress />}
+					{selected &&
+						tasks?.map((task, i) => {
 							return (
 								<Task
 									key={task.id}
@@ -115,9 +124,15 @@ const ArtistsLoading = () => {
 										selectedTask === task.name,
 									)}
 									handleClick={handleTaskClick}
+									handleDoubleClickNavigateToTask
 								/>
 							);
 						})}
+					{selected && tasks?.length === 0 && (
+						<p className="empty-declaration">
+							This artist has no tasks assigned yet...
+						</p>
+					)}
 				</div>
 			</div>
 		</Layout>

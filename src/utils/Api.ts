@@ -101,9 +101,9 @@ class Api {
         });
     }
 
-    async getTasks(projectId: string, sceneId: string): Promise<ITask[]> {
+    async getTasks(projectName: string, sceneName: string): Promise<ITask[]> {
         return this._request<ITask[]>(
-            `${this.url}/projects/${projectId}/${sceneId}`,
+            `${this.url}/projects/${projectName}/${sceneName}`,
             {
                 method: "GET",
                 headers: {
@@ -164,7 +164,6 @@ class Api {
     }
 
     async updateTaskStatus(taskData: TaskDataMin): Promise<ITaskData> {
-        console.log(taskData);
         return this._request<ITaskData>(`${this.url}/task/task-update-status`, {
             method: "PATCH",
             headers: {
@@ -238,4 +237,4 @@ class Api {
     }
 }
 
-export const api = new Api("https://clever-breads-train.loca.lt");
+export const api = new Api(`${process.env.REACT_APP_SERVER_DOMAIN}`);

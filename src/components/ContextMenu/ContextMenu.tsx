@@ -75,7 +75,7 @@ const ContextMenu = () => {
 	};
 
 	const handleTaskDelete = () => {
-		const relatedToDataTask = tasks.find(
+		const relatedToDataTask = tasks?.find(
 			(task) => task.id === taskData[0].task_id,
 		);
 		if (!relatedToDataTask) return;
@@ -98,7 +98,7 @@ const ContextMenu = () => {
 				if (res) {
 					const deletedHours = commentData.spent_hours;
 					if (deletedHours) {
-						const relatedTask = tasks.find(
+						const relatedTask = tasks?.find(
 							(task) => task.id === relatedTaskId,
 						)!;
 						const newHours = relatedTask.spent_hours - deletedHours;

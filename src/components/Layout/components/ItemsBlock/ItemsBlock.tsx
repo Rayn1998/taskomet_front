@@ -52,7 +52,7 @@ const ItemsBlock = ({
 
 	// TASK INFO STORE
 	const { isOpen: taskOpen, setOpenClose: infoOpenClose } =
-		useTaskInfoStore();
+		useTaskInfoStore(); // !!!!!!!!!!!!!!
 
 	// TASK VIEW STORE
 	const handleClick = useTaskViewStore((state) => state.setChange);
@@ -105,7 +105,7 @@ const ItemsBlock = ({
 						{/* <button>view</button> */}
 						<button
 							className="itemsblock-button"
-							onClick={infoOpenClose}
+							onClick={() => infoOpenClose(true)}
 						>
 							<img
 								className="itemsblock-button__image"

@@ -5,4 +5,5 @@ export type TaskProps = {
     orderNum: number;
     selected: boolean;
     handleClick: (name: string) => void;
+    handleDoubleClickNavigateToTask?: boolean;
 };

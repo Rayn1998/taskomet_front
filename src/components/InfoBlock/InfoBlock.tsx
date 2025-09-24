@@ -26,6 +26,7 @@ import comment from "@/assets/images/comment.png";
 
 // TYPES
 import type ITask from "@shared/types/Task";
+import type ITaskData from "@shared/types/TaskData";
 
 const InfoBlock = ({ blockOpen }: { blockOpen: boolean }) => {
 	const location = useLocation();
@@ -35,25 +36,19 @@ const InfoBlock = ({ blockOpen }: { blockOpen: boolean }) => {
 	const [sceneLocation, setSceneLocation] = useState<boolean>(false);
 	const [projectsLocation, setprojectsLocation] = useState<boolean>(false);
 	const [forbiddenComment, setForbiddenComment] = useState<boolean>(false);
-	const [relatedToDataTask, setRelatedToDataTask] = useState<ITask | null>(
-		null,
-	);
 
 	const { tasks, removeTask } = useTasksStore();
 	const { removeProject } = useProjectsStore();
 	const { removeScene } = useScenesStore();
-	const { setClose: closeTask } = useTaskInfoStore();
+	const { setOpenClose: setTaskInfoOpenClose } = useTaskInfoStore();
 	const { projectData } = useProjectDataStore();
 	const { data: sceneData, scene } = useSceneDataStore();
-	const { resetTaskData, taskData, relatedTaskId } = useTaskDataStore();
+	const { resetTaskData, taskData, relatedTask } = useTaskDataStore();
 	const { setOpenClose: setOpenCloseComment } = useCreateCommentPopupStore();
 
 	const handleDeleteButton = () => {
-		// const relatedToDataTask = tasks.find(
-		// 	(task) => task.id === taskData[0].task_id,
-		// );
-		if (taskLocation && relatedTaskId) {
-			api.deleteTask(relatedTaskId)
+		if (taskLocation && relatedTask) {
+			api.deleteTask(relatedTask.id)
 				.then((res) => {
 					snackBar(
 						`Task ${res.name} was deleted successfully!`,
@@ -97,14 +92,12 @@ const InfoBlock = ({ blockOpen }: { blockOpen: boolean }) => {
 	};
 
 	useEffect(() => {
-		if ((taskLocation || myTasksLocation) && taskData && relatedTaskId) {
+		if ((taskLocation || myTasksLocation) && taskData && relatedTask) {
 			setForbiddenComment(false);
-			const relatedTask = tasks.find((task) => task.id === relatedTaskId);
-			if (relatedTask !== undefined) setRelatedToDataTask(relatedTask);
 		} else {
 			setForbiddenComment(true);
 		}
-	}, [taskLocation, taskData, myTasksLocation]);
+	}, [taskLocation, taskData, myTasksLocation, relatedTask]);
 
 	const handleOpenComment = useCallback(() => {
 		if (!forbiddenComment) setOpenCloseComment();
@@ -117,6 +110,7 @@ const InfoBlock = ({ blockOpen }: { blockOpen: boolean }) => {
 		checkedLocation.task && setTaskLocation(true);
 		checkedLocation.myTasks && setMyTasksLocation(true);
 	}, [location]);
+
 	return (
 		<div
 			className="itemsblock-right_block"
@@ -129,7 +123,7 @@ const InfoBlock = ({ blockOpen }: { blockOpen: boolean }) => {
 				<div
 					className="itemsblock-right_block-hide"
 					style={{ backgroundImage: `url(${arrow})` }}
-					onClick={closeTask}
+					onClick={() => setTaskInfoOpenClose(false)}
 				></div>
 				<div
 					className="itemsblock-right_block-add"
@@ -159,12 +153,12 @@ const InfoBlock = ({ blockOpen }: { blockOpen: boolean }) => {
 					</>
 				)}
 				{taskData &&
-					relatedToDataTask &&
+					relatedTask &&
 					(taskLocation || myTasksLocation) && (
 						<>
-							<Title title={relatedToDataTask.name} />
+							<Title title={relatedTask.name} />
 							<Description
-								description={relatedToDataTask.description}
+								description={relatedTask.description}
 							/>
 							{taskData.map((data, i, tasks) => {
 								const isFirst = i === 0;
@@ -175,7 +169,7 @@ const InfoBlock = ({ blockOpen }: { blockOpen: boolean }) => {
 									<Comment
 										statusChanged={statusChanged}
 										taskData={data}
-										relatedTaskId={relatedToDataTask.id}
+										relatedTaskId={relatedTask.id}
 										key={i}
 									/>
 								);

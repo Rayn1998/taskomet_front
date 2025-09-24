@@ -1,5 +1,4 @@
 import { FC, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
 import { useAuthStore } from "@/zustand/authStore";
 
 declare global {
@@ -10,7 +9,21 @@ declare global {
 
 const TelegramAuth: FC = () => {
 	const { setTgAuth } = useAuthStore();
-	const navigate = useNavigate();
+
+	useEffect(() => {
+		if (process.env.REACT_APP_TEST === "true") {
+			const fakeUser = {
+				auth_date: 12314512,
+				first_name: "Yuriy",
+				hash: "4152352352",
+				last_name: "Bodolanov",
+				username: "bodolanov",
+				id: 12312,
+			};
+			localStorage.setItem("user", JSON.stringify(fakeUser));
+			setTgAuth(fakeUser);
+		}
+	}, []);
 
 	useEffect(() => {
 		window.onTelegramAuth = function (user) {
@@ -44,6 +57,7 @@ const TelegramAuth: FC = () => {
 		};
 	}, []);
 	return <div id="telegram-button-container"></div>;
+	return <></>;
 };
 
 export default TelegramAuth;

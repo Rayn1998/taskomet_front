@@ -6,11 +6,15 @@ import Shot from "@/components/Shot/Shot";
 import Task from "@/components/Task/Task";
 import { api } from "@/utils/Api";
 
+// MUI
+import LinearProgress from "@mui/material/LinearProgress";
+
 // STORES
 import { useErrorDataStore } from "@/zustand/errorDataStore";
 import { useTaskViewStore } from "@/zustand/taskViewStore";
 import { useTasksStore } from "@/zustand/tasksStore";
 import { useTaskDataStore } from "@/zustand/taskDataStore";
+import { useTaskRedirectStore } from "@/zustand/taskRedirectStore";
 
 const ShotsList: FC = () => {
 	const navigate = useNavigate();
@@ -23,7 +27,10 @@ const ShotsList: FC = () => {
 	const { setErrorMessage } = useErrorDataStore();
 
 	// TASKS STORE
-	const { tasks, setTasks } = useTasksStore();
+	const { tasks, setTasks, lastPath, resetTasks } = useTasksStore();
+
+	// TASK REDIRECTED STORE
+	const { redirectedTaskId } = useTaskRedirectStore();
 
 	// TASK DATA STORE
 	const { resetTaskData } = useTaskDataStore();
@@ -35,12 +42,14 @@ const ShotsList: FC = () => {
 	};
 
 	useEffect(() => {
-		resetTaskData();
-		const [projectId, sceneId] = location.pathname.split("/").slice(-2);
-		if (projectId && projectId.length > 0) {
-			api.getTasks(projectId, sceneId)
+		const path = location.pathname;
+
+		const tasksRequest = async () => {
+			const [projectName, sceneName] = path.split("/").slice(-2);
+			if (!(projectName && sceneName)) return;
+			api.getTasks(projectName, sceneName)
 				.then((result) => {
-					setTasks(result);
+					setTasks(result, location.pathname);
 				})
 				.catch((err) => {
 					if (err instanceof Error) {
@@ -49,13 +58,20 @@ const ShotsList: FC = () => {
 					}
 					navigate("/not-found");
 				});
+		};
+
+		if (path !== lastPath) {
+			resetTasks();
+			tasksRequest();
 		}
-	}, []);
+	}, [lastPath, redirectedTaskId]);
 
 	return (
 		<Layout isHeader isStatusline order menu>
+			{tasks === null && <LinearProgress />}
 			{view
-				? tasks.map((shot, i) => {
+				? tasks &&
+				  tasks.map((shot, i) => {
 						return (
 							<Shot
 								task={shot}
@@ -66,7 +82,8 @@ const ShotsList: FC = () => {
 							/>
 						);
 				  })
-				: tasks.map((shot, i) => {
+				: tasks &&
+				  tasks.map((shot, i) => {
 						return (
 							<Task
 								key={shot.id}
@@ -77,6 +94,9 @@ const ShotsList: FC = () => {
 							/>
 						);
 				  })}
+			{tasks && tasks.length === 0 && (
+				<p className="empty-declaration">No tasks here yet...</p>
+			)}
 		</Layout>
 	);
 };

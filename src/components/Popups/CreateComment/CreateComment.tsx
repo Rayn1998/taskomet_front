@@ -55,7 +55,7 @@ const CreateComment = () => {
 	const { tasks, updateTask } = useTasksStore();
 
 	// TASK DATA STORE
-	const { taskData, addTaskData, relatedTaskId } = useTaskDataStore();
+	const { taskData, addTaskData, relatedTask } = useTaskDataStore();
 
 	// CREATE COMMENT POPUP STORE
 	const { isOpen, setClose: setPopupClose } = useCreateCommentPopupStore();
@@ -114,7 +114,7 @@ const CreateComment = () => {
 	const handleSubmit = async (e: React.SyntheticEvent) => {
 		e.preventDefault();
 
-		if (!taskData || !relatedTaskId || !auth) return;
+		if (!taskData || !relatedTask || !auth) return;
 		typeOfComment ===
 			(TypeOfData.SettingTheTask ||
 				TypeOfData.Comment ||
@@ -122,7 +122,7 @@ const CreateComment = () => {
 
 		const taskDataToBeSent: TaskDataMin = {
 			type: typeOfComment,
-			task_id: relatedTaskId,
+			task_id: relatedTask.id,
 			created_at: formatSQLTimestamp(new Date()),
 			created_by: auth.id,
 			status,
@@ -144,8 +144,8 @@ const CreateComment = () => {
 			.then((res) => {
 				const { status, spent_hours } = res;
 				addTaskData(res);
-				const relatedToDataTask = tasks.find(
-					(task) => task.id === relatedTaskId,
+				const relatedToDataTask = tasks?.find(
+					(task) => task.id === relatedTask.id,
 				)!;
 				const newTask = {
 					...relatedToDataTask,

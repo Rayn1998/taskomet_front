@@ -5,6 +5,9 @@ import LayoutItem from "@/components/Layout/components/LayoutItem/LayoutItem";
 
 import { api } from "@/utils/Api";
 
+// MUI
+import LinearProgress from "@mui/material/LinearProgress";
+
 // STORES
 import { useErrorDataStore } from "@/zustand/errorDataStore";
 import { useProjectsStore } from "@/zustand/projectsStore";
@@ -54,6 +57,7 @@ const ProjectsList = () => {
 	}, []);
 	return (
 		<Layout isHeader isStatusline order menu>
+			{projects === null && <LinearProgress />}
 			{projects &&
 				projects.map((project, i) => {
 					return (
@@ -68,6 +72,9 @@ const ProjectsList = () => {
 						/>
 					);
 				})}
+			{projects && projects.length === 0 && (
+				<p className="empty-declaration">No projects here yet...</p>
+			)}
 		</Layout>
 	);
 };

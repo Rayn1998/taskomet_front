@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo, useCallback } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 import { snackBar } from "@/utils/snackBar";
 import { api } from "@/utils/Api";
@@ -11,6 +11,7 @@ import { useArtistStore } from "@/zustand/artistStore";
 import { useTaskDataStore } from "@/zustand/taskDataStore";
 import { useTasksStore } from "@/zustand/tasksStore";
 import { useAuthStore } from "@/zustand/authStore";
+import { useTaskRedirectStore } from "@/zustand/taskRedirectStore";
 
 // MUI
 import DropDown from "@/components/DropDown/DropDown";
@@ -25,19 +26,27 @@ import { EPriority, PriorityLabels } from "@/types/Priority";
 import { TypeOfData } from "@/types/TypeOfData";
 import type { TaskDataMin } from "@shared/types/TaskData";
 
-const Task = ({ task, orderNum, selected, handleClick }: TaskProps) => {
+const Task = ({
+	task,
+	orderNum,
+	selected,
+	handleClick,
+	handleDoubleClickNavigateToTask,
+}: TaskProps) => {
 	const {
 		name,
 		id,
 		status,
 		executor,
 		priority,
+		project_name,
 		scene_name,
 		description,
 		spent_hours,
 	} = task;
 
 	const location = useLocation();
+	const navigate = useNavigate();
 
 	// AUTH STORE
 	const { auth } = useAuthStore();
@@ -48,8 +57,12 @@ const Task = ({ task, orderNum, selected, handleClick }: TaskProps) => {
 	// TASKS STORE
 	const { updateTask } = useTasksStore();
 
+	// TASK REDIRECT STORE
+	const { redirectedTaskId, setRedirectedTaskId } = useTaskRedirectStore();
+
 	// TASK DATA STORE
-	const { setTaskData, addTaskData } = useTaskDataStore();
+	const { taskData, relatedTask, setTaskData, addTaskData } =
+		useTaskDataStore();
 	const { isOpen: taskViewOpen, setOpenClose: setTaskViewOpenClose } =
 		useTaskInfoStore();
 
@@ -113,11 +126,19 @@ const Task = ({ task, orderNum, selected, handleClick }: TaskProps) => {
 	};
 
 	const handleDoubleClick = () => {
+		if (handleDoubleClickNavigateToTask) {
+			setRedirectedTaskId(id);
+			return navigate(
+				`/projects/${project_name.toLowerCase()}/${scene_name.toLowerCase()}`,
+			);
+		}
 		if (
 			location.pathname.split("/").slice(1)[0] !== "artists-loading" &&
 			!taskViewOpen
-		)
-			setTaskViewOpenClose();
+		) {
+			setTaskViewOpenClose(true);
+			handleClick(name);
+		}
 	};
 
 	const artistName = useMemo(() => {
@@ -139,24 +160,34 @@ const Task = ({ task, orderNum, selected, handleClick }: TaskProps) => {
 	}, []);
 
 	useEffect(() => {
-		if (taskViewOpen && selected) {
-			api.getTaskData(id)
-				.then((taskData) => {
-					setTaskData(taskData, id);
-				})
-				.catch((err) => console.log(err));
-		}
-	}, [taskViewOpen, selected]);
+		if (!selected || !taskViewOpen) return;
+		if (relatedTask?.id === id && taskData) return;
+
+		api.getTaskData(id)
+			.then((newTaskData) => {
+				setTaskData(newTaskData, task);
+			})
+			.catch(console.log);
+	}, [selected, taskViewOpen, id]);
+
+	useEffect(() => {
+		if (!redirectedTaskId) return;
+
+		api.getTaskData(redirectedTaskId)
+			.then((newTaskData) => {
+				setTaskViewOpenClose(true);
+				setTaskData(newTaskData, task);
+				setRedirectedTaskId(null);
+			})
+			.catch(console.log);
+	}, [redirectedTaskId]);
 
 	return (
 		<div
 			data-type="task"
 			className="task"
-			onContextMenu={() => {
-				handleClick(name);
-				// setRelatedToDataTask(task);
-			}}
-			onClick={() => handleClick(name)}
+			onContextMenu={() => handleClick(name)}
+			onClick={() => taskViewOpen && handleClick(name)}
 			onDoubleClick={handleDoubleClick}
 			onMouseEnter={() => setHover(true)}
 			onMouseLeave={() => setHover(false)}

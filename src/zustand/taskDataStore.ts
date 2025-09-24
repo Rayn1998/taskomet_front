@@ -1,10 +1,11 @@
 import { create } from "zustand";
-import ITaskData from "@shared/types/TaskData";
+import type ITaskData from "@shared/types/TaskData";
+import type ITask from "@shared/types/Task";
 
 interface ITaskDataStore {
     taskData: ITaskData[];
-    relatedTaskId: number | null;
-    setTaskData: (data: ITaskData[], id: number) => void;
+    relatedTask: ITask | null;
+    setTaskData: (data: ITaskData[], task: ITask) => void;
     removeOneTaskData: (id: number) => void;
     addTaskData: (data: ITaskData) => void;
     resetTaskData: () => void;
@@ -12,8 +13,8 @@ interface ITaskDataStore {
 
 export const useTaskDataStore = create<ITaskDataStore>((set) => ({
     taskData: [],
-    relatedTaskId: null,
-    setTaskData: (data, id) => set({ taskData: data, relatedTaskId: id }),
+    relatedTask: null,
+    setTaskData: (data, task) => set({ taskData: data, relatedTask: task }),
     removeOneTaskData: (id) =>
         set((state) => ({
             taskData:
@@ -25,5 +26,5 @@ export const useTaskDataStore = create<ITaskDataStore>((set) => ({
         set((state) => ({
             taskData: [...state.taskData, data],
         })),
-    resetTaskData: () => set({ taskData: [], relatedTaskId: null }),
+    resetTaskData: () => set({ taskData: [], relatedTask: null }),
 }));

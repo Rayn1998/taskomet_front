@@ -4,7 +4,8 @@ import IScene from "@shared/types/Scene";
 
 interface IScenesStore {
     scenes: IScene[] | null;
-    setScenes: (scenes: IScene[]) => void;
+    lastProject: string | null;
+    setScenes: (scenes: IScene[], projectId: string | undefined) => void;
     addScene: (scene: IScene) => void;
     removeScene: (id: number) => void;
     resetScenes: () => void;
@@ -12,7 +13,9 @@ interface IScenesStore {
 
 export const useScenesStore = create<IScenesStore>((set) => ({
     scenes: null,
-    setScenes: (scenes) => set({ scenes }),
+    lastProject: null,
+    setScenes: (scenes, projectId) =>
+        set({ scenes, lastProject: projectId ?? null }),
     addScene: (scene) =>
         set((state) => ({
             scenes: state.scenes ? [...state.scenes, scene] : [scene],

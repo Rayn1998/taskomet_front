@@ -31,7 +31,6 @@ const Comment = ({
 	const [author, setAuthor] = useState<string>("");
 	const ext = taskData.media?.split(".").slice(-1)[0];
 	const mp4 = ext === "mp4";
-	const pathToBack = "https://clever-breads-train.loca.lt";
 
 	const {
 		setOpenClose: setImagePreviewOpenClose,
@@ -41,7 +40,9 @@ const Comment = ({
 	const getArtist = useArtistStore((state) => state.getArtist);
 
 	const handleImageClick = (e: MouseEvent<HTMLImageElement>) => {
-		setImagePreviewSrc(`${pathToBack}/${taskData.media}`);
+		setImagePreviewSrc(
+			`${process.env.REACT_APP_SERVER_DOMAIN}/${taskData.media}`,
+		);
 		setImagePreviewOpenClose();
 	};
 
@@ -92,7 +93,7 @@ const Comment = ({
 						<video
 							className="comment-dailies-video"
 							controls
-							src={`${pathToBack}/${taskData.media}`}
+							src={`${process.env.REACT_APP_SERVER_DOMAIN}/${taskData.media}`}
 						/>
 					)}
 				{type === TypeOfData.SettingTheTask &&
@@ -100,7 +101,7 @@ const Comment = ({
 					!mp4 && (
 						<img
 							className="comment-image"
-							src={`${pathToBack}/${taskData.media}`}
+							src={`${process.env.REACT_APP_SERVER_DOMAIN}/${taskData.media}`}
 							alt="image"
 							onClick={handleImageClick}
 						/>
@@ -109,13 +110,13 @@ const Comment = ({
 					<video
 						className="comment-dailies-video"
 						controls
-						src={`${pathToBack}/${taskData.media}`}
+						src={`${process.env.REACT_APP_SERVER_DOMAIN}/${taskData.media}`}
 					/>
 				)}
 				{type === TypeOfData.Dailies && taskData.media && !mp4 && (
 					<img
 						className="comment-image"
-						src={`${pathToBack}/${taskData.media}`}
+						src={`${process.env.REACT_APP_SERVER_DOMAIN}/${taskData.media}`}
 						alt="image"
 						onClick={handleImageClick}
 					/>
@@ -124,13 +125,13 @@ const Comment = ({
 					<video
 						className="comment-dailies-video"
 						controls
-						src={`${pathToBack}/${taskData.media}`}
+						src={`${process.env.REACT_APP_SERVER_DOMAIN}/${taskData.media}`}
 					/>
 				)}
 				{type === TypeOfData.Comment && taskData.media && !mp4 && (
 					<img
 						className="comment-image"
-						src={`${pathToBack}/${taskData.media}`}
+						src={`${process.env.REACT_APP_SERVER_DOMAIN}/${taskData.media}`}
 						alt="image"
 						onClick={handleImageClick}
 					/>

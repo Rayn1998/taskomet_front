@@ -1,12 +1,16 @@
-import { FC, MouseEvent, useState, useEffect } from "react";
+import { FC, MouseEvent, useState, useEffect, useMemo } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 
 import Layout from "@/components/Layout/Layout";
 import LayoutItem from "@/components/Layout/components/LayoutItem/LayoutItem";
 import { api } from "@/utils/Api";
 
+// MUI
+import LinearProgress from "@mui/material/LinearProgress";
+
 // STORES
 import { useErrorDataStore } from "@/zustand/errorDataStore";
+import { useProjectsStore } from "@/zustand/projectsStore";
 import { useScenesStore } from "@/zustand/scenesStore";
 import { useSceneDataStore } from "@/zustand/sceneDataStore";
 
@@ -17,8 +21,11 @@ const ScenesList: FC = () => {
 	// ERROR DATA STORE
 	const { setErrorMessage } = useErrorDataStore();
 
+	// PROJECTS STORE
+	const { getProject } = useProjectsStore();
+
 	// SCENES STORE
-	const { scenes, setScenes } = useScenesStore();
+	const { scenes, lastProject, setScenes, resetScenes } = useScenesStore();
 
 	// SCENE DATA STORE
 	const { setData: setSceneData, resetData: resetSceneData } =
@@ -26,12 +33,14 @@ const ScenesList: FC = () => {
 
 	const [selected, setSelected] = useState<string>("");
 
+	const navigate = useNavigate();
+	const location = useLocation();
+
 	const handleClick = (scene: IScene) => {
 		setSelected(scene.name);
 		setSceneData(scene);
 	};
-	const navigate = useNavigate();
-	const location = useLocation();
+
 	const handleDoubleClick = (e: MouseEvent<HTMLDivElement>) => {
 		const scene = e.currentTarget.getAttribute("data-name")!.toLowerCase();
 		navigate(`${location.pathname}/${scene}`);
@@ -39,11 +48,13 @@ const ScenesList: FC = () => {
 
 	useEffect(() => {
 		resetSceneData();
-		const projectId = location.pathname.split("/").pop();
-		if (projectId && projectId.length > 0) {
-			api.getScenes(projectId)
-				.then((res) => {
-					setScenes(res);
+		const projectName = location.pathname.split("/").pop();
+		if (projectName === lastProject?.toLowerCase()) return;
+
+		const scenesRequest = (projectName: string) => {
+			api.getScenes(projectName)
+				.then((scenes) => {
+					setScenes(scenes, projectName);
 				})
 				.catch((err) => {
 					if (err instanceof Error) {
@@ -52,10 +63,18 @@ const ScenesList: FC = () => {
 					}
 					navigate("/not-found");
 				});
+		};
+
+		if (!projectName) return;
+
+		if (projectName !== lastProject?.toLowerCase()) {
+			resetScenes();
+			scenesRequest(projectName);
 		}
-	}, []);
+	}, [lastProject]);
 	return (
 		<Layout isHeader isStatusline order menu>
+			{scenes === null && <LinearProgress />}
 			{scenes &&
 				scenes.map((scene, i) => {
 					return (
@@ -70,6 +89,10 @@ const ScenesList: FC = () => {
 						/>
 					);
 				})}
+			{!scenes ||
+				(scenes.length === 0 && (
+					<p className="empty-declaration">No projects here yet...</p>
+				))}
 		</Layout>
 	);
 };
