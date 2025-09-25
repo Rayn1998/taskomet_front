@@ -3,11 +3,12 @@ import { useLocation } from "react-router-dom";
 
 import InfoBlock from "@/components/InfoBlock/InfoBlock";
 
-// TYPES
-import type { IChildrenComponent } from "@/types/IChildrenComponent";
-
 // UTILS
 import { checkLocation } from "@/utils/checkLocation";
+
+// MUI
+import AddCircleOutlineOutlinedIcon from "@mui/icons-material/AddCircleOutlineOutlined";
+import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 
 // STORES
 import { useTaskViewStore } from "@/zustand/taskViewStore";
@@ -20,7 +21,6 @@ import { useCreateTaskPopupStore } from "@/components/Popups/CreateTask/CreateTa
 import type { ILayoutProps } from "@/components/Layout/Layout";
 
 // IMAGES
-import structureImage from "@/assets/images/structure.png";
 import info from "@/assets/images/info.png";
 
 const ItemsBlock = ({
@@ -83,7 +83,7 @@ const ItemsBlock = ({
 			>
 				{menu && (
 					<div className="itemsblock-menu">
-						<button
+						{/* <button
 							style={{
 								display: myTasksLocation ? "none" : "block",
 							}}
@@ -91,7 +91,11 @@ const ItemsBlock = ({
 							onClick={handleAddButton}
 						>
 							+
-						</button>
+						</button> */}
+						<AddCircleOutlineOutlinedIcon
+							className="itemsblock-button"
+							onClick={handleAddButton}
+						/>
 						{/* <div
 						className="itemsblock-structure-icon"
 						onClick={handleClick}
@@ -103,7 +107,11 @@ const ItemsBlock = ({
 						{/* <button>order</button> */}
 						{/* <button>filter</button> */}
 						{/* <button>view</button> */}
-						<button
+						<InfoOutlinedIcon
+							className="itemsblock-button"
+							onClick={() => infoOpenClose(true)}
+						/>
+						{/* <button
 							className="itemsblock-button"
 							onClick={() => infoOpenClose(true)}
 						>
@@ -111,7 +119,7 @@ const ItemsBlock = ({
 								className="itemsblock-button__image"
 								src={info}
 							/>
-						</button>
+						</button> */}
 					</div>
 				)}
 				{canvas && <div className="itemsblock-canvas">{children}</div>}

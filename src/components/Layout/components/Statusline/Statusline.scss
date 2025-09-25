@@ -13,9 +13,9 @@
     font-size: 1.2rem;
 
     .statusline-back {
-        @include image-icon;
         @include hover;
-        background-image: url("../../../../assets/images/back-button.png");
+        width: 3rem;
+        height: 3rem;
     }
 
     .statusline-path {

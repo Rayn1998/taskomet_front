@@ -38,6 +38,32 @@ $transition: all 0.5s ease-out;
             overflow-y: scroll;
 
             transition: $transition;
+
+            .artists-loading__project-accortion {
+                width: 100%;
+                background-color: $comment-background-darker;
+                color: $font-color;
+
+                .artists-loading__project-name {
+                    padding: 1rem;
+                    width: 30%;
+                    background: linear-gradient(
+                        90deg,
+                        $lighten 10%,
+                        rgba(0, 0, 0, 0) 100%
+                    );
+                }
+
+                .artists-loading__project-accortion-icon {
+                    color: $font-color;
+                }
+
+                .artists-loading__project-accortion-details {
+                    display: flex;
+                    flex-direction: column;
+                    gap: 0.5rem;
+                }
+            }
         }
 
         .artists-loading-statistics {
@@ -45,14 +71,14 @@ $transition: all 0.5s ease-out;
             display: flex;
             flex-direction: column;
             align-items: center;
-            background-color: $comment-background;
+            background-color: $comment-background-darker;
 
             transition: $transition;
 
             .artists-loading-statistics-content {
                 height: 100%;
                 width: 100%;
-                background-color: $comment-background;
+                background-color: $comment-background-darker;
                 display: flex;
                 padding: 2rem;
                 position: relative;

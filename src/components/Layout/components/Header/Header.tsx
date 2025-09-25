@@ -8,6 +8,9 @@ import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import Logout from "@mui/icons-material/Logout";
+import SearchOutlinedIcon from "@mui/icons-material/SearchOutlined";
+import SettingsOutlinedIcon from "@mui/icons-material/SettingsOutlined";
+import NotificationsNoneOutlinedIcon from "@mui/icons-material/NotificationsNoneOutlined";
 
 // STORES
 import { useAuthStore } from "@/zustand/authStore";
@@ -53,14 +56,14 @@ const Header = ({ isHeader }: { isHeader: boolean }) => {
 					onBlur={handleSetSearchInactive}
 					style={{
 						outline: isSearchActive
-							? "0.1rem solid rgb(68,120,250)"
+							? "0.1rem solid rgb(100,70,100)"
 							: "none",
 					}}
 				>
-					<div
-						className="header-search-icon"
+					<SearchOutlinedIcon
+						className="header-icon"
 						onClick={handleSetSearchActive}
-					></div>
+					/>
 					<input
 						ref={inputRef}
 						className="header-search"
@@ -68,8 +71,8 @@ const Header = ({ isHeader }: { isHeader: boolean }) => {
 					></input>
 				</div>
 				<div className="header-right-block">
-					<div className="header-preferences"></div>
-					<div className="header-notification"></div>
+					<SettingsOutlinedIcon className="header-icon" />
+					<NotificationsNoneOutlinedIcon className="header-icon" />
 					<Avatar
 						alt="profile-avatar"
 						src={isAuth ? auth?.photo_url : backgroundImage}

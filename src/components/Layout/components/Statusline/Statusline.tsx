@@ -1,6 +1,9 @@
 import { useState, MouseEvent, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 
+// MUI
+import KeyboardBackspaceOutlinedIcon from "@mui/icons-material/KeyboardBackspaceOutlined";
+
 const Statusline = ({ isStatusLine }: { isStatusLine: boolean }) => {
 	const navigate = useNavigate();
 	const params = useParams();
@@ -34,14 +37,14 @@ const Statusline = ({ isStatusLine }: { isStatusLine: boolean }) => {
 	if (!isStatusLine) return <></>;
 	return (
 		<div className="statusline">
-			<div
+			<KeyboardBackspaceOutlinedIcon
 				className="statusline-back"
+				onClick={handleBack}
 				style={{
 					opacity: path.length === 0 ? 0.25 : 1,
 					cursor: path.length === 0 ? "not-allowed" : "pointer",
 				}}
-				onClick={handleBack}
-			></div>
+			/>
 			{path.map((el, i) => (
 				<span className="statusline-path" key={i} onClick={handleClick}>
 					{" > "}

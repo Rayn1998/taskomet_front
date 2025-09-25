@@ -1,44 +1,23 @@
 $background: rgb(42, 44, 51);
 $background-mid-opaque: rgba(42, 44, 51, 0.75);
+$background-transparent: rgba(100, 100, 100, 0.3);
 $background-forward: rgb(35, 37, 44);
 $background-forward-light: rgb(45, 50, 60);
-$boder-color: rgb(68, 120, 250);
+$border-color: rgb(150, 140, 160);
 $comment-background: rgb(60, 70, 90);
+$comment-background-darker: rgb(50, 60, 70);
 $comment-text-background: rgb(100, 70, 100);
+$lighten: rgb(70, 80, 100);
+
+$font-color: rgb(230, 230, 230);
 
 $number-width: 10%;
 $items-width: 22.4%;
 
-@mixin image-icon {
-    border-radius: 0;
-    min-height: 3rem;
-    min-width: 3rem;
-    background-size: contain;
-    background-repeat: no-repeat;
-    background-position: center;
-    filter: invert(0.5);
-}
-
 @mixin hover {
-    position: relative;
+    filter: invert(0.5);
+    cursor: pointer;
     &:hover {
-        cursor: pointer;
-        &::before {
-            opacity: 1;
-        }
-    }
-
-    &::before {
-        position: absolute;
-        top: 0;
-        left: 0;
-        content: "";
-        width: 100%;
-        height: 100%;
-        background-color: $background-forward;
-        filter: opacity(0.2);
-        border-radius: 1rem;
-        opacity: 0;
-        transition: opacity 0.1s ease-in;
+        opacity: 0.5;
     }
 }

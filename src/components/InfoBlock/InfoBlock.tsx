@@ -9,6 +9,11 @@ import Title from "@/components/InfoBlock/components/Title/Title";
 import Description from "@/components/InfoBlock/components/Description/Description";
 import Comment from "@/components/InfoBlock/components/Comment/Comment";
 
+// MUI
+import ArrowCircleRightOutlinedIcon from "@mui/icons-material/ArrowCircleRightOutlined";
+import InsertCommentOutlinedIcon from "@mui/icons-material/InsertCommentOutlined";
+import DeleteOutlinedIcon from "@mui/icons-material/DeleteOutlined";
+
 // STORES
 import { useTaskInfoStore } from "@/zustand/taskInfoStore";
 import { useProjectsStore } from "@/zustand/projectsStore";
@@ -19,11 +24,6 @@ import { useTasksStore } from "@/zustand/tasksStore";
 import { useTaskDataStore } from "@/zustand/taskDataStore";
 import { useCreateCommentPopupStore } from "@/components/Popups/CreateComment/CreateCommentPopupStore";
 
-// IMAGES
-import arrow from "@/assets/images/up-arrow.png";
-import trash from "@/assets/images/delete.png";
-import comment from "@/assets/images/comment.png";
-
 const InfoBlock = ({ blockOpen }: { blockOpen: boolean }) => {
 	const location = useLocation();
 
@@ -33,7 +33,7 @@ const InfoBlock = ({ blockOpen }: { blockOpen: boolean }) => {
 	const [projectsLocation, setprojectsLocation] = useState<boolean>(false);
 	const [forbiddenComment, setForbiddenComment] = useState<boolean>(false);
 
-	const { tasks, removeTask } = useTasksStore();
+	const { removeTask } = useTasksStore();
 	const { removeProject } = useProjectsStore();
 	const { removeScene } = useScenesStore();
 	const { setOpenClose: setTaskInfoOpenClose } = useTaskInfoStore();
@@ -109,33 +109,27 @@ const InfoBlock = ({ blockOpen }: { blockOpen: boolean }) => {
 
 	return (
 		<div
-			className="itemsblock-right_block"
+			className="infoblock"
 			style={{
 				width: blockOpen ? "100%" : "0",
 				opacity: blockOpen ? 1 : 0,
 			}}
 		>
-			<div className="itemsblock-right_block-buttons">
-				<div
-					className="itemsblock-right_block-hide"
-					style={{ backgroundImage: `url(${arrow})` }}
+			<div className="infoblock__block-buttons">
+				<ArrowCircleRightOutlinedIcon
+					className="infoblock__block-buttons-hide"
 					onClick={() => setTaskInfoOpenClose(false)}
-				></div>
-				<div
-					className="itemsblock-right_block-add"
-					style={{
-						backgroundImage: `url(${comment})`,
-						opacity: forbiddenComment ? 0.5 : 1,
-					}}
+				/>
+				<InsertCommentOutlinedIcon
+					className="infoblock__block-buttons-add"
 					onClick={handleOpenComment}
-				></div>
-				<div
-					className="itemsblock-right_block-delete"
-					style={{ backgroundImage: `url(${trash})` }}
+				/>
+				<DeleteOutlinedIcon
+					className="infoblock__block-buttons-delete"
 					onClick={handleDeleteButton}
-				></div>
+				/>
 			</div>
-			<div className="itemsblock-info-block">
+			<div className="infoblock-content">
 				{projectData && projectsLocation && (
 					<>
 						<Title title={projectData.name} />

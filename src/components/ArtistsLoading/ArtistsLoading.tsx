@@ -16,27 +16,41 @@ import Avatar from "@mui/material/Avatar";
 import LinearProgress from "@mui/material/LinearProgress";
 import KeyboardDoubleArrowDownOutlinedIcon from "@mui/icons-material/KeyboardDoubleArrowDownOutlined";
 import KeyboardDoubleArrowUpIcon from "@mui/icons-material/KeyboardDoubleArrowUp";
+import Accordion from "@mui/material/Accordion";
+import AccordionSummary from "@mui/material/AccordionSummary";
+import AccordionDetails from "@mui/material/AccordionDetails";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import Typography from "@mui/material/Typography";
 
 // NIVO
 import { ResponsivePie } from "@nivo/pie";
 
 //STORES
 import { useArtistStore } from "@/zustand/artistStore";
+import { useProjectsStore } from "@/zustand/projectsStore";
 import { useTaskInfoStore } from "@/zustand/taskInfoStore";
 import { useTasksStore } from "@/zustand/tasksStore";
 
 // TYPES
 import { EStatus, StatusLabels, StatusColors } from "@/types/Status";
+import ITask from "@shared/types/Task";
 
 const ArtistsLoading = () => {
 	const location = useLocation();
 
+	// TASK INFO STORE
 	const { setOpenClose: setTaskInfoOpenClose } = useTaskInfoStore();
 
+	// PROJECTS STORE
+	const { projects } = useProjectsStore();
+
+	// ARTISTS STORE
 	const { artists } = useArtistStore();
 
+	// TASKSK STORE
 	const { tasks, setTasks, resetTasks, removeTask } = useTasksStore();
 
+	// STATES
 	const [hoverId, setHoverId] = useState<number | null>(null);
 	const [selectedArtistId, setSelectedArtistId] = useState<number | null>(
 		null,
@@ -46,10 +60,6 @@ const ArtistsLoading = () => {
 	const [isShowStatisticsIcon, setIsShowStatisticsIcon] =
 		useState<boolean>(true);
 	const [pieData, setPieData] = useState<{ id: string; value: number }[]>([]);
-
-	const handleOpenCloseStatistics = () => {
-		setIsStatisticsOpen(!isStatisticsOpen);
-	};
 
 	const handleSelectArtist = useCallback(
 		(id: number) => {
@@ -69,6 +79,7 @@ const ArtistsLoading = () => {
 		setSelectedTask(taskId);
 	};
 
+	// Закрывает Infoblock как только заходим на эту страницу
 	useEffect(() => {
 		setTaskInfoOpenClose(false);
 	}, []);
@@ -82,6 +93,7 @@ const ArtistsLoading = () => {
 		}
 	}, [tasks, selectedArtistId]);
 
+	// Логика отображения стрелки для открытия блока статистики
 	useEffect(() => {
 		if (!isStatisticsOpen) {
 			setTimeout(() => {
@@ -95,6 +107,9 @@ const ArtistsLoading = () => {
 	// STATISTICS -----------------------------
 	const [numberOfTasks, setNumberOfTasks] = useState<number>(0);
 	const [spentHours, setSpentHours] = useState<number>(0);
+	const [filteredByProjectTasks, setFilteredByProjectTasks] = useState<
+		[[string, ITask[]][]] | null
+	>(null);
 
 	useEffect(() => {
 		if (tasks && isStatisticsOpen) {
@@ -128,6 +143,29 @@ const ArtistsLoading = () => {
 			setSpentHours(hours);
 		}
 	}, [tasks, isStatisticsOpen]);
+
+	useEffect(() => {
+		if (!tasks) return;
+		const tasksByProject = new Map();
+		const filteredTasks = [];
+
+		for (const task of tasks) {
+			if (tasksByProject.has(task.project_name)) {
+				const value: ITask[] = tasksByProject.get(task.project_name);
+				value.push(task);
+				tasksByProject.set(task.project_name, value);
+			} else {
+				tasksByProject.set(task.project_name, [task]);
+			}
+		}
+
+		for (const [projectName, projectTasks] of tasksByProject.entries()) {
+			const res = [projectName, projectTasks];
+			filteredTasks.push(res);
+		}
+
+		setFilteredByProjectTasks(filteredTasks as any);
+	}, [tasks]);
 
 	return (
 		<Layout isHeader canvas>
@@ -194,18 +232,47 @@ const ArtistsLoading = () => {
 						)}
 						{selectedArtistId && !tasks && <LinearProgress />}
 						{selectedArtistId &&
-							tasks?.map((task, i) => {
+							filteredByProjectTasks?.map((filteredArray, i) => {
 								return (
-									<Task
-										key={task.id}
-										task={task}
-										orderNum={i}
-										selected={Boolean(
-											selectedTask === task.id,
-										)}
-										handleClick={handleTaskClick}
-										handleDoubleClickNavigateToTask
-									/>
+									<Accordion
+										key={i}
+										defaultExpanded
+										className="artists-loading__project-accortion"
+									>
+										<AccordionSummary
+											expandIcon={
+												<ExpandMoreIcon className="artists-loading__project-accortion-icon" />
+											}
+										>
+											<Typography
+												className="artists-loading__project-name"
+												style={{ fontSize: "1.5rem" }}
+											>
+												{filteredArray[0] as any}
+											</Typography>
+										</AccordionSummary>
+										<AccordionDetails className="artists-loading__project-accortion-details">
+											{(
+												filteredArray[1] as unknown as ITask[]
+											).map((task, i) => {
+												return (
+													<Task
+														key={task.id}
+														task={task}
+														orderNum={i}
+														selected={Boolean(
+															selectedTask ===
+																task.id,
+														)}
+														handleClick={
+															handleTaskClick
+														}
+														handleDoubleClickNavigateToTask
+													/>
+												);
+											})}
+										</AccordionDetails>
+									</Accordion>
 								);
 							})}
 						{selectedArtistId && tasks?.length === 0 && (
@@ -220,7 +287,9 @@ const ArtistsLoading = () => {
 							height: isStatisticsOpen ? "50%" : "5%",
 							cursor: !isStatisticsOpen ? "pointer" : "auto",
 						}}
-						onClick={handleOpenCloseStatistics}
+						onClick={() => {
+							!isStatisticsOpen && setIsStatisticsOpen(true);
+						}}
 					>
 						<div
 							className="artists-loading-statistics-content"
@@ -228,13 +297,13 @@ const ArtistsLoading = () => {
 								opacity: isStatisticsOpen ? 1 : 0,
 								transform: isStatisticsOpen
 									? "translateY(0)"
-									: "translateY(40rem)",
+									: "translateY(10rem)",
 							}}
 						>
 							<KeyboardDoubleArrowDownOutlinedIcon
 								className="artists-loading-statistics__close-icon"
 								fontSize="large"
-								onClick={handleOpenCloseStatistics}
+								onClick={() => setIsStatisticsOpen(false)}
 							/>
 							<div className="artists-loading-statistics__left-block">
 								<div className="artists-loading-statistics__left-block-item">
@@ -290,7 +359,7 @@ const ArtistsLoading = () => {
 							style={{
 								opacity: isShowStatisticsIcon ? 1 : 0,
 							}}
-							onClick={handleOpenCloseStatistics}
+							onClick={() => setIsStatisticsOpen(true)}
 						/>
 					)}
 				</div>

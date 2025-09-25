@@ -155,7 +155,7 @@ const Task = ({
 		let match = color.match(/\d+/g);
 		if (!match) return color;
 
-		const [r, g, b] = match.map((color) => Number(color) * 1.1);
+		const [r, g, b] = match.map((color) => Number(color) * 1.2);
 
 		return `rgb(${r}, ${g}, ${b})`;
 	}, []);
@@ -197,10 +197,14 @@ const Task = ({
 			onMouseEnter={() => setHover(true)}
 			onMouseLeave={() => setHover(false)}
 			style={{
-				backgroundColor:
+				background:
 					hover || selected
-						? lighten(StatusColors[status as EStatus])
-						: StatusColors[status as EStatus],
+						? `linear-gradient(90deg, ${lighten(
+								StatusColors[status as EStatus],
+						  )} 0%, rgba(0, 0, 0, 0) 70%, rgba(50, 100, 120, 0.5) 100%)`
+						: `linear-gradient(90deg, ${
+								StatusColors[status as EStatus]
+						  } 0%, rgba(0, 0, 0, 0) 70%, rgba(50, 100, 120, 0.5) 100%)`,
 			}}
 		>
 			<div className="task-number">{orderNum + 1}</div>

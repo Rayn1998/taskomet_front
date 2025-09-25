@@ -11,6 +11,12 @@
         display: flex;
         justify-content: space-between;
 
+        .header-icon {
+            @include hover;
+            min-width: 4rem;
+            min-height: 4rem;
+        }
+
         .header-search-container {
             background-color: $background;
             display: flex;
@@ -18,13 +24,6 @@
 
             &:active {
                 outline: 0.1rem solid red;
-            }
-
-            .header-search-icon {
-                @include image-icon;
-                min-width: 4rem;
-                background-image: url("../../../../assets/images/search.png");
-                background-size: 50%;
             }
 
             .header-search {
@@ -47,18 +46,6 @@
             display: flex;
             justify-content: flex-end;
             gap: 1rem;
-
-            .header-preferences {
-                @include image-icon;
-                @include hover;
-                background-image: url("../../../../assets/images/gear.png");
-            }
-
-            .header-notification {
-                @include image-icon;
-                @include hover;
-                background-image: url("../../../../assets/images/bell.png");
-            }
 
             .header-profile {
                 border-radius: 100%;
