@@ -1,19 +1,118 @@
 @use "@/scss/variables" as *;
 
+$transition: all 0.5s ease-out;
+
 .artists-loading {
     display: flex;
     gap: 3rem;
     width: 100%;
     height: 100%;
 
-    .artists-loading-tasks {
+    .artists-loading-tasks-block {
+        width: 70%;
         display: flex;
         flex-direction: column;
-        gap: 1rem;
-        width: 100%;
-        height: 100%;
-        flex: 1;
-        background-color: $background;
-        padding: 1rem;
+        gap: 2rem;
+        align-items: center;
+
+        .artists-loading-statistics__show-icon {
+            position: absolute;
+            bottom: 2.5rem;
+            cursor: pointer;
+
+            transition: $transition;
+
+            &:hover {
+                transform: translateY(-0.3rem);
+            }
+        }
+
+        .artists-loading-tasks {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1rem;
+            width: 100%;
+            background-color: $background;
+            padding: 1rem;
+            overflow-y: scroll;
+
+            transition: $transition;
+        }
+
+        .artists-loading-statistics {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-color: $comment-background;
+
+            transition: $transition;
+
+            .artists-loading-statistics-content {
+                height: 100%;
+                width: 100%;
+                background-color: $comment-background;
+                display: flex;
+                padding: 2rem;
+                position: relative;
+                flex: 1;
+
+                transition: $transition;
+
+                .artists-loading-statistics__close-icon {
+                    position: absolute;
+                    top: 1rem;
+                    right: 2rem;
+                    outline: 0.2rem solid rgb(150, 150, 150);
+                    cursor: pointer;
+                    z-index: 5;
+                    transition: $transition;
+
+                    &:hover {
+                        transform: translateY(0.1rem);
+                    }
+                }
+
+                .artists-loading-statistics__left-block {
+                    height: 100%;
+                    width: 30%;
+                    display: flex;
+                    flex-direction: column;
+                    gap: 1.5rem;
+
+                    .artists-loading-statistics__left-block-item {
+                        width: 100%;
+                        display: flex;
+                        justify-content: space-between;
+                    }
+                }
+
+                .artists-loading-statistics__pie-block {
+                    height: 100%;
+                    width: 100%;
+                    padding: 1.5rem;
+                    overflow: visible;
+                    position: relative;
+
+                    &::before {
+                        content: "";
+                        position: absolute;
+                        top: 50%;
+                        left: 55%;
+                        transform: translate(-50%, -50%);
+                        background: linear-gradient(
+                            90deg,
+                            rgba(0, 0, 0, 0) 0%,
+                            rgba(135, 135, 135, 0.15) 35%,
+                            rgba(135, 135, 135, 0.15) 65%,
+                            rgba(0, 0, 0, 0) 100%
+                        );
+                        width: 100%;
+                        height: 100%;
+                    }
+                }
+            }
+        }
     }
 }

@@ -4,6 +4,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { snackBar } from "@/utils/snackBar";
 import { api } from "@/utils/Api";
 import { formatSQLTimestamp } from "@/utils/formatSQLTimestamp";
+// import { checkLocation } from "@/utils/checkLocation";
 
 // STORES
 import { useTaskInfoStore } from "@/zustand/taskInfoStore";
@@ -74,7 +75,7 @@ const Task = ({
 		if (spent_hours === 0 || spent_hours === null) {
 			setSpentHours(0);
 		} else {
-			setSpentHours(spent_hours);
+			setSpentHours(+spent_hours);
 		}
 	}, [spent_hours]);
 
@@ -137,7 +138,7 @@ const Task = ({
 			!taskViewOpen
 		) {
 			setTaskViewOpenClose(true);
-			handleClick(name);
+			handleClick(id);
 		}
 	};
 
@@ -172,12 +173,13 @@ const Task = ({
 
 	useEffect(() => {
 		if (!redirectedTaskId) return;
+		if (redirectedTaskId !== id) return; // !!!!!!!!!!!
 
 		api.getTaskData(redirectedTaskId)
 			.then((newTaskData) => {
+				setRedirectedTaskId(null);
 				setTaskViewOpenClose(true);
 				setTaskData(newTaskData, task);
-				setRedirectedTaskId(null);
 			})
 			.catch(console.log);
 	}, [redirectedTaskId]);
@@ -186,8 +188,11 @@ const Task = ({
 		<div
 			data-type="task"
 			className="task"
-			onContextMenu={() => handleClick(name)}
-			onClick={() => taskViewOpen && handleClick(name)}
+			onContextMenu={() => {
+				handleClick(id);
+				setTaskData(taskData, task);
+			}}
+			onClick={() => taskViewOpen && handleClick(id)}
 			onDoubleClick={handleDoubleClick}
 			onMouseEnter={() => setHover(true)}
 			onMouseLeave={() => setHover(false)}

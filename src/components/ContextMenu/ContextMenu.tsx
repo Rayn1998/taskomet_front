@@ -36,7 +36,8 @@ const ContextMenu = () => {
 	const { scene } = useSceneDataStore();
 
 	// TASK DATA STORE
-	const { taskData, resetTaskData, removeOneTaskData } = useTaskDataStore();
+	const { resetTaskData, removeOneTaskData, relatedTask } =
+		useTaskDataStore();
 
 	// TASKS STORE
 	const { tasks, removeTask, updateTask } = useTasksStore();
@@ -75,16 +76,14 @@ const ContextMenu = () => {
 	};
 
 	const handleTaskDelete = () => {
-		const relatedToDataTask = tasks?.find(
-			(task) => task.id === taskData[0].task_id,
-		);
-		if (!relatedToDataTask) return;
-		api.deleteTask(relatedToDataTask.id).then((deletedTask) => {
+		if (!relatedTask) return;
+
+		api.deleteTask(relatedTask.id).then((deletedTask) => {
 			removeTask(deletedTask.id);
 			resetTaskData();
 			setContextMenu(null);
 			snackBar(
-				`Task ${relatedToDataTask.name} was successfully deleted`,
+				`Task ${relatedTask.name} was successfully deleted`,
 				"success",
 			);
 		});

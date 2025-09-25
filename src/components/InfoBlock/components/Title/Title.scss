@@ -1,5 +1,7 @@
+@use "@/scss/variables" as *;
+
 .title {
-    background-color: rgb(76, 140, 145);
+    background-color: $comment-background;
     margin: 1.5rem;
     padding: 0.25rem;
     display: flex;

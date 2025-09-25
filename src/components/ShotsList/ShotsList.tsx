@@ -13,7 +13,6 @@ import LinearProgress from "@mui/material/LinearProgress";
 import { useErrorDataStore } from "@/zustand/errorDataStore";
 import { useTaskViewStore } from "@/zustand/taskViewStore";
 import { useTasksStore } from "@/zustand/tasksStore";
-import { useTaskDataStore } from "@/zustand/taskDataStore";
 import { useTaskRedirectStore } from "@/zustand/taskRedirectStore";
 
 const ShotsList: FC = () => {
@@ -32,13 +31,10 @@ const ShotsList: FC = () => {
 	// TASK REDIRECTED STORE
 	const { redirectedTaskId } = useTaskRedirectStore();
 
-	// TASK DATA STORE
-	const { resetTaskData } = useTaskDataStore();
+	const [selected, setSelected] = useState<number | null>(null);
 
-	const [selected, setSelected] = useState<string>("");
-
-	const handleClick = (name: string) => {
-		setSelected(name);
+	const handleClick = (taskId: number) => {
+		setSelected(taskId);
 	};
 
 	useEffect(() => {
@@ -71,25 +67,25 @@ const ShotsList: FC = () => {
 			{tasks === null && <LinearProgress />}
 			{view
 				? tasks &&
-				  tasks.map((shot, i) => {
+				  tasks.map((task, i) => {
 						return (
 							<Shot
-								task={shot}
-								key={shot.id}
+								task={task}
+								key={task.id}
 								orderNum={i}
-								selected={Boolean(selected === shot.name)}
+								selected={Boolean(selected === task.id)}
 								handleClick={handleClick}
 							/>
 						);
 				  })
 				: tasks &&
-				  tasks.map((shot, i) => {
+				  tasks.map((task, i) => {
 						return (
 							<Task
-								key={shot.id}
-								task={shot}
+								key={task.id}
+								task={task}
 								orderNum={i}
-								selected={Boolean(selected === shot.name)}
+								selected={Boolean(selected === task.id)}
 								handleClick={handleClick}
 							/>
 						);

@@ -126,7 +126,15 @@ const ItemsBlock = ({
 					</div>
 				)}
 				{menu && order && !canvas && (
-					<div className="itemsblock-list">{children}</div>
+					<div
+						className="itemsblock-list"
+						style={{
+							height:
+								menu && order && isStatusline ? "80%" : "100%",
+						}}
+					>
+						{children}
+					</div>
 				)}
 			</div>
 			{!canvas && <InfoBlock blockOpen={taskOpen} />}

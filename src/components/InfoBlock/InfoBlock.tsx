@@ -24,10 +24,6 @@ import arrow from "@/assets/images/up-arrow.png";
 import trash from "@/assets/images/delete.png";
 import comment from "@/assets/images/comment.png";
 
-// TYPES
-import type ITask from "@shared/types/Task";
-import type ITaskData from "@shared/types/TaskData";
-
 const InfoBlock = ({ blockOpen }: { blockOpen: boolean }) => {
 	const location = useLocation();
 

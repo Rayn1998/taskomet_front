@@ -91,7 +91,7 @@ const ScenesList: FC = () => {
 				})}
 			{!scenes ||
 				(scenes.length === 0 && (
-					<p className="empty-declaration">No projects here yet...</p>
+					<p className="empty-declaration">No scenes here yet...</p>
 				))}
 		</Layout>
 	);

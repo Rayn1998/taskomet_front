@@ -4,6 +4,6 @@ export type TaskProps = {
     task: ITask;
     orderNum: number;
     selected: boolean;
-    handleClick: (name: string) => void;
+    handleClick: (taskId: number) => void;
     handleDoubleClickNavigateToTask?: boolean;
 };

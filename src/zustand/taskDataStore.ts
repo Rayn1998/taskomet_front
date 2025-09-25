@@ -14,7 +14,11 @@ interface ITaskDataStore {
 export const useTaskDataStore = create<ITaskDataStore>((set) => ({
     taskData: [],
     relatedTask: null,
-    setTaskData: (data, task) => set({ taskData: data, relatedTask: task }),
+    setTaskData: (data, task) =>
+        set({
+            taskData: data,
+            relatedTask: task,
+        }),
     removeOneTaskData: (id) =>
         set((state) => ({
             taskData:

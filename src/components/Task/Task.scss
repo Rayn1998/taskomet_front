@@ -1,6 +1,7 @@
 @use "@/scss/variables" as *;
 
 .task {
+    width: 100%;
     padding: 0 1rem;
     display: flex;
     justify-content: space-between;

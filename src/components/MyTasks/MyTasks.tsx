@@ -22,10 +22,10 @@ const MyTasks = () => {
 	// AUTH STORE
 	const { auth } = useAuthStore();
 
-	const [selected, setSelected] = useState<string>("");
+	const [selected, setSelected] = useState<number | null>(null);
 
-	const handleClick = (name: string) => {
-		setSelected(name);
+	const handleClick = (taskId: number) => {
+		setSelected(taskId);
 	};
 
 	useEffect(() => {
@@ -52,7 +52,7 @@ const MyTasks = () => {
 								key={task.id}
 								task={task}
 								orderNum={i}
-								selected={Boolean(selected === task.name)}
+								selected={Boolean(selected === task.id)}
 								handleClick={handleClick}
 							/>
 						);
