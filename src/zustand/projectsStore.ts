@@ -1,10 +1,12 @@
 import { create } from "zustand";
 
-import IProject from "@shared/types/Project";
+import type IProject from "@shared/types/Project";
+import type IProjectProgress from "@shared/types/ProjectProgress";
 
 interface IProjectsStore {
     projects: IProject[] | null;
-    setProjects: (data: IProject[]) => void;
+    projectsProgress: IProjectProgress[] | null;
+    setProjects: (data: [IProject[], IProjectProgress[]]) => void;
     addProject: (data: IProject) => void;
     getProject: (id: number) => IProject | null;
     removeProject: (id: number) => void;
@@ -13,7 +15,9 @@ interface IProjectsStore {
 
 export const useProjectsStore = create<IProjectsStore>((set, get) => ({
     projects: null,
-    setProjects: (data) => set({ projects: data }),
+    projectsProgress: null,
+    setProjects: (data) =>
+        set({ projects: data[0], projectsProgress: data[1] }),
     addProject: (project) =>
         set((state) => ({
             projects: state.projects ? [...state.projects, project] : [project],
@@ -26,6 +30,11 @@ export const useProjectsStore = create<IProjectsStore>((set, get) => ({
         set((state) => ({
             projects: state.projects
                 ? state.projects.filter((project) => project.id !== id)
+                : null,
+            projectsProgress: state.projectsProgress
+                ? state.projectsProgress.filter(
+                      (progress) => progress.projectId !== id,
+                  )
                 : null,
         })),
     resetProjects: () => set({ projects: null }),

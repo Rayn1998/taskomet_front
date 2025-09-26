@@ -7,11 +7,14 @@ import { useSceneDataStore } from "@/zustand/sceneDataStore";
 // TYPES
 import type IProject from "@shared/types/Project";
 import type IScene from "@shared/types/Scene";
+import type IProjectProgress from "@shared/types/ProjectProgress";
+import { EStatus, StatusColors } from "@/types/Status";
 
 interface ILayoutItem<T extends IProject | IScene> {
 	dataType: string;
 	number: number;
 	item: T;
+	progress: IProjectProgress["progress"];
 	handleClick: (item: T) => void;
 	handleDoubleClick: (e: MouseEvent<HTMLDivElement>) => void;
 	selected: boolean;
@@ -21,6 +24,7 @@ const LayoutItem = <T extends IProject | IScene>({
 	dataType,
 	number,
 	item,
+	progress,
 	handleClick,
 	handleDoubleClick,
 	selected,
@@ -67,7 +71,38 @@ const LayoutItem = <T extends IProject | IScene>({
 		>
 			<p className="item-number">{number}</p>
 			<p className="item-name">{item.name}</p>
-			<p className="item-status">--заглушка--</p>
+			<div className="item-status-wrapper">
+				<div className="item-status">
+					{progress.length > 0 &&
+						progress.map((el, _, arr) => {
+							return (
+								<div
+									key={el.status}
+									style={{
+										borderRadius: 0,
+										width: `${
+											(+el.amount / arr.length) * 100
+										}%`,
+										height: "100%",
+										backgroundColor: `${
+											StatusColors[el.status as EStatus]
+										}`,
+									}}
+								></div>
+							);
+						})}
+					{progress.length === 0 && (
+						<div
+							style={{
+								borderRadius: 0,
+								width: "100%",
+								background:
+									"linear-gradient(90deg, rgba(45,35,100, 0.55) 0%, rgba(150,90,90, 0.3) 100%",
+							}}
+						></div>
+					)}
+				</div>
+			</div>
 			<p className="item-artists">--</p>
 			<p className="item-hours">--</p>
 			<p className="item-priority">{item.priority}</p>

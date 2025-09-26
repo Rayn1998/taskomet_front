@@ -1,8 +1,10 @@
-import IProject from "@shared/types/Project";
-import IScene from "@shared/types/Scene";
-import ITask from "@shared/types/Task";
-import ITaskData, { TaskDataMin } from "@shared/types/TaskData";
-import IArtist from "@shared/types/Artist";
+import type IProject from "@shared/types/Project";
+import type IProjectProgress from "@shared/types/ProjectProgress";
+import type IScene from "@shared/types/Scene";
+import type ITask from "@shared/types/Task";
+import type ITaskData from "@shared/types/TaskData";
+import type { TaskDataMin } from "@shared/types/TaskData";
+import type IArtist from "@shared/types/Artist";
 
 class Api {
     private url: string;
@@ -80,13 +82,16 @@ class Api {
         });
     }
 
-    async getProjects(): Promise<IProject[]> {
-        return this._request<IProject[]>(`${this.url}/projects`, {
-            method: "GET",
-            headers: {
-                "Content-Type": "application/json",
+    async getProjects(): Promise<[IProject[], IProjectProgress[]]> {
+        return this._request<[IProject[], IProjectProgress[]]>(
+            `${this.url}/projects`,
+            {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                },
             },
-        });
+        );
     }
 
     async createProject(name: string, description: string): Promise<IProject> {

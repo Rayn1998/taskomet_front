@@ -1,4 +1,10 @@
+@use "@/scss/variables" as *;
+
 .create-comment-popup {
+    & .muipaper-root {
+        background-color: $background-transparent;
+    }
+
     .create-comment-header {
         display: flex;
         justify-content: space-between;

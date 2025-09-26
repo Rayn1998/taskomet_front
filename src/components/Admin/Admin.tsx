@@ -152,8 +152,8 @@ const Admin = () => {
 								<p className="admin-artists-info-item-name">
 									Role:{" "}
 								</p>
-								<DropDown<EArtistRole>
-									label="role"
+								<DropDown
+									// label="role"
 									items={ArtistRoleLabels}
 									selected={selectedArtistData.role}
 									onChange={handleChangeRole}

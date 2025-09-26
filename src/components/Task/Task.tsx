@@ -212,19 +212,18 @@ const Task = ({
 				{scene_name}_{name}
 			</div>
 			<DropDown<EStatus>
-				label="task-status"
+				// label="task-status"
 				items={StatusLabels}
 				selected={status}
 				onChange={handleChangeStatus}
 			/>
 			<div className="task-artist">
-				<Button
-					className="task-artist-button"
-					variant="contained"
-					onClick={handleOpen}
-				>
-					{artistName}
-				</Button>
+				<button className="task-artist-button" onClick={handleOpen}>
+					<span className="task-artist-button-transition"></span>
+					<span className="task-artist-button-label">
+						{artistName}
+					</span>
+				</button>
 				<ArtistSimpleDialog
 					selectedExecutor={executor}
 					open={artistDialogOpen}
@@ -233,7 +232,7 @@ const Task = ({
 			</div>
 			<p className="task-spent-hours">{spentHours}</p>
 			<DropDown<EPriority>
-				label="priority"
+				// label="priority"
 				items={PriorityLabels}
 				selected={priority}
 				onChange={handleChangePriority}

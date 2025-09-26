@@ -83,6 +83,7 @@ const ScenesList: FC = () => {
 							key={i}
 							number={i + 1}
 							item={scene}
+							progress={[] as any}
 							handleClick={handleClick}
 							handleDoubleClick={handleDoubleClick}
 							selected={Boolean(scene.name === selected)}

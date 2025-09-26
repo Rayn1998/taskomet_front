@@ -1,6 +1,8 @@
 import { useState, useCallback, useEffect } from "react";
 import { useDropzone } from "react-dropzone";
 
+import DropDown from "@/components/DropDown/DropDown";
+
 import { snackBar } from "@/utils/snackBar";
 import { api } from "@/utils/Api";
 import { formatSQLTimestamp } from "@/utils/formatSQLTimestamp";
@@ -184,22 +186,21 @@ const CreateComment = () => {
 			onKeyUp={(e) => {
 				if (e.key === "Escape") setPopupClose();
 			}}
+			sx={{
+				"& .MuiPaper-root": {
+					color: "rgb(230, 230, 230)",
+					backgroundColor: "rgb(50, 60, 70)",
+				},
+			}}
 		>
 			<div className="create-comment-header">
 				<DialogTitle>Add new comment</DialogTitle>
-				<NativeSelect
-					className="create-comment-type"
-					value={typeOfComment}
-					onChange={(e) => setTypeOfComment(+e.target.value)}
-				>
-					{typesOfComment.map(([obj, label], i) => {
-						return (
-							<option key={i} value={obj}>
-								{label}
-							</option>
-						);
-					})}
-				</NativeSelect>
+				<DropDown<TypeOfData>
+					// label="task-status"
+					items={TypeOfDataLabels}
+					selected={typeOfComment}
+					onChange={setTypeOfComment}
+				/>
 			</div>
 			<DialogContent
 				className="create-comment-content"
@@ -219,6 +220,8 @@ const CreateComment = () => {
 						maxWidth: "100%",
 						padding: "0.5rem",
 						position: "relative",
+						color: "rgb(230,230,230)",
+						backgroundColor: "rgb(60,70,90)",
 					}}
 				/>
 
@@ -282,6 +285,7 @@ const CreateComment = () => {
 			<DialogActions>
 				{typeOfComment === TypeOfData.Dailies && (
 					<NativeSelect
+						style={{ color: "rgb(230,230,230)" }}
 						value={spentHours}
 						onChange={(e) => setSpentHours(+e.target.value)}
 					>
@@ -295,6 +299,7 @@ const CreateComment = () => {
 					</NativeSelect>
 				)}
 				<NativeSelect
+					style={{ color: "rgb(230,230,230)" }}
 					value={status}
 					onChange={(e) => setStatus(+e.target.value)}
 				>

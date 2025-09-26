@@ -2,12 +2,13 @@
 
 .task {
     width: 100%;
+    min-height: 5rem;
     padding: 0 1rem;
     display: flex;
     justify-content: space-between;
     align-items: center;
     cursor: pointer;
-    outline: 0.1rem solid red;
+    outline: 0.1rem solid $comment-text-background;
     margin-bottom: 0.5rem;
     user-select: none;
 
@@ -28,13 +29,55 @@
     }
 
     .task-artist {
+        height: 100%;
         padding: 0 2%;
+        display: flex;
+        align-items: center;
 
         .task-artist-button {
             width: 100%;
-            white-space: nowrap;
+            height: 3rem;
             overflow: hidden;
-            text-overflow: ellipsis;
+            background: $background-transparent;
+            outline: 0.1rem solid $comment-text-background;
+            color: white;
+            border: none;
+            position: relative;
+            border-radius: 0.6rem;
+            display: flex;
+            padding: 0 0.5rem;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+
+            &:hover .task-artist-button-transition {
+                width: 14em;
+                height: 14em;
+            }
+
+            .task-artist-button-transition {
+                transition-timing-function: cubic-bezier(0, 0, 0.2, 1);
+                transition-duration: 500ms;
+                background-color: rgba(16, 185, 129, 0.6);
+                border-radius: 9999px;
+                width: 0;
+                height: 0;
+                position: absolute;
+                left: 50%;
+                top: 50%;
+                transform: translate(-50%, -50%);
+            }
+
+            .task-artist-button-label {
+                border-radius: 0;
+                position: relative;
+                top: -1px;
+                text-align: center;
+                align-self: center;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+            }
         }
     }
 }

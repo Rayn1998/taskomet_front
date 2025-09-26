@@ -15,11 +15,23 @@
     }
 
     .item-name,
-    .item-status,
+    .item-status-wrapper,
     .item-artists,
     .item-hours,
     .item-priority {
         text-align: center;
         width: $items-width;
+    }
+
+    .item-status-wrapper {
+        height: 100%;
+        padding: 1rem 0;
+
+        .item-status {
+            border-radius: 2rem;
+            overflow: hidden;
+            display: flex;
+            height: 100%;
+        }
     }
 }
