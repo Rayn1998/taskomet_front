@@ -18,7 +18,7 @@ const TelegramAuth: FC = () => {
 				hash: "4152352352",
 				last_name: "Bodolanov",
 				username: "bodolanov",
-				id: 12312,
+				id: 1,
 			};
 			localStorage.setItem("user", JSON.stringify(fakeUser));
 			setTgAuth(fakeUser);

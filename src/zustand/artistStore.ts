@@ -6,6 +6,7 @@ interface IArtistStore {
     setArtists: (data: IArtist[]) => void;
     getArtist: (id: number) => IArtist | undefined;
     addArtist: (data: IArtist) => void;
+    updateArtist: (data: IArtist) => void;
 }
 
 export const useArtistStore = create<IArtistStore>((set, get) => ({
@@ -18,5 +19,11 @@ export const useArtistStore = create<IArtistStore>((set, get) => ({
     addArtist: (data) =>
         set((state) => ({
             artists: state.artists ? [...state.artists, data] : [data],
+        })),
+    updateArtist: (data) =>
+        set((state) => ({
+            artists: state.artists?.map((artist) =>
+                artist.id === data.id ? data : artist,
+            ),
         })),
 }));

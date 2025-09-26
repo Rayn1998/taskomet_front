@@ -1,6 +1,8 @@
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+
 import TelegramAuth from "@/components/TelegramAuth/TelegramAuth";
+import { snackBar } from "@/utils/snackBar";
 
 import { api } from "@/utils/Api";
 
@@ -23,11 +25,13 @@ const Signup = () => {
 	}, []);
 
 	useEffect(() => {
+		// Надо дописать логику добавления недостающих данных,
+		// если пользователь был создан до регистрации
 		const loadAuth = async () => {
 			if (!tgAuth || auth) return;
 
 			try {
-				const artist = await api.getArtist(tgAuth.id);
+				const artist = await api.getArtist(tgAuth.username);
 
 				let authArtist;
 
@@ -35,16 +39,52 @@ const Signup = () => {
 					authArtist = await api.createArtist({
 						name: `${tgAuth.first_name} ${tgAuth.last_name}`,
 						user_name: tgAuth.username,
-						role: 1,
+						role: 10,
 						photo_url: tgAuth.photo_url ?? "",
 						tg_id: tgAuth.id,
 					});
 				} else {
-					authArtist = artist;
+					// Тут проверка, если артист был создан до регистрации
+					// у него не будет id телеграма и фото
+					const artistWithRequiredData = { ...artist };
+					if (tgAuth.id) artistWithRequiredData.id = tgAuth.id;
+					if (tgAuth.photo_url)
+						artistWithRequiredData.photo_url = tgAuth.photo_url;
+
+					let equalData = true;
+					for (const key of Object.keys(
+						artistWithRequiredData,
+					) as (keyof typeof artistWithRequiredData)[]) {
+						if (artistWithRequiredData[key] !== artist[key]) {
+							equalData = false;
+						}
+					}
+					if (!equalData) {
+						const newDataForUpdate = {
+							tg_id: artistWithRequiredData.tg_id,
+							photo_url: artistWithRequiredData.photo_url,
+							user_name: artistWithRequiredData.user_name,
+						};
+						api.updateArtistAfterRegister(newDataForUpdate)
+							.then((artist) => {
+								snackBar(
+									`Welcome to Taskomet, dear ${artist.name}`,
+								);
+							})
+							.catch((_) =>
+								snackBar(
+									"Something went wrong. Please contact @bodolanov about the problem",
+									"error",
+								),
+							);
+					}
+
+					authArtist = artistWithRequiredData;
 				}
 
 				setAuth(authArtist);
 				setLoggedIn(true);
+				snackBar(`Welcome back, dear ${authArtist.name}`);
 
 				const artists = await api.getArtists();
 				if (artists?.length) setArtists(artists);

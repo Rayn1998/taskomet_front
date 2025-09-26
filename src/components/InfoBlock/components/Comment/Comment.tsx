@@ -52,6 +52,8 @@ const Comment = ({
 			if (artist) {
 				setAuthor(artist.name);
 			}
+		} else if (taskData && !taskData.created_by) {
+			setAuthor("This artist was deleted");
 		}
 	}, [getArtist, setAuthor, taskData]);
 

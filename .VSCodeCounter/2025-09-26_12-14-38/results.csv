@@ -1,0 +1,96 @@
+"filename", "language", "SCSS", "TypeScript", "TypeScript JSX", "comment", "blank", "total"
+"/Users/rayn/Desktop/Projects/NodeJS/mmpro_tasks/frontend/src/assets/fonts/fonts.scss", "SCSS", 6, 0, 0, 0, 1, 7
+"/Users/rayn/Desktop/Projects/NodeJS/mmpro_tasks/frontend/src/components/Admin/Admin.scss", "SCSS", 38, 0, 0, 0, 7, 45
+"/Users/rayn/Desktop/Projects/NodeJS/mmpro_tasks/frontend/src/components/Admin/Admin.tsx", "TypeScript JSX", 0, 0, 158, 14, 15, 187
+"/Users/rayn/Desktop/Projects/NodeJS/mmpro_tasks/frontend/src/components/App/App.scss", "SCSS", 7, 0, 0, 0, 1, 8
+"/Users/rayn/Desktop/Projects/NodeJS/mmpro_tasks/frontend/src/components/App/App.tsx", "TypeScript JSX", 0, 0, 63, 1, 5, 69
+"/Users/rayn/Desktop/Projects/NodeJS/mmpro_tasks/frontend/src/components/ArtistSimpleDialog/ArtistSimpleDialog.tsx", "TypeScript JSX", 0, 0, 86, 2, 11, 99
+"/Users/rayn/Desktop/Projects/NodeJS/mmpro_tasks/frontend/src/components/ArtistsLoading/ArtistsLoading.scss", "SCSS", 122, 0, 0, 0, 23, 145
+"/Users/rayn/Desktop/Projects/NodeJS/mmpro_tasks/frontend/src/components/ArtistsLoading/ArtistsLoading.tsx", "TypeScript JSX", 0, 0, 335, 13, 29, 377
+"/Users/rayn/Desktop/Projects/NodeJS/mmpro_tasks/frontend/src/components/ContextMenu/ContextMenu.tsx", "TypeScript JSX", 0, 0, 148, 9, 24, 181
+"/Users/rayn/Desktop/Projects/NodeJS/mmpro_tasks/frontend/src/components/DropDown/DropDown.scss", "SCSS", 11, 0, 0, 3, 3, 17
+"/Users/rayn/Desktop/Projects/NodeJS/mmpro_tasks/frontend/src/components/DropDown/DropDown.tsx", "TypeScript JSX", 0, 0, 53, 0, 7, 60
+"/Users/rayn/Desktop/Projects/NodeJS/mmpro_tasks/frontend/src/components/Error/Error.scss", "SCSS", 45, 0, 0, 0, 8, 53
+"/Users/rayn/Desktop/Projects/NodeJS/mmpro_tasks/frontend/src/components/Error/Error.tsx", "TypeScript JSX", 0, 0, 60, 4, 13, 77
+"/Users/rayn/Desktop/Projects/NodeJS/mmpro_tasks/frontend/src/components/Error/ErrorIcon.tsx", "TypeScript JSX", 0, 0, 76, 0, 2, 78
+"/Users/rayn/Desktop/Projects/NodeJS/mmpro_tasks/frontend/src/components/IconWrapper/IconWrapper.tsx", "TypeScript JSX", 0, 0, 15, 0, 3, 18
+"/Users/rayn/Desktop/Projects/NodeJS/mmpro_tasks/frontend/src/components/InfoBlock/InfoBlock.scss", "SCSS", 31, 0, 0, 0, 5, 36
+"/Users/rayn/Desktop/Projects/NodeJS/mmpro_tasks/frontend/src/components/InfoBlock/InfoBlock.tsx", "TypeScript JSX", 0, 0, 159, 2, 14, 175
+"/Users/rayn/Desktop/Projects/NodeJS/mmpro_tasks/frontend/src/components/InfoBlock/components/Comment/Comment.scss", "SCSS", 64, 0, 0, 4, 11, 79
+"/Users/rayn/Desktop/Projects/NodeJS/mmpro_tasks/frontend/src/components/InfoBlock/components/Comment/Comment.tsx", "TypeScript JSX", 0, 0, 149, 2, 11, 162
+"/Users/rayn/Desktop/Projects/NodeJS/mmpro_tasks/frontend/src/components/InfoBlock/components/Description/Description.scss", "SCSS", 28, 0, 0, 0, 6, 34
+"/Users/rayn/Desktop/Projects/NodeJS/mmpro_tasks/frontend/src/components/InfoBlock/components/Description/Description.tsx", "TypeScript JSX", 0, 0, 16, 0, 3, 19
+"/Users/rayn/Desktop/Projects/NodeJS/mmpro_tasks/frontend/src/components/InfoBlock/components/Title/Title.scss", "SCSS", 12, 0, 0, 0, 3, 15
+"/Users/rayn/Desktop/Projects/NodeJS/mmpro_tasks/frontend/src/components/InfoBlock/components/Title/Title.tsx", "TypeScript JSX", 0, 0, 11, 0, 3, 14
+"/Users/rayn/Desktop/Projects/NodeJS/mmpro_tasks/frontend/src/components/Layout/Layout.scss", "SCSS", 9, 0, 0, 0, 2, 11
+"/Users/rayn/Desktop/Projects/NodeJS/mmpro_tasks/frontend/src/components/Layout/Layout.tsx", "TypeScript JSX", 0, 0, 34, 1, 5, 40
+"/Users/rayn/Desktop/Projects/NodeJS/mmpro_tasks/frontend/src/components/Layout/components/Header/Header.scss", "SCSS", 52, 0, 0, 0, 10, 62
+"/Users/rayn/Desktop/Projects/NodeJS/mmpro_tasks/frontend/src/components/Layout/components/Header/Header.tsx", "TypeScript JSX", 0, 0, 135, 3, 11, 149
+"/Users/rayn/Desktop/Projects/NodeJS/mmpro_tasks/frontend/src/components/Layout/components/ItemsBlock/ItemsBlock.scss", "SCSS", 63, 0, 0, 1, 10, 74
+"/Users/rayn/Desktop/Projects/NodeJS/mmpro_tasks/frontend/src/components/Layout/components/ItemsBlock/ItemsBlock.tsx", "TypeScript JSX", 0, 0, 95, 9, 18, 122
+"/Users/rayn/Desktop/Projects/NodeJS/mmpro_tasks/frontend/src/components/Layout/components/LayoutItem/LayoutItem.scss", "SCSS", 22, 0, 0, 0, 4, 26
+"/Users/rayn/Desktop/Projects/NodeJS/mmpro_tasks/frontend/src/components/Layout/components/LayoutItem/LayoutItem.tsx", "TypeScript JSX", 0, 0, 65, 4, 10, 79
+"/Users/rayn/Desktop/Projects/NodeJS/mmpro_tasks/frontend/src/components/Layout/components/Sidebar/Sidebar.scss", "SCSS", 15, 0, 0, 0, 3, 18
+"/Users/rayn/Desktop/Projects/NodeJS/mmpro_tasks/frontend/src/components/Layout/components/Sidebar/Sidebar.tsx", "TypeScript JSX", 0, 0, 66, 1, 4, 71
+"/Users/rayn/Desktop/Projects/NodeJS/mmpro_tasks/frontend/src/components/Layout/components/Statusline/Statusline.scss", "SCSS", 23, 0, 0, 0, 4, 27
+"/Users/rayn/Desktop/Projects/NodeJS/mmpro_tasks/frontend/src/components/Layout/components/Statusline/Statusline.tsx", "TypeScript JSX", 0, 0, 50, 1, 8, 59
+"/Users/rayn/Desktop/Projects/NodeJS/mmpro_tasks/frontend/src/components/MyTasks/MyTasks.tsx", "TypeScript JSX", 0, 0, 55, 4, 12, 71
+"/Users/rayn/Desktop/Projects/NodeJS/mmpro_tasks/frontend/src/components/Popups/CreateArtist/CreateArtist.tsx", "TypeScript JSX", 0, 0, 66, 7, 9, 82
+"/Users/rayn/Desktop/Projects/NodeJS/mmpro_tasks/frontend/src/components/Popups/CreateArtist/CreateArtistPopupStore.ts", "TypeScript", 0, 16, 0, 0, 3, 19
+"/Users/rayn/Desktop/Projects/NodeJS/mmpro_tasks/frontend/src/components/Popups/CreateComment/CreateComment.scss", "SCSS", 34, 0, 0, 3, 5, 42
+"/Users/rayn/Desktop/Projects/NodeJS/mmpro_tasks/frontend/src/components/Popups/CreateComment/CreateComment.tsx", "TypeScript JSX", 0, 0, 286, 10, 28, 324
+"/Users/rayn/Desktop/Projects/NodeJS/mmpro_tasks/frontend/src/components/Popups/CreateComment/CreateCommentPopupStore.ts", "TypeScript", 0, 16, 0, 0, 3, 19
+"/Users/rayn/Desktop/Projects/NodeJS/mmpro_tasks/frontend/src/components/Popups/CreateProject/CreateProject.tsx", "TypeScript JSX", 0, 0, 82, 5, 10, 97
+"/Users/rayn/Desktop/Projects/NodeJS/mmpro_tasks/frontend/src/components/Popups/CreateProject/CreateProjectPopupStore.ts", "TypeScript", 0, 16, 0, 0, 3, 19
+"/Users/rayn/Desktop/Projects/NodeJS/mmpro_tasks/frontend/src/components/Popups/CreateScene/CreateScene.tsx", "TypeScript JSX", 0, 0, 89, 5, 12, 106
+"/Users/rayn/Desktop/Projects/NodeJS/mmpro_tasks/frontend/src/components/Popups/CreateScene/CreateScenePopupStore.ts", "TypeScript", 0, 16, 0, 0, 3, 19
+"/Users/rayn/Desktop/Projects/NodeJS/mmpro_tasks/frontend/src/components/Popups/CreateTask/CreateTask.tsx", "TypeScript JSX", 0, 0, 77, 5, 11, 93
+"/Users/rayn/Desktop/Projects/NodeJS/mmpro_tasks/frontend/src/components/Popups/CreateTask/CreateTaskPopupStore.ts", "TypeScript", 0, 14, 0, 0, 3, 17
+"/Users/rayn/Desktop/Projects/NodeJS/mmpro_tasks/frontend/src/components/Popups/ImagePreview/ImagePreview.scss", "SCSS", 28, 0, 0, 2, 4, 34
+"/Users/rayn/Desktop/Projects/NodeJS/mmpro_tasks/frontend/src/components/Popups/ImagePreview/ImagePreview.tsx", "TypeScript JSX", 0, 0, 49, 2, 9, 60
+"/Users/rayn/Desktop/Projects/NodeJS/mmpro_tasks/frontend/src/components/Popups/ImagePreview/ImagePreviewStore.ts", "TypeScript", 0, 16, 0, 0, 3, 19
+"/Users/rayn/Desktop/Projects/NodeJS/mmpro_tasks/frontend/src/components/ProjectsList/ProjectsList.scss", "SCSS", 12, 0, 0, 0, 3, 15
+"/Users/rayn/Desktop/Projects/NodeJS/mmpro_tasks/frontend/src/components/ProjectsList/ProjectsList.tsx", "TypeScript JSX", 0, 0, 63, 6, 14, 83
+"/Users/rayn/Desktop/Projects/NodeJS/mmpro_tasks/frontend/src/components/ProtectedRoute/ProtectedRoute.tsx", "TypeScript JSX", 0, 0, 16, 1, 5, 22
+"/Users/rayn/Desktop/Projects/NodeJS/mmpro_tasks/frontend/src/components/ScenesList/ScenesList.tsx", "TypeScript JSX", 0, 0, 76, 7, 18, 101
+"/Users/rayn/Desktop/Projects/NodeJS/mmpro_tasks/frontend/src/components/Shot/Shot.tsx", "TypeScript JSX", 0, 0, 39, 1, 6, 46
+"/Users/rayn/Desktop/Projects/NodeJS/mmpro_tasks/frontend/src/components/ShotsList/ShotsList.scss", "SCSS", 19, 0, 0, 0, 5, 24
+"/Users/rayn/Desktop/Projects/NodeJS/mmpro_tasks/frontend/src/components/ShotsList/ShotsList.tsx", "TypeScript JSX", 0, 0, 79, 6, 16, 101
+"/Users/rayn/Desktop/Projects/NodeJS/mmpro_tasks/frontend/src/components/ShotsList/TaskProps.type.ts", "TypeScript", 0, 8, 0, 0, 2, 10
+"/Users/rayn/Desktop/Projects/NodeJS/mmpro_tasks/frontend/src/components/Signup/Signup.scss", "SCSS", 9, 0, 0, 0, 2, 11
+"/Users/rayn/Desktop/Projects/NodeJS/mmpro_tasks/frontend/src/components/Signup/Signup.tsx", "TypeScript JSX", 0, 0, 58, 0, 15, 73
+"/Users/rayn/Desktop/Projects/NodeJS/mmpro_tasks/frontend/src/components/SnackBar/SnackBar.tsx", "TypeScript JSX", 0, 0, 50, 1, 8, 59
+"/Users/rayn/Desktop/Projects/NodeJS/mmpro_tasks/frontend/src/components/Task/Task.scss", "SCSS", 34, 0, 0, 0, 7, 41
+"/Users/rayn/Desktop/Projects/NodeJS/mmpro_tasks/frontend/src/components/Task/Task.tsx", "TypeScript JSX", 0, 0, 208, 9, 29, 246
+"/Users/rayn/Desktop/Projects/NodeJS/mmpro_tasks/frontend/src/components/TelegramAuth/TelegramAuth.tsx", "TypeScript JSX", 0, 0, 50, 5, 9, 64
+"/Users/rayn/Desktop/Projects/NodeJS/mmpro_tasks/frontend/src/index.scss", "SCSS", 43, 0, 0, 0, 6, 49
+"/Users/rayn/Desktop/Projects/NodeJS/mmpro_tasks/frontend/src/index.tsx", "TypeScript JSX", 0, 0, 13, 2, 2, 17
+"/Users/rayn/Desktop/Projects/NodeJS/mmpro_tasks/frontend/src/scss/_index.scss", "SCSS", 1, 0, 0, 0, 1, 2
+"/Users/rayn/Desktop/Projects/NodeJS/mmpro_tasks/frontend/src/scss/_variables.scss", "SCSS", 20, 0, 0, 0, 4, 24
+"/Users/rayn/Desktop/Projects/NodeJS/mmpro_tasks/frontend/src/types/ArtistRole.ts", "TypeScript", 0, 14, 0, 0, 2, 16
+"/Users/rayn/Desktop/Projects/NodeJS/mmpro_tasks/frontend/src/types/DataInfo.ts", "TypeScript", 0, 5, 0, 0, 1, 6
+"/Users/rayn/Desktop/Projects/NodeJS/mmpro_tasks/frontend/src/types/IChildrenComponent.ts", "TypeScript", 0, 5, 0, 0, 2, 7
+"/Users/rayn/Desktop/Projects/NodeJS/mmpro_tasks/frontend/src/types/Priority.ts", "TypeScript", 0, 10, 0, 0, 2, 12
+"/Users/rayn/Desktop/Projects/NodeJS/mmpro_tasks/frontend/src/types/Status.ts", "TypeScript", 0, 27, 0, 0, 2, 29
+"/Users/rayn/Desktop/Projects/NodeJS/mmpro_tasks/frontend/src/types/TypeOfData.ts", "TypeScript", 0, 18, 0, 0, 3, 21
+"/Users/rayn/Desktop/Projects/NodeJS/mmpro_tasks/frontend/src/types/gifs.d.ts", "TypeScript", 0, 4, 0, 0, 1, 5
+"/Users/rayn/Desktop/Projects/NodeJS/mmpro_tasks/frontend/src/types/images.d.ts", "TypeScript", 0, 4, 0, 0, 1, 5
+"/Users/rayn/Desktop/Projects/NodeJS/mmpro_tasks/frontend/src/utils/Api.ts", "TypeScript", 0, 222, 0, 0, 29, 251
+"/Users/rayn/Desktop/Projects/NodeJS/mmpro_tasks/frontend/src/utils/checkLocation.ts", "TypeScript", 0, 34, 0, 0, 4, 38
+"/Users/rayn/Desktop/Projects/NodeJS/mmpro_tasks/frontend/src/utils/constants.ts", "TypeScript", 0, 9, 0, 0, 1, 10
+"/Users/rayn/Desktop/Projects/NodeJS/mmpro_tasks/frontend/src/utils/formatSQLTimestamp.ts", "TypeScript", 0, 11, 0, 0, 4, 15
+"/Users/rayn/Desktop/Projects/NodeJS/mmpro_tasks/frontend/src/utils/snackBar.tsx", "TypeScript JSX", 0, 0, 18, 0, 3, 21
+"/Users/rayn/Desktop/Projects/NodeJS/mmpro_tasks/frontend/src/zustand/artistStore.ts", "TypeScript", 0, 27, 0, 0, 3, 30
+"/Users/rayn/Desktop/Projects/NodeJS/mmpro_tasks/frontend/src/zustand/authStore.ts", "TypeScript", 0, 23, 0, 0, 4, 27
+"/Users/rayn/Desktop/Projects/NodeJS/mmpro_tasks/frontend/src/zustand/commentStore.ts", "TypeScript", 0, 15, 0, 0, 3, 18
+"/Users/rayn/Desktop/Projects/NodeJS/mmpro_tasks/frontend/src/zustand/errorDataStore.ts", "TypeScript", 0, 12, 0, 0, 3, 15
+"/Users/rayn/Desktop/Projects/NodeJS/mmpro_tasks/frontend/src/zustand/projectDataStore.ts", "TypeScript", 0, 12, 0, 0, 4, 16
+"/Users/rayn/Desktop/Projects/NodeJS/mmpro_tasks/frontend/src/zustand/projectsStore.ts", "TypeScript", 0, 29, 0, 0, 4, 33
+"/Users/rayn/Desktop/Projects/NodeJS/mmpro_tasks/frontend/src/zustand/sceneDataStore.ts", "TypeScript", 0, 20, 0, 0, 5, 25
+"/Users/rayn/Desktop/Projects/NodeJS/mmpro_tasks/frontend/src/zustand/scenesStore.ts", "TypeScript", 0, 27, 0, 0, 4, 31
+"/Users/rayn/Desktop/Projects/NodeJS/mmpro_tasks/frontend/src/zustand/taskDataStore.ts", "TypeScript", 0, 32, 0, 0, 3, 35
+"/Users/rayn/Desktop/Projects/NodeJS/mmpro_tasks/frontend/src/zustand/taskInfoStore.ts", "TypeScript", 0, 12, 0, 0, 3, 15
+"/Users/rayn/Desktop/Projects/NodeJS/mmpro_tasks/frontend/src/zustand/taskRedirectStore.ts", "TypeScript", 0, 9, 0, 0, 3, 12
+"/Users/rayn/Desktop/Projects/NodeJS/mmpro_tasks/frontend/src/zustand/taskViewStore.ts", "TypeScript", 0, 9, 0, 0, 2, 11
+"/Users/rayn/Desktop/Projects/NodeJS/mmpro_tasks/frontend/src/zustand/tasksStore.ts", "TypeScript", 0, 38, 0, 0, 3, 41
+"Total", "-", 748, 730, 3148, 155, 666, 5447

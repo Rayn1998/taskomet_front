@@ -14,6 +14,9 @@ import TextField from "@mui/material/TextField";
 
 import { api } from "@/utils/Api";
 
+// TYPES
+import type IArtist from "@shared/types/Artist";
+
 const CreateArtistPopup = () => {
 	// ARTIST STORE
 	const addArtist = useArtistStore((state) => state.addArtist);
@@ -23,18 +26,24 @@ const CreateArtistPopup = () => {
 
 	// states for form of popup
 	const [name, setName] = useState<string>("");
-	const [tgId, setTgId] = useState<string>("");
+	const [userName, setUserName] = useState<string>("");
 
 	const handleClick = () => {
-		console.log("CREATE ARTIST");
-		// api.createArtist(name, 0, tgId)
-		// 	.then((newArtist) => {
-		// 		setName("");
-		// 		setTgId("");
-		// 		handleClose();
-		// 		addArtist(newArtist);
-		// 	})
-		// 	.catch((err) => console.log(err));
+		if (!(name && userName)) return;
+		const reqData: Omit<IArtist, "id"> = {
+			name,
+			user_name: userName,
+			role: 0,
+			photo_url: "",
+		};
+		api.createArtist(reqData)
+			.then((newArtist) => {
+				setName("");
+				setUserName("");
+				handleClose();
+				addArtist(newArtist);
+			})
+			.catch((err) => console.log(err));
 	};
 	return (
 		<Dialog onClose={handleClose} open={isOpen}>
@@ -55,10 +64,10 @@ const CreateArtistPopup = () => {
 					}}
 				/>
 				<TextField
-					label="telegram id"
-					value={tgId}
+					label="telegram username"
+					value={userName}
 					onChange={(e) => {
-						setTgId(e.currentTarget.value);
+						setUserName(e.currentTarget.value);
 					}}
 				/>
 				{/* <DropDown label="role" /> */}

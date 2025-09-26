@@ -176,6 +176,10 @@ const ArtistsLoading = () => {
 						width: "30%",
 						height: "fit-content",
 						bgcolor: "rgb(42, 44, 51)",
+						display: "flex",
+						flexDirection: "column",
+						gap: "1rem",
+						padding: "1rem",
 					}}
 				>
 					{!artists && <LinearProgress />}
@@ -194,7 +198,8 @@ const ArtistsLoading = () => {
 										? "rgb(10, 80, 80)"
 										: isHovered
 										? "rgb(5, 55, 80)"
-										: "rgb(45, 50, 60)",
+										: "rgb(50, 60, 70)",
+									outline: "0.1rem solid rgb(100, 70, 100)",
 								}}
 							>
 								<ListItemButton>

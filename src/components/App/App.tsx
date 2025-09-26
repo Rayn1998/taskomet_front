@@ -2,6 +2,7 @@ import { Routes, Route, Navigate } from "react-router-dom";
 import { SnackbarProvider } from "notistack";
 
 // COMPONENTS
+import Admin from "@/components/Admin/Admin";
 import ArtistsLoading from "@/components/ArtistsLoading/ArtistsLoading";
 import ContextMenu from "@/components/ContextMenu/ContextMenu";
 import CreateArtistPopup from "@/components/Popups/CreateArtist/CreateArtist";
@@ -45,6 +46,7 @@ const App = () => {
 							path="/artists-loading"
 							element={<ArtistsLoading />}
 						/>
+						<Route path="/admin" element={<Admin />} />
 					</Route>
 
 					<Route path="/signup" element={<Signup />} />

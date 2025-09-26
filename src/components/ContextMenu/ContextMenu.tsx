@@ -1,4 +1,7 @@
 import { useState, useEffect } from "react";
+
+import Warning from "@/components/Popups/Warning/Warning";
+
 import { api } from "@/utils/Api";
 import { snackBar } from "@/utils/snackBar";
 
@@ -46,9 +49,12 @@ const ContextMenu = () => {
 	const { commentData, relatedTaskId, resetCommentData } =
 		useCommentDataStore();
 
+	// STATES
 	const [contextMenu, setContextMenu] = useState<null | IContextMenuData>(
 		null,
 	);
+	const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+
 	const handleContextMenuClose = () => setContextMenu(null);
 
 	const handleProjectDelete = () => {
@@ -154,24 +160,65 @@ const ContextMenu = () => {
 			}
 		>
 			{contextMenu?.type === "project" && [
-				<MenuItem key="delete" onClick={handleProjectDelete}>
-					Delete
-				</MenuItem>,
+				<Warning
+					key={contextMenu.type}
+					isOpen={isModalOpen}
+					setClose={() => {
+						setIsModalOpen(false);
+						setContextMenu(null);
+					}}
+					cb={handleProjectDelete}
+				>
+					<MenuItem key="delete" onClick={() => setIsModalOpen(true)}>
+						Delete
+					</MenuItem>
+				</Warning>,
 			]}
 			{contextMenu?.type === "scene" && [
-				<MenuItem key="delete" onClick={handleSceneDelete}>
-					Delete
-				</MenuItem>,
+				<Warning
+					key={contextMenu.type}
+					isOpen={isModalOpen}
+					cb={handleSceneDelete}
+					setClose={() => {
+						setIsModalOpen(false);
+						setContextMenu(null);
+					}}
+				>
+					<MenuItem key="delete" onClick={() => setIsModalOpen(true)}>
+						Delete
+					</MenuItem>
+				</Warning>,
 			]}
 			{contextMenu?.type === "task" && [
-				<MenuItem key="delete" onClick={handleTaskDelete}>
-					Delete
-				</MenuItem>,
+				<Warning
+					key={contextMenu.type}
+					isOpen={isModalOpen}
+					cb={handleTaskDelete}
+					setClose={() => {
+						setIsModalOpen(false);
+						setContextMenu(null);
+					}}
+				>
+					<MenuItem key="delete" onClick={() => setIsModalOpen(true)}>
+						Delete
+					</MenuItem>
+				</Warning>,
+				,
 			]}
 			{contextMenu?.type === "comment" && [
-				<MenuItem key="delete" onClick={handleComentDelete}>
-					Delete
-				</MenuItem>,
+				<Warning
+					key={contextMenu.type}
+					isOpen={isModalOpen}
+					cb={handleComentDelete}
+					setClose={() => {
+						setIsModalOpen(false);
+						setContextMenu(null);
+					}}
+				>
+					<MenuItem key="delete" onClick={() => setIsModalOpen(true)}>
+						Delete
+					</MenuItem>
+				</Warning>,
 			]}
 		</Menu>
 	);

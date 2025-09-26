@@ -1,4 +1,3 @@
-import { FC } from "react";
 import Sidebar from "@/components/Layout/components/Sidebar/Sidebar";
 import Header from "@/components/Layout/components/Header/Header";
 import Statusline from "@/components/Layout/components/Statusline/Statusline";

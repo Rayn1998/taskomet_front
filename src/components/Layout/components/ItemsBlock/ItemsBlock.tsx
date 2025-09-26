@@ -20,9 +20,6 @@ import { useCreateTaskPopupStore } from "@/components/Popups/CreateTask/CreateTa
 // TYPES
 import type { ILayoutProps } from "@/components/Layout/Layout";
 
-// IMAGES
-import info from "@/assets/images/info.png";
-
 const ItemsBlock = ({
 	children,
 	order,
@@ -83,43 +80,14 @@ const ItemsBlock = ({
 			>
 				{menu && (
 					<div className="itemsblock-menu">
-						{/* <button
-							style={{
-								display: myTasksLocation ? "none" : "block",
-							}}
-							className="itemsblock-button"
-							onClick={handleAddButton}
-						>
-							+
-						</button> */}
 						<AddCircleOutlineOutlinedIcon
 							className="itemsblock-button"
 							onClick={handleAddButton}
 						/>
-						{/* <div
-						className="itemsblock-structure-icon"
-						onClick={handleClick}
-						style={{
-							backgroundImage: `url(${structureImage})`,
-						}}
-					></div> */}
-						{/* <button className="itemsblock-button">menu</button> */}
-						{/* <button>order</button> */}
-						{/* <button>filter</button> */}
-						{/* <button>view</button> */}
 						<InfoOutlinedIcon
 							className="itemsblock-button"
 							onClick={() => infoOpenClose(true)}
 						/>
-						{/* <button
-							className="itemsblock-button"
-							onClick={() => infoOpenClose(true)}
-						>
-							<img
-								className="itemsblock-button__image"
-								src={info}
-							/>
-						</button> */}
 					</div>
 				)}
 				{canvas && <div className="itemsblock-canvas">{children}</div>}

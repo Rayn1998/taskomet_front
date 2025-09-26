@@ -1,6 +1,7 @@
 import { useState, useCallback, useEffect } from "react";
 import { useDropzone } from "react-dropzone";
 
+import { snackBar } from "@/utils/snackBar";
 import { api } from "@/utils/Api";
 import { formatSQLTimestamp } from "@/utils/formatSQLTimestamp";
 
@@ -154,9 +155,13 @@ const CreateComment = () => {
 						+relatedToDataTask.spent_hours + Number(spent_hours),
 				};
 				updateTask(newTask);
+				snackBar("Success", "success");
 				handleClose();
 			})
-			.catch((err) => console.log(err))
+			.catch((err) => {
+				console.log(err);
+				snackBar("Something went wrong", "error");
+			})
 			.finally(() => {
 				setLoading(false);
 				setFiles([]);
@@ -171,10 +176,6 @@ const CreateComment = () => {
 	for (const [obj, label] of Object.entries(TypeOfDataLabels)) {
 		typesOfComment.push([obj, label]);
 	}
-
-	// useEffect(() => {
-	// 	relatedToDataTask?.status && setStatus(relatedToDataTask.status);
-	// }, [relatedToDataTask]);
 
 	return (
 		<Dialog

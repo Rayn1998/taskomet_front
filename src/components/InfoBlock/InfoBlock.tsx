@@ -8,6 +8,7 @@ import { api } from "@/utils/Api";
 import Title from "@/components/InfoBlock/components/Title/Title";
 import Description from "@/components/InfoBlock/components/Description/Description";
 import Comment from "@/components/InfoBlock/components/Comment/Comment";
+import Warning from "../Popups/Warning/Warning";
 
 // MUI
 import ArrowCircleRightOutlinedIcon from "@mui/icons-material/ArrowCircleRightOutlined";
@@ -32,6 +33,7 @@ const InfoBlock = ({ blockOpen }: { blockOpen: boolean }) => {
 	const [sceneLocation, setSceneLocation] = useState<boolean>(false);
 	const [projectsLocation, setprojectsLocation] = useState<boolean>(false);
 	const [forbiddenComment, setForbiddenComment] = useState<boolean>(false);
+	const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
 
 	const { removeTask } = useTasksStore();
 	const { removeProject } = useProjectsStore();
@@ -43,6 +45,10 @@ const InfoBlock = ({ blockOpen }: { blockOpen: boolean }) => {
 	const { setOpenClose: setOpenCloseComment } = useCreateCommentPopupStore();
 
 	const handleDeleteButton = () => {
+		setIsModalOpen(!isModalOpen);
+	};
+
+	const handleDelete = () => {
 		if (taskLocation && relatedTask) {
 			api.deleteTask(relatedTask.id)
 				.then((res) => {
@@ -124,10 +130,16 @@ const InfoBlock = ({ blockOpen }: { blockOpen: boolean }) => {
 					className="infoblock__block-buttons-add"
 					onClick={handleOpenComment}
 				/>
-				<DeleteOutlinedIcon
-					className="infoblock__block-buttons-delete"
-					onClick={handleDeleteButton}
-				/>
+				<Warning
+					isOpen={isModalOpen}
+					setClose={handleDeleteButton}
+					cb={handleDelete}
+				>
+					<DeleteOutlinedIcon
+						className="infoblock__block-buttons-delete"
+						onClick={handleDeleteButton}
+					/>
+				</Warning>
 			</div>
 			<div className="infoblock-content">
 				{projectData && projectsLocation && (

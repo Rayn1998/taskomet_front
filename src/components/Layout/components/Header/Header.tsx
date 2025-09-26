@@ -1,16 +1,18 @@
 import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 
-import backgroundImage from "@/assets/images/user.png";
 // MUI
 import Avatar from "@mui/material/Avatar";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import Logout from "@mui/icons-material/Logout";
+
+// MUI ICONS
 import SearchOutlinedIcon from "@mui/icons-material/SearchOutlined";
 import SettingsOutlinedIcon from "@mui/icons-material/SettingsOutlined";
 import NotificationsNoneOutlinedIcon from "@mui/icons-material/NotificationsNoneOutlined";
+import AdminPanelSettingsOutlinedIcon from "@mui/icons-material/AdminPanelSettingsOutlined";
 
 // STORES
 import { useAuthStore } from "@/zustand/authStore";
@@ -73,9 +75,13 @@ const Header = ({ isHeader }: { isHeader: boolean }) => {
 				<div className="header-right-block">
 					<SettingsOutlinedIcon className="header-icon" />
 					<NotificationsNoneOutlinedIcon className="header-icon" />
+					<AdminPanelSettingsOutlinedIcon
+						className="header-icon"
+						onClick={() => navigate("/admin")}
+					/>
 					<Avatar
 						alt="profile-avatar"
-						src={isAuth ? auth?.photo_url : backgroundImage}
+						src={isAuth ? auth?.photo_url : ""}
 						onClick={handleAvatarClick}
 						aria-controls={open ? "account-menu" : undefined}
 						aria-haspopup="true"

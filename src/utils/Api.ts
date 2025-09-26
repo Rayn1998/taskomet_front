@@ -29,6 +29,16 @@ class Api {
         }
     }
 
+    async createArtist(props: Omit<IArtist, "id">): Promise<IArtist> {
+        return this._request<IArtist>(`${this.url}/create-artist`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ ...props }),
+        });
+    }
+
     async getArtists(): Promise<IArtist[]> {
         return this._request<IArtist[]>(`${this.url}/get-artist`, {
             method: "GET",
@@ -38,12 +48,35 @@ class Api {
         });
     }
 
-    async getArtist(tg_id: number): Promise<IArtist> {
-        return this._request<IArtist>(`${this.url}/get-artist/${tg_id}`, {
+    async getArtist(user_name: string): Promise<IArtist> {
+        return this._request<IArtist>(`${this.url}/get-artist/${user_name}`, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
             },
+        });
+    }
+
+    async updateArtistRole(artistId: number, role: number): Promise<IArtist> {
+        return this._request<IArtist>(`${this.url}/artist-role`, {
+            method: "PATCH",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ artistId, role }),
+        });
+    }
+
+    async updateArtistAfterRegister(
+        data: Omit<IArtist, "id" | "role" | "name">,
+    ): Promise<IArtist> {
+        const { photo_url, tg_id, user_name } = data;
+        return this._request<IArtist>(`${this.url}/update-new-artist`, {
+            method: "PATCH",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ photo_url, tg_id, user_name }),
         });
     }
 
@@ -193,16 +226,6 @@ class Api {
                 method: "GET",
             },
         );
-    }
-
-    async createArtist(props: Omit<IArtist, "id">): Promise<IArtist> {
-        return this._request<IArtist>(`${this.url}/create-artist`, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ ...props }),
-        });
     }
 
     async sendComment(comment: FormData): Promise<ITaskData> {
