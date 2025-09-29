@@ -1,4 +1,4 @@
-import { FC, MouseEvent, useState, useEffect, useMemo } from "react";
+import { FC, MouseEvent, useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 
 import Layout from "@/components/Layout/Layout";
@@ -10,7 +10,6 @@ import LinearProgress from "@mui/material/LinearProgress";
 
 // STORES
 import { useErrorDataStore } from "@/zustand/errorDataStore";
-import { useProjectsStore } from "@/zustand/projectsStore";
 import { useScenesStore } from "@/zustand/scenesStore";
 import { useSceneDataStore } from "@/zustand/sceneDataStore";
 
@@ -20,9 +19,6 @@ import type IScene from "@shared/types/Scene";
 const ScenesList: FC = () => {
 	// ERROR DATA STORE
 	const { setErrorMessage } = useErrorDataStore();
-
-	// PROJECTS STORE
-	const { getProject } = useProjectsStore();
 
 	// SCENES STORE
 	const { scenes, lastProject, setScenes, resetScenes } = useScenesStore();

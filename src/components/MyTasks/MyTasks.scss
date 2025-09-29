@@ -1,0 +1,13 @@
+.my-tasks-content {
+    display: flex;
+    height: 100%;
+
+    .my-tasks-projects-list {
+        width: 30%;
+    }
+
+    .itemsblock-list {
+        width: 70%;
+        height: 100%;
+    }
+}

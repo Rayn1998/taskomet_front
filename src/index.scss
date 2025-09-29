@@ -1,3 +1,4 @@
+@use "components/AccordionItemsBlock/AccordionItemsBlock";
 @use "components/Admin/Admin";
 @use "components/App/App.scss";
 @use "components/ArtistsLoading/ArtistsLoading";
@@ -13,9 +14,11 @@
 @use "components/Layout/components/ItemsBlock/ItemsBlock";
 @use "components/Layout/components/Sidebar/Sidebar";
 @use "components/Layout/components/Statusline/Statusline";
+@use "components/MyTasks/MyTasks";
+@use "components/ProjectsList/ProjectsList";
 @use "components/ShotsList/ShotsList";
 @use "components/Signup/Signup";
-@use "components/ProjectsList/ProjectsList";
+@use "components/StatisticBlock/StatisticBlock";
 @use "components/Task/Task";
 @use "components/Popups/CreateComment/CreateComment";
 @use "components/Popups/ImagePreview/ImagePreview";

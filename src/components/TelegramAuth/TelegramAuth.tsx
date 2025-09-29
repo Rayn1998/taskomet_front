@@ -18,6 +18,8 @@ const TelegramAuth: FC = () => {
 				hash: "4152352352",
 				last_name: "Bodolanov",
 				username: "bodolanov",
+				photo_url:
+					"https://t.me/i/userpic/320/L00DAS7h4otNF4Or_Qy4l9n32VBw3HQl1yWyjhxemrw.jpg",
 				id: 1,
 			};
 			localStorage.setItem("user", JSON.stringify(fakeUser));

@@ -1,0 +1,52 @@
+@use "@/scss/variables" as *;
+
+$transition: all 0.5s ease-out;
+
+.accordion-items-block {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    align-items: center;
+
+    .accordion-items-block-list {
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 1rem;
+        width: 100%;
+        background-color: $background;
+        padding: 1rem;
+        overflow-y: scroll;
+
+        transition: $transition;
+
+        .accordion-items-block__project-accordion {
+            width: 100%;
+            background-color: $comment-background-darker;
+            color: $font-color;
+
+            .accordion-items-block__project-name {
+                padding: 1rem;
+                width: 30%;
+                background: linear-gradient(
+                    90deg,
+                    $lighten 10%,
+                    rgba(0, 0, 0, 0) 100%
+                );
+            }
+
+            .accordion-items-block__project-accortion-icon {
+                color: $font-color;
+            }
+
+            .accordion-items-block__project-accortion-details {
+                display: flex;
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+        }
+    }
+}
