@@ -1,5 +1,4 @@
-import { FC } from "react";
-
+// MUI
 import Dialog from "@mui/material/Dialog";
 import DialogTitle from "@mui/material/DialogTitle";
 import Avatar from "@mui/material/Avatar";
@@ -8,9 +7,10 @@ import ListItem from "@mui/material/ListItem";
 import ListItemAvatar from "@mui/material/ListItemAvatar";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemText from "@mui/material/ListItemText";
-import PersonIcon from "@mui/icons-material/Person";
+import DoNotDisturbIcon from "@mui/icons-material/DoNotDisturb";
 import AddIcon from "@mui/icons-material/Add";
-import { blue } from "@mui/material/colors";
+import AccountCircleOutlinedIcon from "@mui/icons-material/AccountCircleOutlined";
+import { red, green } from "@mui/material/colors";
 
 // STORES
 import { useCreateArtistPopupStore } from "@/components/Popups/CreateArtist/CreateArtistPopupStore";
@@ -22,7 +22,7 @@ interface ISimpleDialog {
 	onClose: (value: number | null) => void;
 }
 
-const ArtistSimpleDialog: FC<ISimpleDialog> = (props) => {
+const ArtistSimpleDialog = (props: ISimpleDialog) => {
 	// ARTIST STORE
 	const { artists: artistList } = useArtistStore();
 
@@ -42,7 +42,16 @@ const ArtistSimpleDialog: FC<ISimpleDialog> = (props) => {
 		setOpenClose();
 	};
 	return (
-		<Dialog open={open} onClose={handleClose}>
+		<Dialog
+			open={open}
+			onClose={handleClose}
+			sx={{
+				"& .MuiPaper-root": {
+					color: "rgb(230, 230, 230)",
+					backgroundColor: "rgb(50, 60, 70)",
+				},
+			}}
+		>
 			<DialogTitle>Select artist</DialogTitle>
 			<List sx={{ pt: 0 }}>
 				<ListItem disablePadding key="01">
@@ -50,11 +59,11 @@ const ArtistSimpleDialog: FC<ISimpleDialog> = (props) => {
 						<ListItemAvatar>
 							<Avatar
 								sx={{
-									bgcolor: blue[100],
-									color: blue[600],
+									bgcolor: red[500],
+									// color: blue[600],
 								}}
 							>
-								<PersonIcon />
+								<DoNotDisturbIcon />
 							</Avatar>
 						</ListItemAvatar>
 						<ListItemText primary="NONE" />
@@ -69,11 +78,13 @@ const ArtistSimpleDialog: FC<ISimpleDialog> = (props) => {
 								<ListItemAvatar>
 									<Avatar
 										sx={{
-											bgcolor: blue[100],
-											color: blue[600],
+											bgcolor: "rgba(50,140,150,0.5)",
+											color: red[600],
 										}}
 									>
-										<PersonIcon />
+										<AccountCircleOutlinedIcon
+											sx={{ color: "rgb(230,230,230)" }}
+										/>
 									</Avatar>
 								</ListItemAvatar>
 								<ListItemText primary={artist.name} />
@@ -83,7 +94,11 @@ const ArtistSimpleDialog: FC<ISimpleDialog> = (props) => {
 				<ListItem disablePadding>
 					<ListItemButton autoFocus onClick={handleAddArtistClick}>
 						<ListItemAvatar>
-							<Avatar>
+							<Avatar
+								sx={{
+									bgcolor: green[500],
+								}}
+							>
 								<AddIcon />
 							</Avatar>
 						</ListItemAvatar>

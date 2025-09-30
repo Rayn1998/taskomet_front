@@ -14,6 +14,7 @@ import Warning from "../Popups/Warning/Warning";
 import ArrowCircleRightOutlinedIcon from "@mui/icons-material/ArrowCircleRightOutlined";
 import InsertCommentOutlinedIcon from "@mui/icons-material/InsertCommentOutlined";
 import DeleteOutlinedIcon from "@mui/icons-material/DeleteOutlined";
+import ModeEditOutlineOutlinedIcon from "@mui/icons-material/ModeEditOutlineOutlined";
 
 // STORES
 import { useTaskInfoStore } from "@/zustand/taskInfoStore";
@@ -44,6 +45,10 @@ const InfoBlock = ({ blockOpen }: { blockOpen: boolean }) => {
 	const { resetTaskData, taskData, relatedTask } = useTaskDataStore();
 	const { setOpenClose: setOpenCloseComment } = useCreateCommentPopupStore();
 
+	// useEffect(() => console.log(projectData), [projectData]);
+	// useEffect(() => console.log(sceneData), [sceneData]);
+	// useEffect(() => console.log(taskData), [taskData]);
+
 	const handleDeleteButton = () => {
 		setIsModalOpen(!isModalOpen);
 	};
@@ -58,7 +63,7 @@ const InfoBlock = ({ blockOpen }: { blockOpen: boolean }) => {
 						[removeTask.bind(null, res.id), resetTaskData],
 					);
 				})
-				.catch((err) => {
+				.catch((_) => {
 					snackBar("Error while deleting the task", "error");
 				});
 		}
@@ -130,6 +135,7 @@ const InfoBlock = ({ blockOpen }: { blockOpen: boolean }) => {
 					className="infoblock__block-buttons-add"
 					onClick={handleOpenComment}
 				/>
+				<ModeEditOutlineOutlinedIcon className="infoblock__block-buttons-edit-info" />
 				<Warning
 					isOpen={isModalOpen}
 					setClose={handleDeleteButton}

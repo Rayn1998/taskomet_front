@@ -15,13 +15,15 @@ import { useSceneDataStore } from "@/zustand/sceneDataStore";
 
 // TYPES
 import type IScene from "@shared/types/Scene";
+import type IEntityProgress from "@shared/types/EntityProgress";
 
 const ScenesList: FC = () => {
 	// ERROR DATA STORE
 	const { setErrorMessage } = useErrorDataStore();
 
 	// SCENES STORE
-	const { scenes, lastProject, setScenes, resetScenes } = useScenesStore();
+	const { scenes, scenesProgress, lastProject, setScenes, resetScenes } =
+		useScenesStore();
 
 	// SCENE DATA STORE
 	const { setData: setSceneData, resetData: resetSceneData } =
@@ -72,14 +74,18 @@ const ScenesList: FC = () => {
 		<Layout isHeader isStatusline order menu>
 			{scenes === null && <LinearProgress />}
 			{scenes &&
+				scenesProgress &&
 				scenes.map((scene, i) => {
+					const progress = scenesProgress.find((progress) => {
+						if (progress.entityId === scene.id) return progress;
+					}) as IEntityProgress;
 					return (
 						<LayoutItem<IScene>
 							dataType="scene"
 							key={i}
 							number={i + 1}
 							item={scene}
-							progress={[] as any}
+							itemProgress={progress}
 							handleClick={handleClick}
 							handleDoubleClick={handleDoubleClick}
 							selected={Boolean(scene.name === selected)}

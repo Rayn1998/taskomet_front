@@ -1,5 +1,5 @@
 import type IProject from "@shared/types/Project";
-import type IProjectProgress from "@shared/types/ProjectProgress";
+import type IEntityProgress from "@shared/types/EntityProgress";
 import type IScene from "@shared/types/Scene";
 import type ITask from "@shared/types/Task";
 import type ITaskData from "@shared/types/TaskData";
@@ -82,8 +82,8 @@ class Api {
         });
     }
 
-    async getProjects(): Promise<[IProject[], IProjectProgress[]]> {
-        return this._request<[IProject[], IProjectProgress[]]>(
+    async getProjects(): Promise<[IProject[], IEntityProgress[]]> {
+        return this._request<[IProject[], IEntityProgress[]]>(
             `${this.url}/projects`,
             {
                 method: "GET",
@@ -110,13 +110,18 @@ class Api {
         });
     }
 
-    async getScenes(projectName: string): Promise<IScene[]> {
-        return this._request<IScene[]>(`${this.url}/projects/${projectName}`, {
-            method: "GET",
-            headers: {
-                "Content-Type": "application/json",
+    async getScenes(
+        projectName: string,
+    ): Promise<[IScene[], IEntityProgress[]]> {
+        return this._request<[IScene[], IEntityProgress[]]>(
+            `${this.url}/projects/${projectName}`,
+            {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                },
             },
-        });
+        );
     }
 
     async createScene(
@@ -142,6 +147,18 @@ class Api {
     async getTasks(projectName: string, sceneName: string): Promise<ITask[]> {
         return this._request<ITask[]>(
             `${this.url}/projects/${projectName}/${sceneName}`,
+            {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+            },
+        );
+    }
+
+    async getAllTasks(projectId: number): Promise<ITask[]> {
+        return this._request<ITask[]>(
+            `${this.url}/projects/get-all-tasks/${projectId}`,
             {
                 method: "GET",
                 headers: {

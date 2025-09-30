@@ -1,12 +1,12 @@
 import { create } from "zustand";
 
 import type IProject from "@shared/types/Project";
-import type IProjectProgress from "@shared/types/ProjectProgress";
+import type IEntityProgress from "@shared/types/EntityProgress";
 
 interface IProjectsStore {
     projects: IProject[] | null;
-    projectsProgress: IProjectProgress[] | null;
-    setProjects: (data: [IProject[], IProjectProgress[]]) => void;
+    projectsProgress: IEntityProgress[] | null;
+    setProjects: (data: [IProject[], IEntityProgress[]]) => void;
     addProject: (data: IProject) => void;
     getProject: (id: number) => IProject | null;
     removeProject: (id: number) => void;
@@ -33,7 +33,7 @@ export const useProjectsStore = create<IProjectsStore>((set, get) => ({
                 : null,
             projectsProgress: state.projectsProgress
                 ? state.projectsProgress.filter(
-                      (progress) => progress.projectId !== id,
+                      (progress) => progress.entityId !== id,
                   )
                 : null,
         })),

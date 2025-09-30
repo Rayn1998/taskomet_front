@@ -196,7 +196,6 @@ const CreateComment = () => {
 			<div className="create-comment-header">
 				<DialogTitle>Add new comment</DialogTitle>
 				<DropDown<TypeOfData>
-					// label="task-status"
 					items={TypeOfDataLabels}
 					selected={typeOfComment}
 					onChange={setTypeOfComment}

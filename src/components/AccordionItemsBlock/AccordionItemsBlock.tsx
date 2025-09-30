@@ -17,6 +17,7 @@ interface IListItemsBlock<T> {
 	selectedItemId: number | null;
 	handleItemClick: (...any: any) => any;
 	itemsArray: [string, T[]][] | null;
+	handleDoubleClickNavigateToTask: boolean;
 	blockStyle?: CSSProperties;
 }
 
@@ -27,6 +28,7 @@ const AccordionItemsBlock = <T,>({
 	selectedItemId,
 	handleItemClick,
 	itemsArray,
+	handleDoubleClickNavigateToTask,
 	blockStyle = {},
 }: IListItemsBlock<T>) => {
 	return (
@@ -72,7 +74,9 @@ const AccordionItemsBlock = <T,>({
 														selectedItemId,
 												)}
 												handleClick={handleItemClick}
-												handleDoubleClickNavigateToTask
+												handleDoubleClickNavigateToTask={
+													handleDoubleClickNavigateToTask
+												}
 											/>
 										);
 									})}

@@ -8,6 +8,8 @@ import ListItemText from "@mui/material/ListItemText";
 import ListItemAvatar from "@mui/material/ListItemAvatar";
 import LinearProgress from "@mui/material/LinearProgress";
 import Avatar from "@mui/material/Avatar";
+import AccountCircleOutlinedIcon from "@mui/icons-material/AccountCircleOutlined";
+import { red, blue, green } from "@mui/material/colors";
 
 interface IListItemsBlock<T> {
 	items: T[] | null;
@@ -25,7 +27,7 @@ const ListItemsBlock = <T,>({
 		<List
 			dense
 			sx={{
-				width: "30%",
+				width: "100%",
 				height: "100%",
 				overflowY: "scroll",
 				bgcolor: "rgb(42, 44, 51)",
@@ -67,7 +69,20 @@ const ListItemsBlock = <T,>({
 									/>
 								</ListItemAvatar>
 							)}
-
+							{!(item as any).photo_url && (
+								<ListItemAvatar>
+									<Avatar
+										sx={{
+											bgcolor: "rgba(50,140,150,0.5)",
+											color: red[600],
+										}}
+									>
+										<AccountCircleOutlinedIcon
+											sx={{ color: "rgb(230,230,230)" }}
+										/>
+									</Avatar>
+								</ListItemAvatar>
+							)}
 							<ListItemText
 								id={labelId}
 								primary={(item as any).name}

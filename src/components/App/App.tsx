@@ -14,6 +14,7 @@ import ErrorComponent from "@/components/Error/Error";
 import ImagePreviewPopup from "@/components/Popups/ImagePreview/ImagePreview";
 import MyTasks from "@/components/MyTasks/MyTasks";
 import ProjectsList from "@/components/ProjectsList/ProjectsList";
+import ProjectsStatistics from "@/components/ProjectsStatistics/ProjectsStatistics";
 import ProtectedRoute from "@/components/ProtectedRoute/ProtectedRoute";
 import ScenesList from "@/components/ScenesList/ScenesList";
 import ShotsList from "@/components/ShotsList/ShotsList";
@@ -47,6 +48,10 @@ const App = () => {
 							element={<ArtistsLoading />}
 						/>
 						<Route path="/admin" element={<Admin />} />
+						<Route
+							path="/projects-statistics"
+							element={<ProjectsStatistics />}
+						/>
 					</Route>
 
 					<Route path="/signup" element={<Signup />} />

@@ -1,4 +1,4 @@
-import { useState, MouseEvent } from "react";
+import { useState, MouseEvent, useEffect } from "react";
 
 // STORES
 import { useProjectDataStore } from "@/zustand/projectDataStore";
@@ -7,14 +7,14 @@ import { useSceneDataStore } from "@/zustand/sceneDataStore";
 // TYPES
 import type IProject from "@shared/types/Project";
 import type IScene from "@shared/types/Scene";
-import type IProjectProgress from "@shared/types/ProjectProgress";
+import type IEntityProgress from "@shared/types/EntityProgress";
 import { EStatus, StatusColors } from "@/types/Status";
 
 interface ILayoutItem<T extends IProject | IScene> {
 	dataType: string;
 	number: number;
 	item: T;
-	progress: IProjectProgress["progress"];
+	itemProgress: IEntityProgress;
 	handleClick: (item: T) => void;
 	handleDoubleClick: (e: MouseEvent<HTMLDivElement>) => void;
 	selected: boolean;
@@ -24,7 +24,7 @@ const LayoutItem = <T extends IProject | IScene>({
 	dataType,
 	number,
 	item,
-	progress,
+	itemProgress,
 	handleClick,
 	handleDoubleClick,
 	selected,
@@ -73,8 +73,8 @@ const LayoutItem = <T extends IProject | IScene>({
 			<p className="item-name">{item.name}</p>
 			<div className="item-status-wrapper">
 				<div className="item-status">
-					{progress.length > 0 &&
-						progress.map((el, _, arr) => {
+					{itemProgress.progress?.length > 0 &&
+						itemProgress.progress?.map((el, _, arr) => {
 							return (
 								<div
 									key={el.status}
@@ -91,21 +91,20 @@ const LayoutItem = <T extends IProject | IScene>({
 								></div>
 							);
 						})}
-					{progress.length === 0 && (
+					{itemProgress.progress?.length === 0 && (
 						<div
 							style={{
 								borderRadius: 0,
 								width: "100%",
-								background:
-									"linear-gradient(90deg, rgba(45,35,100, 0.55) 0%, rgba(150,90,90, 0.3) 100%",
+								backgroundColor: "rgb(125, 125, 125)",
 							}}
 						></div>
 					)}
 				</div>
 			</div>
-			<p className="item-artists">--</p>
-			<p className="item-hours">--</p>
-			<p className="item-priority">{item.priority}</p>
+			<p className="item-artists">{itemProgress?.executorsCount}</p>
+			<p className="item-hours">{itemProgress?.spentHours}</p>
+			<p className="item-priority">{/*{item.priority}*/}</p>
 		</div>
 	);
 };

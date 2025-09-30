@@ -28,7 +28,7 @@ const CreateArtistPopup = () => {
 	const [name, setName] = useState<string>("");
 	const [userName, setUserName] = useState<string>("");
 
-	const handleClick = () => {
+	const handleCreateArtist = () => {
 		if (!(name && userName)) return;
 		const reqData: Omit<IArtist, "id"> = {
 			name,
@@ -46,7 +46,16 @@ const CreateArtistPopup = () => {
 			.catch((err) => console.log(err));
 	};
 	return (
-		<Dialog onClose={handleClose} open={isOpen}>
+		<Dialog
+			onClose={handleClose}
+			open={isOpen}
+			sx={{
+				"& .MuiPaper-root": {
+					color: "rgb(230, 230, 230)",
+					backgroundColor: "rgb(50, 60, 70)",
+				},
+			}}
+		>
 			<DialogTitle>Add new artist</DialogTitle>
 			<DialogContent
 				sx={{
@@ -56,24 +65,59 @@ const CreateArtistPopup = () => {
 					gap: "1rem",
 				}}
 			>
-				<TextField
-					label="name"
-					value={name}
-					onChange={(e) => {
-						setName(e.currentTarget.value);
+				<form
+					id="create-artist-form"
+					onSubmit={handleCreateArtist}
+					style={{
+						display: "flex",
+						flexDirection: "column",
+						gap: "1rem",
 					}}
-				/>
-				<TextField
-					label="telegram username"
-					value={userName}
-					onChange={(e) => {
-						setUserName(e.currentTarget.value);
-					}}
-				/>
+				>
+					<TextField
+						required
+						label="name"
+						value={name}
+						onChange={(e) => {
+							setName(e.currentTarget.value);
+						}}
+						sx={{
+							"& .MuiInputBase-input": {
+								color: "rgb(230, 230, 230)",
+							},
+							"& .MuiFormLabel-root": {
+								color: "rgb(230, 230, 230)",
+							},
+						}}
+					/>
+					<TextField
+						required
+						label="telegram username"
+						value={userName}
+						onChange={(e) => {
+							setUserName(e.currentTarget.value);
+						}}
+						sx={{
+							"& .MuiInputBase-input": {
+								color: "rgb(230, 230, 230)",
+							},
+							"& .MuiFormLabel-root": {
+								color: "rgb(230, 230, 230)",
+							},
+						}}
+					/>
+				</form>
 				{/* <DropDown label="role" /> */}
 			</DialogContent>
 			<DialogActions>
-				<Button onClick={handleClick}>Add new artist</Button>
+				<Button
+					type="submit"
+					variant="contained"
+					color="success"
+					form="create-artist-form"
+				>
+					Add new artist
+				</Button>
 			</DialogActions>
 		</Dialog>
 	);

@@ -1,13 +1,15 @@
+@use "@/scss/variables" as *;
+
 .my-tasks-content {
     display: flex;
     height: 100%;
 
-    .my-tasks-projects-list {
-        width: 30%;
+    .my-tasks-projects {
+        transition: $transition;
     }
 
     .itemsblock-list {
-        width: 70%;
+        width: 100%;
         height: 100%;
     }
 }

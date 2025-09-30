@@ -68,7 +68,16 @@ const CreateScenePopup = () => {
 		setScenePopupClose();
 	};
 	return (
-		<Dialog open={isScenePopupOpen} onClose={handleClose}>
+		<Dialog
+			open={isScenePopupOpen}
+			onClose={handleClose}
+			sx={{
+				"& .MuiPaper-root": {
+					color: "rgb(230, 230, 230)",
+					backgroundColor: "rgb(50, 60, 70)",
+				},
+			}}
+		>
 			<DialogTitle>Create new scene</DialogTitle>
 			<DialogContent>
 				<form
@@ -82,19 +91,41 @@ const CreateScenePopup = () => {
 					}}
 				>
 					<TextField
+						required
 						label="name"
 						value={name}
 						onChange={(e) => setName(e.currentTarget.value)}
+						sx={{
+							"& .MuiInputBase-input": {
+								color: "rgb(230, 230, 230)",
+							},
+							"& .MuiFormLabel-root": {
+								color: "rgb(230, 230, 230)",
+							},
+						}}
 					/>
 					<TextField
 						label="description"
 						value={description}
 						onChange={(e) => setDescription(e.currentTarget.value)}
+						sx={{
+							"& .MuiInputBase-input": {
+								color: "rgb(230, 230, 230)",
+							},
+							"& .MuiFormLabel-root": {
+								color: "rgb(230, 230, 230)",
+							},
+						}}
 					/>
 				</form>
 			</DialogContent>
 			<DialogActions>
-				<Button type="submit" form="create-scene-form">
+				<Button
+					type="submit"
+					variant="contained"
+					color="success"
+					form="create-scene-form"
+				>
 					Add new scene
 				</Button>
 			</DialogActions>

@@ -59,7 +59,16 @@ const CreateProjectPopup = () => {
 		setProjectPopupClose();
 	};
 	return (
-		<Dialog open={isProjectPopupOpen} onClose={handleClose}>
+		<Dialog
+			open={isProjectPopupOpen}
+			onClose={handleClose}
+			sx={{
+				"& .MuiPaper-root": {
+					color: "rgb(230, 230, 230)",
+					backgroundColor: "rgb(50, 60, 70)",
+				},
+			}}
+		>
 			<DialogTitle>Create new project</DialogTitle>
 			<DialogContent>
 				<form
@@ -73,19 +82,41 @@ const CreateProjectPopup = () => {
 					}}
 				>
 					<TextField
+						required
 						label="name"
 						value={name}
 						onChange={(e) => setName(e.currentTarget.value)}
+						sx={{
+							"& .MuiInputBase-input": {
+								color: "rgb(230, 230, 230)",
+							},
+							"& .MuiFormLabel-root": {
+								color: "rgb(230, 230, 230)",
+							},
+						}}
 					/>
 					<TextField
 						label="description"
 						value={description}
 						onChange={(e) => setDescription(e.currentTarget.value)}
+						sx={{
+							"& .MuiInputBase-input": {
+								color: "rgb(230, 230, 230)",
+							},
+							"& .MuiFormLabel-root": {
+								color: "rgb(230, 230, 230)",
+							},
+						}}
 					/>
 				</form>
 			</DialogContent>
 			<DialogActions>
-				<Button type="submit" form="create-project-form">
+				<Button
+					type="submit"
+					variant="contained"
+					color="success"
+					form="create-project-form"
+				>
 					Add new project
 				</Button>
 			</DialogActions>

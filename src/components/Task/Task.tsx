@@ -4,9 +4,9 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { snackBar } from "@/utils/snackBar";
 import { api } from "@/utils/Api";
 import { formatSQLTimestamp } from "@/utils/formatSQLTimestamp";
-// import { checkLocation } from "@/utils/checkLocation";
 
 // STORES
+import { useScenesStore } from "@/zustand/scenesStore";
 import { useTaskInfoStore } from "@/zustand/taskInfoStore";
 import { useArtistStore } from "@/zustand/artistStore";
 import { useTaskDataStore } from "@/zustand/taskDataStore";
@@ -16,7 +16,6 @@ import { useTaskRedirectStore } from "@/zustand/taskRedirectStore";
 
 // MUI
 import DropDown from "@/components/DropDown/DropDown";
-import Button from "@mui/material/Button";
 import ArtistSimpleDialog from "@/components/ArtistSimpleDialog/ArtistSimpleDialog";
 
 // TYPES | CONSTANTS
@@ -57,6 +56,9 @@ const Task = ({
 
 	// TASKS STORE
 	const { updateTask } = useTasksStore();
+
+	// SCENES STORE
+	const { resetLastProject } = useScenesStore();
 
 	// TASK REDIRECT STORE
 	const { redirectedTaskId, setRedirectedTaskId } = useTaskRedirectStore();
@@ -111,6 +113,7 @@ const Task = ({
 				const updatedTask: ITask = { ...task, status };
 				updateTask(updatedTask);
 				addTaskData(res);
+				resetLastProject(); // для того чтобы прогрессбар на странице сцен обновился
 				snackBar("Status was changed", "success");
 			})
 			.catch((err) => console.log(err));
@@ -212,7 +215,6 @@ const Task = ({
 				{scene_name}_{name}
 			</div>
 			<DropDown<EStatus>
-				// label="task-status"
 				items={StatusLabels}
 				selected={status}
 				onChange={handleChangeStatus}

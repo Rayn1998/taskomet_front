@@ -33,7 +33,6 @@ const ArtistsLoading = () => {
 		null,
 	);
 	const [selectedTaskId, setSelectedTaskId] = useState<number | null>(null);
-	// const [isStatisticsOpen, setIsStatisticsOpen] = useState<boolean>(false);
 	const [filteredByProjectTasks, setFilteredByProjectTasks] = useState<
 		[string, ITask[]][] | null
 	>(null);
@@ -41,13 +40,11 @@ const ArtistsLoading = () => {
 	const handleSelectArtist = useCallback(
 		(id: number) => {
 			if (id === selectedArtistId) return;
-			console.log("here");
 			setFilteredByProjectTasks(null);
 			setSelectedArtistId(id);
 			resetTasks();
 			api.getMyTasks(id)
 				.then((tasks) => {
-					console.log("request");
 					setTasks(tasks, location.pathname);
 				})
 				.catch((err) => console.log(err));
@@ -101,11 +98,13 @@ const ArtistsLoading = () => {
 	return (
 		<Layout isHeader canvas>
 			<div className="artists-loading">
-				<ListItemsBlock
-					items={artists}
-					selectedItemId={selectedArtistId}
-					handleSelectItem={handleSelectArtist}
-				/>
+				<div className="artists-loading-artists-list">
+					<ListItemsBlock
+						items={artists}
+						selectedItemId={selectedArtistId}
+						handleSelectItem={handleSelectArtist}
+					/>
+				</div>
 				<div className="artists-loading-tasks-block">
 					<div className="artists-loading-tasks">
 						<AccordionItemsBlock<ITask>
@@ -114,8 +113,8 @@ const ArtistsLoading = () => {
 							noItemsForSelectedEntityText="This artist has no tasks assigned yet..."
 							selectedItemId={selectedTaskId}
 							handleItemClick={handleTaskClick}
+							handleDoubleClickNavigateToTask
 							itemsArray={filteredByProjectTasks}
-							// blockStyle={{ width: "100%" }}
 						/>
 					</div>
 					<StatisticBlock />
