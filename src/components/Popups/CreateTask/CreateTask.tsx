@@ -25,7 +25,7 @@ const CreateTaskPopup = () => {
 		useCreateTaskPopupStore();
 
 	// TASKS STORE
-	const addTask = useTasksStore((state) => state.addTask);
+	const { tasks, addTask } = useTasksStore();
 
 	// SCENES STORE
 	const { resetLastProject } = useScenesStore();
@@ -36,6 +36,14 @@ const CreateTaskPopup = () => {
 
 	const handleCreateTask = (e: FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
+		if (!tasks) return;
+		for (const task of tasks) {
+			if (task.name.toLowerCase() === name.toLowerCase()) {
+				snackBar("Task with same name already exists", "error");
+				return;
+			}
+		}
+
 		const [projectName, sceneName] = location.pathname.split("/").slice(-2);
 		if (projectName && projectName.length > 0) {
 			api.createTask(name, description, projectName, sceneName)

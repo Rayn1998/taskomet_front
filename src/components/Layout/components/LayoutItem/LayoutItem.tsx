@@ -9,6 +9,7 @@ import type IProject from "@shared/types/Project";
 import type IScene from "@shared/types/Scene";
 import type IEntityProgress from "@shared/types/EntityProgress";
 import { EStatus, StatusColors } from "@/types/Status";
+import { EPriority, PriorityColors } from "@/types/Priority";
 
 interface ILayoutItem<T extends IProject | IScene> {
 	dataType: string;
@@ -104,7 +105,39 @@ const LayoutItem = <T extends IProject | IScene>({
 			</div>
 			<p className="item-artists">{itemProgress?.executorsCount}</p>
 			<p className="item-hours">{itemProgress?.spentHours}</p>
-			<p className="item-priority">{/*{item.priority}*/}</p>
+			<div className="item-priority-wrapper">
+				<div className="item-priority">
+					{itemProgress.priority?.length > 0 &&
+						itemProgress.priority?.map((el, _, arr) => {
+							return (
+								<div
+									key={el.priority}
+									style={{
+										borderRadius: 0,
+										width: `${
+											(+el.amount / arr.length) * 100
+										}%`,
+										height: "100%",
+										backgroundColor: `${
+											PriorityColors[
+												el.priority as EPriority
+											]
+										}`,
+									}}
+								></div>
+							);
+						})}
+					{itemProgress.priority?.length === 0 && (
+						<div
+							style={{
+								borderRadius: 0,
+								width: "100%",
+								backgroundColor: "rgb(125, 125, 125)",
+							}}
+						></div>
+					)}
+				</div>
+			</div>
 		</div>
 	);
 };

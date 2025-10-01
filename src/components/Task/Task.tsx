@@ -22,7 +22,7 @@ import ArtistSimpleDialog from "@/components/ArtistSimpleDialog/ArtistSimpleDial
 import type ITask from "@shared/types/Task";
 import type { TaskProps } from "@/components/ShotsList/TaskProps.type";
 import { EStatus, StatusLabels, StatusColors } from "@/types/Status";
-import { EPriority, PriorityLabels } from "@/types/Priority";
+import { EPriority, PriorityLabels, PriorityColors } from "@/types/Priority";
 import { TypeOfData } from "@/types/TypeOfData";
 import type { TaskDataMin } from "@shared/types/TaskData";
 
@@ -124,6 +124,7 @@ const Task = ({
 			.then((newPriority) => {
 				const updatedTask: ITask = { ...task, priority: newPriority };
 				updateTask(updatedTask);
+				resetLastProject(); // для того чтобы прогрессбар на странице сцен обновился
 				snackBar("Priority was changed", "success");
 			})
 			.catch((err) => console.log(err));
@@ -204,10 +205,14 @@ const Task = ({
 					hover || selected
 						? `linear-gradient(90deg, ${lighten(
 								StatusColors[status as EStatus],
-						  )} 0%, rgba(0, 0, 0, 0) 70%, rgba(50, 100, 120, 0.5) 100%)`
+						  )} 0%, rgba(0, 0, 0, 0) 70%, ${lighten(
+								PriorityColors[priority as EPriority],
+						  )}`
 						: `linear-gradient(90deg, ${
 								StatusColors[status as EStatus]
-						  } 0%, rgba(0, 0, 0, 0) 70%, rgba(50, 100, 120, 0.5) 100%)`,
+						  } 0%, rgba(0, 0, 0, 0) 70%, ${
+								PriorityColors[priority as EPriority]
+						  }`,
 			}}
 		>
 			<div className="task-number">{orderNum + 1}</div>

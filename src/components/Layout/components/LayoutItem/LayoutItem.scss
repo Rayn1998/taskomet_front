@@ -6,6 +6,7 @@
     align-items: center;
     min-height: 5rem;
     user-select: none;
+    padding: 0 1rem;
 
     p {
         text-align: center;
@@ -18,16 +19,18 @@
     .item-status-wrapper,
     .item-artists,
     .item-hours,
-    .item-priority {
+    .item-priority-wrapper {
         text-align: center;
         width: $items-width;
     }
 
-    .item-status-wrapper {
+    .item-status-wrapper,
+    .item-priority-wrapper {
         height: 100%;
         padding: 1rem 0;
 
-        .item-status {
+        .item-status,
+        .item-priority {
             border-radius: 2rem;
             overflow: hidden;
             display: flex;

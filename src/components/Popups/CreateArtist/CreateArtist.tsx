@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, FormEvent } from "react";
 
 // STATES
 import { useCreateArtistPopupStore } from "./CreateArtistPopupStore";
@@ -13,13 +13,14 @@ import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 
 import { api } from "@/utils/Api";
+import { snackBar } from "@/utils/snackBar";
 
 // TYPES
 import type IArtist from "@shared/types/Artist";
 
 const CreateArtistPopup = () => {
 	// ARTIST STORE
-	const addArtist = useArtistStore((state) => state.addArtist);
+	const { artists, addArtist } = useArtistStore();
 
 	// Create Artist Popup states
 	const { isOpen, setClose: handleClose } = useCreateArtistPopupStore();
@@ -28,14 +29,25 @@ const CreateArtistPopup = () => {
 	const [name, setName] = useState<string>("");
 	const [userName, setUserName] = useState<string>("");
 
-	const handleCreateArtist = () => {
+	const handleCreateArtist = (e: FormEvent<HTMLFormElement>) => {
+		e.preventDefault();
 		if (!(name && userName)) return;
+		if (!artists) return;
+
+		for (const artist of artists) {
+			if (artist.name.toLowerCase() === name.toLowerCase()) {
+				snackBar("Artist with same name already exists", "error");
+				return;
+			}
+		}
+
 		const reqData: Omit<IArtist, "id"> = {
 			name,
 			user_name: userName,
 			role: 0,
 			photo_url: "",
 		};
+
 		api.createArtist(reqData)
 			.then((newArtist) => {
 				setName("");

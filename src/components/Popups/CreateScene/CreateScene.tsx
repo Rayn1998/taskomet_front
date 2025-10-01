@@ -13,6 +13,7 @@ import IconButton from "@mui/material/IconButton";
 import CloseIcon from "@mui/icons-material/Close";
 
 import { api } from "@/utils/Api";
+import { snackBar } from "@/utils/snackBar";
 
 // STORE
 import { useCreateScenePopupStore } from "./CreateScenePopupStore";
@@ -26,7 +27,7 @@ const CreateScenePopup = () => {
 		useCreateScenePopupStore();
 
 	// SCENES STORE
-	const { addScene } = useScenesStore();
+	const { scenes, addScene } = useScenesStore();
 
 	// SNACKBAR
 	const { enqueueSnackbar } = useSnackbar();
@@ -36,6 +37,15 @@ const CreateScenePopup = () => {
 
 	const handleAddScene = (e: FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
+		if (!scenes) return;
+
+		for (const scene of scenes) {
+			if (scene.name.toLowerCase() === name.toLowerCase()) {
+				snackBar("Scene with same name already exists", "error");
+				return;
+			}
+		}
+
 		const [projectName] = location.pathname.split("/").slice(-1);
 		if (projectName && projectName.length > 0) {
 			api.createScene(name, description, projectName)
