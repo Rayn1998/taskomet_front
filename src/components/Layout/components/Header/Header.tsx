@@ -21,12 +21,17 @@ import AutorenewOutlinedIcon from "@mui/icons-material/AutorenewOutlined";
 
 // STORES
 import { useAuthStore } from "@/zustand/authStore";
-
 import { useProjectsStore } from "@/zustand/projectsStore";
 import { useScenesStore } from "@/zustand/scenesStore";
 import { useTasksStore } from "@/zustand/tasksStore";
 
+// TYPES
+import { EArtistRole } from "@/types/ArtistRole";
+
 const Header = ({ isHeader }: { isHeader: boolean }) => {
+	// AUTH STORE
+	const { auth, resetAuth } = useAuthStore();
+
 	// PROJECTS STORE
 	const { setProjects } = useProjectsStore();
 
@@ -44,7 +49,6 @@ const Header = ({ isHeader }: { isHeader: boolean }) => {
 	const [rotateAngle, setRotateAngel] = useState<number>(0);
 	const open = Boolean(anchorEl);
 
-	const { auth, resetAuth } = useAuthStore();
 	const isAuth = Boolean(auth);
 	const [isSearchActive, setSearchActive] = useState<boolean>(false);
 	const inputRef = useRef<HTMLInputElement>(null);
@@ -150,10 +154,12 @@ const Header = ({ isHeader }: { isHeader: boolean }) => {
 					/>
 					{/* <SettingsOutlinedIcon className="header-icon" /> */}
 					{/* <NotificationsNoneOutlinedIcon className="header-icon" /> */}
-					<AdminPanelSettingsOutlinedIcon
-						className="header-icon"
-						onClick={() => navigate("/admin")}
-					/>
+					{auth && auth.role !== EArtistRole.Artist && (
+						<AdminPanelSettingsOutlinedIcon
+							className="header-icon"
+							onClick={() => navigate("/admin")}
+						/>
+					)}
 					<Avatar
 						alt="profile-avatar"
 						src={isAuth ? auth?.photo_url : ""}

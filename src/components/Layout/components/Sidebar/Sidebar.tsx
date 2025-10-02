@@ -9,7 +9,14 @@ import AssessmentOutlinedIcon from "@mui/icons-material/AssessmentOutlined";
 import Tooltip from "@mui/material/Tooltip";
 import Zoom from "@mui/material/Zoom";
 
+// STORES
+import { useAuthStore } from "@/zustand/authStore";
+
+// TYPES
+import { EArtistRole } from "@/types/ArtistRole";
+
 const Sidebar: FC = () => {
+	const { auth } = useAuthStore();
 	const navigate = useNavigate();
 	return (
 		<div className="sidebar">
@@ -47,40 +54,44 @@ const Sidebar: FC = () => {
 					onClick={() => navigate("/my-tasks")}
 				/>
 			</Tooltip>
-			<Tooltip
-				title="Artists Loading"
-				placement="right"
-				slots={{ transition: Zoom }}
-				slotProps={{
-					tooltip: {
-						sx: {
-							fontSize: "1rem",
+			{auth && auth.role !== EArtistRole.Artist && (
+				<Tooltip
+					title="Artists Loading"
+					placement="right"
+					slots={{ transition: Zoom }}
+					slotProps={{
+						tooltip: {
+							sx: {
+								fontSize: "1rem",
+							},
 						},
-					},
-				}}
-			>
-				<RecentActorsOutlinedIcon
-					className="sidebar-icon"
-					onClick={() => navigate("/artists-loading")}
-				/>
-			</Tooltip>
-			<Tooltip
-				title="Project Statistics"
-				placement="right"
-				slots={{ transition: Zoom }}
-				slotProps={{
-					tooltip: {
-						sx: {
-							fontSize: "1rem",
+					}}
+				>
+					<RecentActorsOutlinedIcon
+						className="sidebar-icon"
+						onClick={() => navigate("/artists-loading")}
+					/>
+				</Tooltip>
+			)}
+			{auth && auth.role !== EArtistRole.Artist && (
+				<Tooltip
+					title="Project Statistics"
+					placement="right"
+					slots={{ transition: Zoom }}
+					slotProps={{
+						tooltip: {
+							sx: {
+								fontSize: "1rem",
+							},
 						},
-					},
-				}}
-			>
-				<AssessmentOutlinedIcon
-					className="sidebar-icon"
-					onClick={() => navigate("/projects-statistics")}
-				/>
-			</Tooltip>
+					}}
+				>
+					<AssessmentOutlinedIcon
+						className="sidebar-icon"
+						onClick={() => navigate("/projects-statistics")}
+					/>
+				</Tooltip>
+			)}
 		</div>
 	);
 };

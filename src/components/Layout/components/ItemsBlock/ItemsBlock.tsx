@@ -11,6 +11,7 @@ import AddCircleOutlineOutlinedIcon from "@mui/icons-material/AddCircleOutlineOu
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 
 // STORES
+import { useAuthStore } from "@/zustand/authStore";
 import { useTaskViewStore } from "@/zustand/taskViewStore";
 import { useTaskInfoStore } from "@/zustand/taskInfoStore";
 import { useCreateProjectPopupStore } from "@/components/Popups/CreateProject/CreateProjectPopupStore";
@@ -19,6 +20,7 @@ import { useCreateTaskPopupStore } from "@/components/Popups/CreateTask/CreateTa
 
 // TYPES
 import type { ILayoutProps } from "@/components/Layout/Layout";
+import { EArtistRole } from "@/types/ArtistRole";
 
 const ItemsBlock = ({
 	children,
@@ -36,6 +38,9 @@ const ItemsBlock = ({
 		useState<boolean>(false);
 	const [createTaskAllowed, setCreateTaskAllowed] = useState<boolean>(false);
 	const [myTasksLocation, setMyTasksLocation] = useState<boolean>(false);
+
+	// AUTH STORE
+	const { auth } = useAuthStore();
 
 	// TASK POPUP STORE
 	const { setOpenClose: setOpenCloseTaskPopup } = useCreateTaskPopupStore();
@@ -80,12 +85,14 @@ const ItemsBlock = ({
 			>
 				{menu && (
 					<div className="itemsblock-menu">
-						{!myTasksLocation && (
-							<AddCircleOutlineOutlinedIcon
-								className="itemsblock-button"
-								onClick={handleAddButton}
-							/>
-						)}
+						{!myTasksLocation &&
+							auth &&
+							auth.role !== EArtistRole.Artist && (
+								<AddCircleOutlineOutlinedIcon
+									className="itemsblock-button"
+									onClick={handleAddButton}
+								/>
+							)}
 						<InfoOutlinedIcon
 							className="itemsblock-button"
 							onClick={() => infoOpenClose(!taskOpen)}

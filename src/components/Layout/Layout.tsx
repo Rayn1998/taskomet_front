@@ -5,7 +5,6 @@ import ItemsBlock from "@/components/Layout/components/ItemsBlock/ItemsBlock";
 
 // TYPES
 import type { IChildrenComponent } from "@/types/IChildrenComponent";
-
 export interface ILayoutProps extends IChildrenComponent {
 	isHeader?: boolean;
 	isStatusline?: boolean;

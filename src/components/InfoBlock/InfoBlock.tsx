@@ -18,6 +18,7 @@ import DeleteOutlinedIcon from "@mui/icons-material/DeleteOutlined";
 import ModeEditOutlineOutlinedIcon from "@mui/icons-material/ModeEditOutlineOutlined";
 
 // STORES
+import { useAuthStore } from "@/zustand/authStore";
 import { useTaskInfoStore } from "@/zustand/taskInfoStore";
 import { useProjectsStore } from "@/zustand/projectsStore";
 import { useProjectDataStore } from "@/zustand/projectDataStore";
@@ -26,6 +27,9 @@ import { useSceneDataStore } from "@/zustand/sceneDataStore";
 import { useTasksStore } from "@/zustand/tasksStore";
 import { useTaskDataStore } from "@/zustand/taskDataStore";
 import { useCreateCommentPopupStore } from "@/components/Popups/CreateComment/CreateCommentPopupStore";
+
+// TYPES
+import { EArtistRole } from "@/types/ArtistRole";
 
 const InfoBlock = ({ blockOpen }: { blockOpen: boolean }) => {
 	const location = useLocation();
@@ -37,6 +41,7 @@ const InfoBlock = ({ blockOpen }: { blockOpen: boolean }) => {
 	const [forbiddenComment, setForbiddenComment] = useState<boolean>(false);
 	const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
 
+	const { auth } = useAuthStore();
 	const { removeTask } = useTasksStore();
 	const { removeProject } = useProjectsStore();
 	const { removeScene } = useScenesStore();
@@ -136,16 +141,18 @@ const InfoBlock = ({ blockOpen }: { blockOpen: boolean }) => {
 					onClick={handleOpenComment}
 				/>
 				{/* <ModeEditOutlineOutlinedIcon className="infoblock__block-buttons-edit-info" /> */}
-				<Warning
-					isOpen={isModalOpen}
-					setClose={handleDeleteButton}
-					cb={handleDelete}
-				>
-					<DeleteOutlinedIcon
-						className="infoblock__block-buttons-delete"
-						onClick={handleDeleteButton}
-					/>
-				</Warning>
+				{auth && auth.role !== EArtistRole.Artist && (
+					<Warning
+						isOpen={isModalOpen}
+						setClose={handleDeleteButton}
+						cb={handleDelete}
+					>
+						<DeleteOutlinedIcon
+							className="infoblock__block-buttons-delete"
+							onClick={handleDeleteButton}
+						/>
+					</Warning>
+				)}
 			</div>
 			<div className="infoblock-content">
 				{projectData && relatedProject && projectsLocation && (
