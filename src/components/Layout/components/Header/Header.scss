@@ -1,5 +1,17 @@
 @use "@/scss/variables" as *;
 
+@keyframes refreshAnimation {
+    0% {
+        transform: rotate(0deg);
+    }
+    99% {
+        transform: rotate(360deg);
+    }
+    100% {
+        transform: rotate(0deg);
+    }
+}
+
 .header {
     width: 100%;
     max-height: 10%;
@@ -11,10 +23,15 @@
         display: flex;
         justify-content: space-between;
 
-        .header-icon {
+        .header-icon,
+        .header-icon-refresh {
             @include hover;
             min-width: 4rem;
             min-height: 4rem;
+        }
+
+        .header-icon-refresh {
+            transition: all 1s;
         }
 
         .header-search-container {

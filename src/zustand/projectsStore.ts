@@ -21,6 +21,26 @@ export const useProjectsStore = create<IProjectsStore>((set, get) => ({
     addProject: (project) =>
         set((state) => ({
             projects: state.projects ? [...state.projects, project] : [project],
+            projectsProgress: state.projectsProgress
+                ? [
+                      ...state.projectsProgress,
+                      {
+                          entityId: project.id,
+                          progress: [],
+                          priority: [],
+                          executorsCount: 0,
+                          spentHours: 0,
+                      } as IEntityProgress,
+                  ]
+                : [
+                      {
+                          entityId: project.id,
+                          progress: [],
+                          priority: [],
+                          executorsCount: 0,
+                          spentHours: 0,
+                      } as IEntityProgress,
+                  ],
         })),
     getProject: (id) => {
         const { projects } = get();
@@ -37,5 +57,5 @@ export const useProjectsStore = create<IProjectsStore>((set, get) => ({
                   )
                 : null,
         })),
-    resetProjects: () => set({ projects: null }),
+    resetProjects: () => set({ projects: null, projectsProgress: null }),
 }));

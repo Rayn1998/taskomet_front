@@ -6,7 +6,7 @@ import { useCommentDataStore } from "@/zustand/commentStore";
 import { useImagePreviewPopup } from "@/components/Popups/ImagePreview/ImagePreviewStore";
 
 // TYPES
-import type ITaskData from "@shared/types/TaskData";
+import type { ITaskData } from "@shared/types/EntityData";
 import {
 	TypeOfDataColor,
 	TypeOfDataLabels,

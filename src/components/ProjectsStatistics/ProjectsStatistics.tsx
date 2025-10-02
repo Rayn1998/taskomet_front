@@ -13,6 +13,7 @@ import { ResponsivePie } from "@nivo/pie";
 // STORES
 import { useProjectsStore } from "@/zustand/projectsStore";
 import { useTasksStore } from "@/zustand/tasksStore";
+import { useTaskInfoStore } from "@/zustand/taskInfoStore";
 
 // TYPES
 import { EStatus, StatusLabels, StatusColors } from "@/types/Status";
@@ -26,6 +27,9 @@ const ProjectsStatistics = () => {
 	// TASKS STORE
 	const { tasks, setTasks } = useTasksStore();
 
+	// TASK INFO STORE
+	const { setOpenClose: setInfoBlockOpenClose } = useTaskInfoStore();
+
 	const [selectedProjectId, setSelectedProjectId] = useState<number | null>(
 		null,
 	);
@@ -36,6 +40,8 @@ const ProjectsStatistics = () => {
 	const handleClick = (id: number) => {
 		setSelectedProjectId(id);
 	};
+
+	useEffect(() => setInfoBlockOpenClose(false), []);
 
 	useEffect(() => {
 		if (!selectedProjectId) return;

@@ -14,6 +14,7 @@ import { useTasksStore } from "@/zustand/tasksStore";
 import { EStatus, StatusLabels, StatusColors } from "@/types/Status";
 
 const StatisticBlock = () => {
+	// TASKS STORE
 	const { tasks } = useTasksStore();
 
 	const [pieData, setPieData] = useState<{ id: string; value: number }[]>([]);

@@ -1,5 +1,9 @@
 import { useState, useEffect, useRef } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
+
+import { api } from "@/utils/Api";
+import { checkLocation } from "@/utils/checkLocation";
+import { snackBar } from "@/utils/snackBar";
 
 // MUI
 import Avatar from "@mui/material/Avatar";
@@ -13,14 +17,31 @@ import SearchOutlinedIcon from "@mui/icons-material/SearchOutlined";
 import SettingsOutlinedIcon from "@mui/icons-material/SettingsOutlined";
 import NotificationsNoneOutlinedIcon from "@mui/icons-material/NotificationsNoneOutlined";
 import AdminPanelSettingsOutlinedIcon from "@mui/icons-material/AdminPanelSettingsOutlined";
+import AutorenewOutlinedIcon from "@mui/icons-material/AutorenewOutlined";
 
 // STORES
 import { useAuthStore } from "@/zustand/authStore";
 
+import { useProjectsStore } from "@/zustand/projectsStore";
+import { useScenesStore } from "@/zustand/scenesStore";
+import { useTasksStore } from "@/zustand/tasksStore";
+
 const Header = ({ isHeader }: { isHeader: boolean }) => {
+	// PROJECTS STORE
+	const { setProjects } = useProjectsStore();
+
+	// SCENES STORE
+	const { setScenes } = useScenesStore();
+
+	// TASKS STORE
+	const { setTasks } = useTasksStore();
+
+	const location = useLocation();
 	const navigate = useNavigate();
 
 	const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+	const [refreshed, setRefreshed] = useState<boolean>(false);
+	const [rotateAngle, setRotateAngel] = useState<number>(0);
 	const open = Boolean(anchorEl);
 
 	const { auth, resetAuth } = useAuthStore();
@@ -39,6 +60,13 @@ const Header = ({ isHeader }: { isHeader: boolean }) => {
 	const handleAvatarClick = (event: React.MouseEvent<HTMLElement>) => {
 		setAnchorEl(event.currentTarget);
 	};
+
+	const handleRefreshClick = () => {
+		setRotateAngel((prev) => prev + 360);
+		setRefreshed(true);
+		setTimeout(() => setRefreshed(false), 1000);
+	};
+
 	const handleClose = () => {
 		setAnchorEl(null);
 	};
@@ -48,6 +76,43 @@ const Header = ({ isHeader }: { isHeader: boolean }) => {
 		resetAuth();
 		navigate("/signup");
 	};
+
+	const handleRefresh = () => {
+		const currentLocation = checkLocation(location);
+
+		if (currentLocation.project || currentLocation.artistsLoading) {
+			api.getProjects()
+				.then(setProjects)
+				.catch(() => snackBar("Can't receive projects", "error"));
+		}
+
+		if (currentLocation.scene || currentLocation.artistsLoading) {
+			const projectName = location.pathname.split("/").pop();
+			projectName &&
+				api
+					.getScenes(projectName)
+					.then((scenes) => setScenes(scenes, projectName))
+					.catch(() => snackBar("Can't receive scenes", "error"));
+		}
+
+		if (
+			currentLocation.task ||
+			currentLocation.myTasks ||
+			currentLocation.artistsLoading
+		) {
+			const [projectName, sceneName] = location.pathname
+				.split("/")
+				.slice(-2);
+			if (!(projectName && sceneName)) return;
+
+			api.getTasks(projectName, sceneName)
+				.then((tasks) => setTasks(tasks, location.pathname))
+				.catch(() => snackBar("Can't receive tasks", "error"));
+		}
+
+		snackBar("Refreshed!", "success");
+	};
+
 	if (!isHeader) return <></>;
 	return (
 		<div className="header">
@@ -73,8 +138,18 @@ const Header = ({ isHeader }: { isHeader: boolean }) => {
 					></input>
 				</div>
 				<div className="header-right-block">
-					<SettingsOutlinedIcon className="header-icon" />
-					<NotificationsNoneOutlinedIcon className="header-icon" />
+					<AutorenewOutlinedIcon
+						className="header-icon-refresh"
+						onClick={() => {
+							handleRefreshClick();
+							handleRefresh();
+						}}
+						style={{
+							transform: `rotate(${rotateAngle}deg)`,
+						}}
+					/>
+					{/* <SettingsOutlinedIcon className="header-icon" /> */}
+					{/* <NotificationsNoneOutlinedIcon className="header-icon" /> */}
 					<AdminPanelSettingsOutlinedIcon
 						className="header-icon"
 						onClick={() => navigate("/admin")}

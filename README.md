@@ -1,4 +1,4 @@
-# 🎬 MatchMovePro
+# 🎬 Taskomet
 
 ![TypeScript](https://img.shields.io/badge/TypeScript-3178c6?logo=typescript&logoColor=fff)
 ![React](https://img.shields.io/badge/React-20232a?logo=react&logoColor=61dafb)

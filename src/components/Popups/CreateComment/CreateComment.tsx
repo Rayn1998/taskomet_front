@@ -1,4 +1,5 @@
-import { useState, useCallback, useEffect } from "react";
+import { useState, useCallback } from "react";
+import { useLocation } from "react-router-dom";
 import { useDropzone } from "react-dropzone";
 
 import DropDown from "@/components/DropDown/DropDown";
@@ -6,6 +7,8 @@ import DropDown from "@/components/DropDown/DropDown";
 import { snackBar } from "@/utils/snackBar";
 import { api } from "@/utils/Api";
 import { formatSQLTimestamp } from "@/utils/formatSQLTimestamp";
+import { hours } from "@/utils/constants";
+import { checkLocation } from "@/utils/checkLocation";
 
 // MUI
 import Dialog from "@mui/material/Dialog";
@@ -21,38 +24,33 @@ import CheckCircle from "@mui/icons-material/CheckCircle";
 
 // STORES
 import { useCreateCommentPopupStore } from "./CreateCommentPopupStore";
+import { useProjectDataStore } from "@/zustand/projectDataStore";
+import { useSceneDataStore } from "@/zustand/sceneDataStore";
 import { useTasksStore } from "@/zustand/tasksStore";
 import { useTaskDataStore } from "@/zustand/taskDataStore";
 import { useAuthStore } from "@/zustand/authStore";
 
 // TYPES
-import type { TaskDataMin } from "@shared/types/TaskData";
+import type {
+	ProjectDataMin,
+	SceneDataMin,
+	TaskDataMin,
+} from "@shared/types/EntityData";
 import { TypeOfData, TypeOfDataLabels } from "@/types/TypeOfData";
 import { EStatus, StatusLabels } from "@/types/Status";
 
-const hours: [label: string, value: number][] = [
-	["0h", 0],
-	["0.5h", 0.5],
-	["1h", 1],
-	["1.5h", 1.5],
-	["2h", 2],
-	["2.5h", 2.5],
-	["3h", 3],
-	["3.5h", 3.5],
-	["4h", 4],
-	["4.5h", 4.5],
-	["5h", 5],
-	["5.5h", 5.5],
-	["6h", 6],
-	["6.5h", 6.5],
-	["7h", 7],
-	["7.5h", 7.5],
-	["8h", 8],
-];
-
 const CreateComment = () => {
+	const location = useLocation();
+	const currentLocation = checkLocation(location);
+
 	// AUTH STORE
 	const { auth } = useAuthStore();
+
+	// PROJECT DATA STORE
+	const { relatedProject, addProjectData } = useProjectDataStore();
+
+	// SCENE DATA STORE
+	const { relatedScene, addSceneData } = useSceneDataStore();
 
 	// TASKS STORE
 	const { tasks, updateTask } = useTasksStore();
@@ -114,7 +112,81 @@ const CreateComment = () => {
 		setFiles([]);
 	};
 
-	const handleSubmit = async (e: React.SyntheticEvent) => {
+	const handleProjectDataSubmit = async (e: React.SyntheticEvent) => {
+		e.preventDefault();
+
+		if (!auth || !relatedProject) return;
+
+		const taskDataToBeSent: ProjectDataMin = {
+			project_id: relatedProject.id,
+			created_at: formatSQLTimestamp(new Date()),
+			created_by: auth.id,
+			text,
+		};
+
+		const formData = new FormData();
+		setLoading(true);
+
+		if (typeof files[0] !== "undefined") {
+			formData.append("file", files[0]);
+		}
+
+		formData.append("data", JSON.stringify(taskDataToBeSent));
+
+		await api
+			.sendProjectMedia(formData)
+			.then((res) => {
+				addProjectData(res);
+				snackBar("Success", "success");
+				handleClose();
+			})
+			.catch((_) => {
+				snackBar("Something went wrong", "error");
+			})
+			.finally(() => {
+				setLoading(false);
+				setFiles([]);
+			});
+	};
+
+	const handleSceneDataSubmit = async (e: React.SyntheticEvent) => {
+		e.preventDefault();
+
+		if (!auth || !relatedScene) return;
+
+		const taskDataToBeSent: SceneDataMin = {
+			scene_id: relatedScene.id,
+			created_at: formatSQLTimestamp(new Date()),
+			created_by: auth.id,
+			text,
+		};
+
+		const formData = new FormData();
+		setLoading(true);
+
+		if (typeof files[0] !== "undefined") {
+			formData.append("file", files[0]);
+		}
+
+		formData.append("data", JSON.stringify(taskDataToBeSent));
+
+		await api
+			.sendSceneMedia(formData)
+			.then((res) => {
+				addSceneData(res);
+				snackBar("Success", "success");
+				handleClose();
+			})
+			.catch((_) => {
+				snackBar("Something went wrong", "error");
+			})
+			.finally(() => {
+				setLoading(false);
+				setFiles([]);
+			});
+	};
+
+	const handleTaskDataSubmit = async (e: React.SyntheticEvent) => {
 		e.preventDefault();
 
 		if (!taskData || !relatedTask || !auth) return;
@@ -160,14 +232,19 @@ const CreateComment = () => {
 				snackBar("Success", "success");
 				handleClose();
 			})
-			.catch((err) => {
-				console.log(err);
+			.catch((_) => {
 				snackBar("Something went wrong", "error");
 			})
 			.finally(() => {
 				setLoading(false);
 				setFiles([]);
 			});
+	};
+
+	const handleSubmit = (e: React.SyntheticEvent) => {
+		if (currentLocation.project) handleProjectDataSubmit(e);
+		if (currentLocation.scene) handleSceneDataSubmit(e);
+		if (currentLocation.task) handleTaskDataSubmit(e);
 	};
 
 	const statuses = [];
@@ -195,11 +272,13 @@ const CreateComment = () => {
 		>
 			<div className="create-comment-header">
 				<DialogTitle>Add new comment</DialogTitle>
-				<DropDown<TypeOfData>
-					items={TypeOfDataLabels}
-					selected={typeOfComment}
-					onChange={setTypeOfComment}
-				/>
+				{currentLocation.task && (
+					<DropDown<TypeOfData>
+						items={TypeOfDataLabels}
+						selected={typeOfComment}
+						onChange={setTypeOfComment}
+					/>
+				)}
 			</div>
 			<DialogContent
 				className="create-comment-content"
@@ -282,34 +361,37 @@ const CreateComment = () => {
 				{loading && <CircularProgress />}
 			</DialogContent>
 			<DialogActions>
-				{typeOfComment === TypeOfData.Dailies && (
+				{typeOfComment === TypeOfData.Dailies &&
+					currentLocation.task && (
+						<NativeSelect
+							style={{ color: "rgb(230,230,230)" }}
+							value={spentHours}
+							onChange={(e) => setSpentHours(+e.target.value)}
+						>
+							{hours.map(([label, value], i) => {
+								return (
+									<option key={i} value={value}>
+										{label}
+									</option>
+								);
+							})}
+						</NativeSelect>
+					)}
+				{currentLocation.task && (
 					<NativeSelect
 						style={{ color: "rgb(230,230,230)" }}
-						value={spentHours}
-						onChange={(e) => setSpentHours(+e.target.value)}
+						value={status}
+						onChange={(e) => setStatus(+e.target.value)}
 					>
-						{hours.map(([label, value], i) => {
+						{statuses.map(([statusNum, label], i) => {
 							return (
-								<option key={i} value={value}>
+								<option key={i} value={statusNum}>
 									{label}
 								</option>
 							);
 						})}
 					</NativeSelect>
 				)}
-				<NativeSelect
-					style={{ color: "rgb(230,230,230)" }}
-					value={status}
-					onChange={(e) => setStatus(+e.target.value)}
-				>
-					{statuses.map(([statusNum, label], i) => {
-						return (
-							<option key={i} value={statusNum}>
-								{label}
-							</option>
-						);
-					})}
-				</NativeSelect>
 				<Button
 					onClick={handleSubmit}
 					variant="contained"

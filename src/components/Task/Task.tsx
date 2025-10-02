@@ -24,7 +24,7 @@ import type { TaskProps } from "@/components/ShotsList/TaskProps.type";
 import { EStatus, StatusLabels, StatusColors } from "@/types/Status";
 import { EPriority, PriorityLabels, PriorityColors } from "@/types/Priority";
 import { TypeOfData } from "@/types/TypeOfData";
-import type { TaskDataMin } from "@shared/types/TaskData";
+import type { TaskDataMin } from "@shared/types/EntityData";
 
 const Task = ({
 	task,
@@ -66,7 +66,7 @@ const Task = ({
 	// TASK DATA STORE
 	const { taskData, relatedTask, setTaskData, addTaskData } =
 		useTaskDataStore();
-	const { isOpen: taskViewOpen, setOpenClose: setTaskViewOpenClose } =
+	const { isOpen: taskInfoOpen, setOpenClose: setTaskViewOpenClose } =
 		useTaskInfoStore();
 
 	const [hover, setHover] = useState<boolean>(false);
@@ -139,7 +139,7 @@ const Task = ({
 		}
 		if (
 			location.pathname.split("/").slice(1)[0] !== "artists-loading" &&
-			!taskViewOpen
+			!taskInfoOpen
 		) {
 			setTaskViewOpenClose(true);
 			handleClick(id);
@@ -165,7 +165,7 @@ const Task = ({
 	}, []);
 
 	useEffect(() => {
-		if (!selected || !taskViewOpen) return;
+		if (!selected || !taskInfoOpen) return;
 		if (relatedTask?.id === id && taskData) return;
 
 		api.getTaskData(id)
@@ -173,7 +173,7 @@ const Task = ({
 				setTaskData(newTaskData, task);
 			})
 			.catch(console.log);
-	}, [selected, taskViewOpen, id]);
+	}, [selected, taskInfoOpen, id]);
 
 	useEffect(() => {
 		if (!redirectedTaskId) return;
@@ -196,7 +196,7 @@ const Task = ({
 				handleClick(id);
 				setTaskData(taskData, task);
 			}}
-			onClick={() => taskViewOpen && handleClick(id)}
+			onClick={() => taskInfoOpen && handleClick(id)}
 			onDoubleClick={handleDoubleClick}
 			onMouseEnter={() => setHover(true)}
 			onMouseLeave={() => setHover(false)}

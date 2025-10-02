@@ -8,7 +8,8 @@ import { api } from "@/utils/Api";
 import Title from "@/components/InfoBlock/components/Title/Title";
 import Description from "@/components/InfoBlock/components/Description/Description";
 import Comment from "@/components/InfoBlock/components/Comment/Comment";
-import Warning from "../Popups/Warning/Warning";
+import Media from "@/components/InfoBlock/components/Media/Media";
+import Warning from "@/components/Popups/Warning/Warning";
 
 // MUI
 import ArrowCircleRightOutlinedIcon from "@mui/icons-material/ArrowCircleRightOutlined";
@@ -40,14 +41,10 @@ const InfoBlock = ({ blockOpen }: { blockOpen: boolean }) => {
 	const { removeProject } = useProjectsStore();
 	const { removeScene } = useScenesStore();
 	const { setOpenClose: setTaskInfoOpenClose } = useTaskInfoStore();
-	const { projectData } = useProjectDataStore();
-	const { data: sceneData, scene } = useSceneDataStore();
+	const { projectData, relatedProject } = useProjectDataStore();
+	const { sceneData, relatedScene } = useSceneDataStore();
 	const { resetTaskData, taskData, relatedTask } = useTaskDataStore();
 	const { setOpenClose: setOpenCloseComment } = useCreateCommentPopupStore();
-
-	// useEffect(() => console.log(projectData), [projectData]);
-	// useEffect(() => console.log(sceneData), [sceneData]);
-	// useEffect(() => console.log(taskData), [taskData]);
 
 	const handleDeleteButton = () => {
 		setIsModalOpen(!isModalOpen);
@@ -67,32 +64,35 @@ const InfoBlock = ({ blockOpen }: { blockOpen: boolean }) => {
 					snackBar("Error while deleting the task", "error");
 				});
 		}
-		if (sceneLocation && scene) {
-			api.deleteScene(scene.id)
+		if (sceneLocation && relatedScene) {
+			api.deleteScene(relatedScene.id)
 				.then((_) => {
 					snackBar(
-						`Scene ${scene.name} was deleted successfully!`,
+						`Scene ${relatedScene.name} was deleted successfully!`,
 						"success",
-						[removeScene.bind(null, scene.id), resetTaskData],
+						[
+							removeScene.bind(null, relatedScene.id),
+							resetTaskData,
+						],
 					);
 				})
 				.catch((err) => {
 					snackBar("Error while deleting the scene", "error");
 				});
 		}
-		if (projectsLocation && projectData) {
-			api.deleteProject(projectData.id)
+		if (projectsLocation && relatedProject) {
+			api.deleteProject(relatedProject.id)
 				.then((_) => {
 					snackBar(
-						`Project ${projectData.name} was deleted successfully!`,
+						`Project ${relatedProject.name} was deleted successfully!`,
 						"success",
 						[
-							removeProject.bind(null, projectData.id),
+							removeProject.bind(null, relatedProject.id),
 							resetTaskData,
 						],
 					);
 				})
-				.catch((err) => {
+				.catch((_) => {
 					snackBar("Error while deleting the project", "error");
 				});
 		}
@@ -102,7 +102,7 @@ const InfoBlock = ({ blockOpen }: { blockOpen: boolean }) => {
 		if ((taskLocation || myTasksLocation) && taskData && relatedTask) {
 			setForbiddenComment(false);
 		} else {
-			setForbiddenComment(true);
+			setForbiddenComment(false);
 		}
 	}, [taskLocation, taskData, myTasksLocation, relatedTask]);
 
@@ -135,7 +135,7 @@ const InfoBlock = ({ blockOpen }: { blockOpen: boolean }) => {
 					className="infoblock__block-buttons-add"
 					onClick={handleOpenComment}
 				/>
-				<ModeEditOutlineOutlinedIcon className="infoblock__block-buttons-edit-info" />
+				{/* <ModeEditOutlineOutlinedIcon className="infoblock__block-buttons-edit-info" /> */}
 				<Warning
 					isOpen={isModalOpen}
 					setClose={handleDeleteButton}
@@ -148,16 +148,34 @@ const InfoBlock = ({ blockOpen }: { blockOpen: boolean }) => {
 				</Warning>
 			</div>
 			<div className="infoblock-content">
-				{projectData && projectsLocation && (
+				{projectData && relatedProject && projectsLocation && (
 					<>
-						<Title title={projectData.name} />
-						<Description description={projectData.description} />
+						<Title title={relatedProject.name} />
+						<Description description={relatedProject.description} />
+						{projectData.map((data, i, tasks) => {
+							return (
+								<Media
+									data={data}
+									relatedEntityId={relatedProject.id}
+									key={i}
+								/>
+							);
+						})}
 					</>
 				)}
-				{sceneData && sceneLocation && (
+				{sceneData && relatedScene && sceneLocation && (
 					<>
-						<Title title={sceneData.name} />
-						<Description description={sceneData.description} />
+						<Title title={relatedScene.name} />
+						<Description description={relatedScene.description} />
+						{sceneData.map((data, i, tasks) => {
+							return (
+								<Media
+									data={data}
+									relatedEntityId={relatedScene.id}
+									key={i}
+								/>
+							);
+						})}
 					</>
 				)}
 				{taskData &&

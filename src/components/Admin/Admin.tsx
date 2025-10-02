@@ -16,15 +16,21 @@ import ListItemText from "@mui/material/ListItemText";
 import ListItemAvatar from "@mui/material/ListItemAvatar";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
+import AddCircleOutlineOutlinedIcon from "@mui/icons-material/AddCircleOutlineOutlined";
 
 // STORES
 import { useArtistStore } from "@/zustand/artistStore";
 import { useTaskInfoStore } from "@/zustand/taskInfoStore";
+import { useCreateArtistPopupStore } from "@/components/Popups/CreateArtist/CreateArtistPopupStore";
 
 // TYPEs
 import { EArtistRole, ArtistRoleLabels } from "@/types/ArtistRole";
 
 const Admin = () => {
+	// CREATE ARTIST POPUP STORE
+	const { setOpenClose: setArtistCreateOpenClose } =
+		useCreateArtistPopupStore();
+
 	// ARTISTS STORE
 	const { artists, updateArtist } = useArtistStore();
 
@@ -47,6 +53,10 @@ const Admin = () => {
 		[selectedArtistData],
 	);
 
+	const handleCreateArtistClick = () => {
+		setArtistCreateOpenClose();
+	};
+
 	const handleChangeRole = (role: number) => {
 		if (!Number.isInteger(role) || selectedArtistData === null) return;
 		if (role === selectedArtistData.role) return;
@@ -67,10 +77,15 @@ const Admin = () => {
 		<Layout isHeader canvas>
 			<div className="admin">
 				<div className="admin-artists-list">
+					<AddCircleOutlineOutlinedIcon
+						className="admin-artists-addbutton"
+						onClick={handleCreateArtistClick}
+					/>
 					<List
 						dense
 						sx={{
-							height: "fit-content",
+							width: "100%",
+							height: "100%",
 							bgcolor: "rgb(42, 44, 51)",
 							display: "flex",
 							flexDirection: "column",
@@ -155,7 +170,9 @@ const Admin = () => {
 								<DropDown
 									// label="role"
 									items={ArtistRoleLabels}
-									selected={selectedArtistData.role}
+									selected={
+										selectedArtistData.role as EArtistRole
+									}
 									onChange={handleChangeRole}
 								/>
 							</div>
@@ -163,9 +180,6 @@ const Admin = () => {
 								<p className="admin-artists-info-item-name">
 									Photo:{" "}
 								</p>
-								{/* <p className="admin-artists-info-item-value">
-							{selectedArtistData && selectedArtistData.user_name}
-						</p> */}
 							</div>
 							<Button
 								className="admin-artists-info-delete-button"

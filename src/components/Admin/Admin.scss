@@ -7,6 +7,17 @@
 
     .admin-artists-list {
         width: 30%;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 1rem;
+    }
+
+    .admin-artists-addbutton {
+        @include hover;
+        min-width: 4rem;
+        min-height: 4rem;
     }
 
     .admin-artists-info {

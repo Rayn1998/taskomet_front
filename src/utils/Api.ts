@@ -2,8 +2,12 @@ import type IProject from "@shared/types/Project";
 import type IEntityProgress from "@shared/types/EntityProgress";
 import type IScene from "@shared/types/Scene";
 import type ITask from "@shared/types/Task";
-import type ITaskData from "@shared/types/TaskData";
-import type { TaskDataMin } from "@shared/types/TaskData";
+import type {
+    ITaskData,
+    TaskDataMin,
+    IProjectData,
+    ISceneData,
+} from "@shared/types/EntityData";
 import type IArtist from "@shared/types/Artist";
 
 class Api {
@@ -94,6 +98,34 @@ class Api {
         );
     }
 
+    async getProjectData(projectId: number): Promise<IProjectData[]> {
+        return this._request<IProjectData[]>(
+            `${this.url}/projects/project-data?id=${projectId}`,
+            {
+                method: "GET",
+            },
+        );
+    }
+
+    async sendProjectMedia(media: FormData): Promise<IProjectData> {
+        const data = await fetch(`${this.url}/projects/project-media`, {
+            method: "POST",
+            body: media,
+        });
+        return data.json() as unknown as IProjectData;
+    }
+
+    async deleteProjectMedia(mediaId: number): Promise<boolean> {
+        const res = await fetch(
+            `${this.url}/projects/project-media/${mediaId}`,
+            {
+                method: "DELETE",
+            },
+        );
+
+        return res.ok ? true : false;
+    }
+
     async createProject(name: string, description: string): Promise<IProject> {
         return this._request<IProject>(`${this.url}/projects/create-project`, {
             method: "POST",
@@ -124,6 +156,31 @@ class Api {
         );
     }
 
+    async getSceneData(sceneId: number): Promise<ISceneData[]> {
+        return this._request<ISceneData[]>(
+            `${this.url}/projects/scene-data?id=${sceneId}`,
+            {
+                method: "GET",
+            },
+        );
+    }
+
+    async sendSceneMedia(media: FormData): Promise<ISceneData> {
+        const data = await fetch(`${this.url}/projects/scene-media`, {
+            method: "POST",
+            body: media,
+        });
+        return data.json() as unknown as ISceneData;
+    }
+
+    async deleteSceneMedia(mediaId: number): Promise<boolean> {
+        const res = await fetch(`${this.url}/projects/scene-media/${mediaId}`, {
+            method: "DELETE",
+        });
+
+        return res.ok ? true : false;
+    }
+
     async createScene(
         name: string,
         description: string,
@@ -152,6 +209,15 @@ class Api {
                 headers: {
                     "Content-Type": "application/json",
                 },
+            },
+        );
+    }
+
+    async getTaskData(taskId: number): Promise<ITaskData[]> {
+        return this._request<ITaskData[]>(
+            `${this.url}/task/task-data?id=${taskId}`,
+            {
+                method: "GET",
             },
         );
     }
@@ -241,15 +307,6 @@ class Api {
         });
     }
 
-    async getTaskData(taskId: number): Promise<ITaskData[]> {
-        return this._request<ITaskData[]>(
-            `${this.url}/task/task-data?id=${taskId}`,
-            {
-                method: "GET",
-            },
-        );
-    }
-
     async sendComment(comment: FormData): Promise<ITaskData> {
         const data = await fetch(`${this.url}/task/task-comment`, {
             method: "POST",
@@ -271,7 +328,6 @@ class Api {
     }
 
     async checkServerConnection() {
-        console.log(this.url);
         const response = await fetch(`${this.url}/check-server`, {
             method: "GET",
         });

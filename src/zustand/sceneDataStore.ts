@@ -1,24 +1,33 @@
 import { create } from "zustand";
 
-import IScene from "@shared/types/Scene";
-
-interface ISceneData {
-    name: string;
-    description: string;
-}
+import type IScene from "@shared/types/Scene";
+import type { ISceneData } from "@shared/types/EntityData";
 
 interface ISceneDataStore {
-    data: ISceneData | null;
-    scene: IScene | null;
-    setData: (data: ISceneData) => void;
-    resetData: () => void;
-    setScene: (scene: IScene) => void;
+    sceneData: ISceneData[];
+    relatedScene: IScene | null;
+    setSceneData: (data: ISceneData[]) => void;
+    setRelatedScene: (scene: IScene) => void;
+    removeOneSceneData: (id: number) => void;
+    addSceneData: (data: ISceneData) => void;
+    resetSceneData: () => void;
 }
 
 export const useSceneDataStore = create<ISceneDataStore>((set) => ({
-    data: null,
-    scene: null,
-    setData: (data) => set({ data }),
-    resetData: () => set({ data: null }),
-    setScene: (scene) => set({ scene }),
+    sceneData: [],
+    relatedScene: null,
+    setSceneData: (data) => set({ sceneData: data }),
+    setRelatedScene: (scene) => set({ relatedScene: scene }),
+    removeOneSceneData: (id) =>
+        set((state) => ({
+            sceneData:
+                state.sceneData.length > 0
+                    ? state.sceneData.filter((data) => data.id !== id)
+                    : [],
+        })),
+    addSceneData: (data) =>
+        set((state) => ({
+            sceneData: [...state.sceneData, data],
+        })),
+    resetSceneData: () => set({ sceneData: [] }),
 }));

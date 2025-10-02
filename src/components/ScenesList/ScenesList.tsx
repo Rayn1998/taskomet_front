@@ -12,12 +12,16 @@ import LinearProgress from "@mui/material/LinearProgress";
 import { useErrorDataStore } from "@/zustand/errorDataStore";
 import { useScenesStore } from "@/zustand/scenesStore";
 import { useSceneDataStore } from "@/zustand/sceneDataStore";
+import { useTaskInfoStore } from "@/zustand/taskInfoStore";
 
 // TYPES
 import type IScene from "@shared/types/Scene";
 import type IEntityProgress from "@shared/types/EntityProgress";
 
 const ScenesList: FC = () => {
+	// TASK INFO STORE
+	const { isOpen: taskViewOpen } = useTaskInfoStore();
+
 	// ERROR DATA STORE
 	const { setErrorMessage } = useErrorDataStore();
 
@@ -26,7 +30,7 @@ const ScenesList: FC = () => {
 		useScenesStore();
 
 	// SCENE DATA STORE
-	const { setData: setSceneData, resetData: resetSceneData } =
+	const { setSceneData, setRelatedScene, relatedScene, resetSceneData } =
 		useSceneDataStore();
 
 	const [selected, setSelected] = useState<string>("");
@@ -36,13 +40,23 @@ const ScenesList: FC = () => {
 
 	const handleClick = (scene: IScene) => {
 		setSelected(scene.name);
-		setSceneData(scene);
+		setRelatedScene(scene);
 	};
 
 	const handleDoubleClick = (e: MouseEvent<HTMLDivElement>) => {
 		const scene = e.currentTarget.getAttribute("data-name")!.toLowerCase();
 		navigate(`${location.pathname}/${scene}`);
 	};
+
+	useEffect(() => {
+		if (!(selected && taskViewOpen && relatedScene)) return;
+
+		api.getSceneData(relatedScene.id)
+			.then((newSceneData) => {
+				setSceneData(newSceneData);
+			})
+			.catch(console.log);
+	}, [selected, taskViewOpen, relatedScene]);
 
 	useEffect(() => {
 		resetSceneData();
@@ -70,6 +84,7 @@ const ScenesList: FC = () => {
 			scenesRequest(projectName);
 		}
 	}, [lastProject]);
+
 	return (
 		<Layout isHeader isStatusline order menu>
 			{scenes === null && <LinearProgress />}

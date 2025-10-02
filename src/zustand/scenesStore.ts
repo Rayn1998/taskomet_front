@@ -30,13 +30,38 @@ export const useScenesStore = create<IScenesStore>((set) => ({
     addScene: (scene) =>
         set((state) => ({
             scenes: state.scenes ? [...state.scenes, scene] : [scene],
+            scenesProgress: state.scenesProgress
+                ? [
+                      ...state.scenesProgress,
+                      {
+                          entityId: scene.id,
+                          progress: [],
+                          priority: [],
+                          executorsCount: 0,
+                          spentHours: 0,
+                      } as IEntityProgress,
+                  ]
+                : [
+                      {
+                          entityId: scene.id,
+                          progress: [],
+                          priority: [],
+                          executorsCount: 0,
+                          spentHours: 0,
+                      } as IEntityProgress,
+                  ],
         })),
     removeScene: (id) =>
         set((state) => ({
             scenes: state.scenes
                 ? state.scenes.filter((scene) => scene.id !== id)
                 : null,
+            scenesProgress: state.scenesProgress
+                ? state.scenesProgress.filter(
+                      (progress) => progress.entityId !== id,
+                  )
+                : null,
         })),
-    resetScenes: () => set({ scenes: null }),
+    resetScenes: () => set({ scenes: null, scenesProgress: null }),
     resetLastProject: () => set({ lastProject: null }),
 }));

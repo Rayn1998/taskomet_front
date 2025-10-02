@@ -31,20 +31,20 @@ const LayoutItem = <T extends IProject | IScene>({
 	selected,
 }: ILayoutItem<T>) => {
 	// PROJECT DATA STORE
-	const { setProjectData } = useProjectDataStore();
+	const { setRelatedProject } = useProjectDataStore();
 
 	// SCENE DATA STORE
-	const { setScene } = useSceneDataStore();
+	const { setRelatedScene } = useSceneDataStore();
 
 	const [hover, setHover] = useState<boolean>(false);
 
 	const handleContextClick = () => {
 		switch (dataType) {
 			case "project":
-				setProjectData(item as IProject);
+				setRelatedProject(item as IProject);
 				break;
 			case "scene":
-				setScene(item as IScene);
+				setRelatedScene(item as IScene);
 				break;
 		}
 	};
@@ -74,8 +74,9 @@ const LayoutItem = <T extends IProject | IScene>({
 			<p className="item-name">{item.name}</p>
 			<div className="item-status-wrapper">
 				<div className="item-status">
-					{itemProgress.progress?.length > 0 &&
-						itemProgress.progress?.map((el, _, arr) => {
+					{itemProgress?.progress &&
+						itemProgress.progress?.length > 0 &&
+						itemProgress.progress.map((el, _, arr) => {
 							return (
 								<div
 									key={el.status}
@@ -92,23 +93,25 @@ const LayoutItem = <T extends IProject | IScene>({
 								></div>
 							);
 						})}
-					{itemProgress.progress?.length === 0 && (
-						<div
-							style={{
-								borderRadius: 0,
-								width: "100%",
-								backgroundColor: "rgb(125, 125, 125)",
-							}}
-						></div>
-					)}
+					{itemProgress?.progress &&
+						itemProgress.progress?.length === 0 && (
+							<div
+								style={{
+									borderRadius: 0,
+									width: "100%",
+									backgroundColor: "rgb(125, 125, 125)",
+								}}
+							></div>
+						)}
 				</div>
 			</div>
 			<p className="item-artists">{itemProgress?.executorsCount}</p>
 			<p className="item-hours">{itemProgress?.spentHours}</p>
 			<div className="item-priority-wrapper">
 				<div className="item-priority">
-					{itemProgress.priority?.length > 0 &&
-						itemProgress.priority?.map((el, _, arr) => {
+					{itemProgress?.priority &&
+						itemProgress.priority?.length > 0 &&
+						itemProgress.priority.map((el, _, arr) => {
 							return (
 								<div
 									key={el.priority}
@@ -127,15 +130,16 @@ const LayoutItem = <T extends IProject | IScene>({
 								></div>
 							);
 						})}
-					{itemProgress.priority?.length === 0 && (
-						<div
-							style={{
-								borderRadius: 0,
-								width: "100%",
-								backgroundColor: "rgb(125, 125, 125)",
-							}}
-						></div>
-					)}
+					{itemProgress?.priority &&
+						itemProgress.priority?.length === 0 && (
+							<div
+								style={{
+									borderRadius: 0,
+									width: "100%",
+									backgroundColor: "rgb(125, 125, 125)",
+								}}
+							></div>
+						)}
 				</div>
 			</div>
 		</div>

@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import type ITaskData from "@shared/types/TaskData";
+import type { ITaskData } from "@shared/types/EntityData";
 import type ITask from "@shared/types/Task";
 
 interface ITaskDataStore {

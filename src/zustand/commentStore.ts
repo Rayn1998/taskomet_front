@@ -1,17 +1,24 @@
 import { create } from "zustand";
-import type ITaskData from "@shared/types/TaskData";
+import type {
+    IProjectData,
+    ISceneData,
+    ITaskData,
+} from "@shared/types/EntityData";
 
 interface ICommentDataStore {
-    commentData: ITaskData | null;
-    relatedTaskId: number | null;
-    setCommentData: (data: ITaskData, relatedTaskId: number) => void;
+    commentData: IProjectData | ISceneData | ITaskData | null;
+    relatedEntityId: number | null;
+    setCommentData: (
+        data: IProjectData | ISceneData | ITaskData,
+        relatedEntityId: number,
+    ) => void;
     resetCommentData: () => void;
 }
 
 export const useCommentDataStore = create<ICommentDataStore>((set) => ({
     commentData: null,
-    relatedTaskId: null,
-    setCommentData: (data, relatedTaskId) =>
-        set({ commentData: data, relatedTaskId }),
-    resetCommentData: () => set({ commentData: null, relatedTaskId: null }),
+    relatedEntityId: null,
+    setCommentData: (data, relatedEntityId) =>
+        set({ commentData: data, relatedEntityId }),
+    resetCommentData: () => set({ commentData: null, relatedEntityId: null }),
 }));

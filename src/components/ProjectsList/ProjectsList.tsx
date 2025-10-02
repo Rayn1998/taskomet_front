@@ -12,6 +12,7 @@ import LinearProgress from "@mui/material/LinearProgress";
 import { useErrorDataStore } from "@/zustand/errorDataStore";
 import { useProjectsStore } from "@/zustand/projectsStore";
 import { useProjectDataStore } from "@/zustand/projectDataStore";
+import { useTaskInfoStore } from "@/zustand/taskInfoStore";
 
 // TYPES
 import type IProject from "@shared/types/Project";
@@ -20,21 +21,31 @@ import IEntityProgress from "@shared/types/EntityProgress";
 const ProjectsList = () => {
 	const navigate = useNavigate();
 
+	// TASK INFO STORE
+	const { isOpen: isTaskInfoOpen } = useTaskInfoStore();
+
 	// PROJECTS STORE
 	const { projects, projectsProgress, setProjects } = useProjectsStore();
-	// useEffect(() => console.log(projects), [projects]);
+
+	// PROJECT DATA STORE
 
 	// ERROR DATA STORE
 	const { setErrorMessage } = useErrorDataStore();
 
 	// PROJECT DATA STORE
-	const { setProjectData, resetProjectData } = useProjectDataStore();
+	const {
+		projectData,
+		setProjectData,
+		setRelatedProject,
+		relatedProject,
+		resetProjectData,
+	} = useProjectDataStore();
 
 	const [selected, setSelected] = useState<string>("");
 
 	const handleClick = (project: IProject) => {
 		setSelected(project.name);
-		setProjectData(project);
+		setRelatedProject(project);
 	};
 
 	const handleDoubleClick = (e: MouseEvent<HTMLDivElement>) => {
@@ -43,6 +54,16 @@ const ProjectsList = () => {
 			.toLowerCase();
 		navigate(`/projects/${project}`);
 	};
+
+	useEffect(() => {
+		if (!(selected && isTaskInfoOpen && relatedProject)) return;
+
+		api.getProjectData(relatedProject.id)
+			.then((newProjectData) => {
+				setProjectData(newProjectData);
+			})
+			.catch(console.log);
+	}, [selected, isTaskInfoOpen, relatedProject]);
 
 	useEffect(() => {
 		resetProjectData();

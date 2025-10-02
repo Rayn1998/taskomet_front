@@ -30,13 +30,14 @@ const ContextMenu = () => {
 	const { removeProject } = useProjectsStore();
 
 	// PROJECT DATA STORE
-	const { projectData, resetProjectData } = useProjectDataStore();
+	const { relatedProject, resetProjectData, removeOneProjectData } =
+		useProjectDataStore();
 
 	// SCENES STORE
 	const { removeScene } = useScenesStore();
 
 	// SCENE DATA STORE
-	const { scene } = useSceneDataStore();
+	const { relatedScene, removeOneSceneData } = useSceneDataStore();
 
 	// TASK DATA STORE
 	const { resetTaskData, removeOneTaskData, relatedTask } =
@@ -46,7 +47,7 @@ const ContextMenu = () => {
 	const { tasks, removeTask, updateTask } = useTasksStore();
 
 	// COMMENT STORE
-	const { commentData, relatedTaskId, resetCommentData } =
+	const { commentData, relatedEntityId, resetCommentData } =
 		useCommentDataStore();
 
 	// STATES
@@ -58,45 +59,56 @@ const ContextMenu = () => {
 	const handleContextMenuClose = () => setContextMenu(null);
 
 	const handleProjectDelete = () => {
-		if (!projectData) return;
-		api.deleteProject(projectData.id)
+		if (!relatedProject) return;
+		api.deleteProject(relatedProject.id)
 			.then(() => {
-				removeProject(projectData.id);
+				removeProject(relatedProject.id);
 				resetProjectData();
 				setContextMenu(null);
 				snackBar(
-					`Project ${projectData.name} was successfully deleted`,
+					`Project ${relatedProject.name} was successfully deleted`,
 					"success",
 				);
 			})
-			.catch((err) => console.log(err));
+			.catch((err) => snackBar(err.message, "error"))
+			.finally(() => setIsModalOpen(false));
 	};
 
 	const handleSceneDelete = () => {
-		if (!scene) return;
-		api.deleteScene(scene.id).then(() => {
-			removeScene(scene.id);
-			setContextMenu(null);
-			snackBar(`Scene ${scene.name} was successfully deleted`, "success");
-		});
+		if (!relatedScene) return;
+		api.deleteScene(relatedScene.id)
+			.then(() => {
+				removeScene(relatedScene.id);
+				setContextMenu(null);
+				snackBar(
+					`Scene ${relatedScene.name} was successfully deleted`,
+					"success",
+				);
+			})
+			.catch((err) => snackBar(err.message, "error"))
+			.finally(() => setIsModalOpen(false));
 	};
 
 	const handleTaskDelete = () => {
 		if (!relatedTask) return;
 
-		api.deleteTask(relatedTask.id).then((deletedTask) => {
-			removeTask(deletedTask.id);
-			resetTaskData();
-			setContextMenu(null);
-			snackBar(
-				`Task ${relatedTask.name} was successfully deleted`,
-				"success",
-			);
-		});
+		api.deleteTask(relatedTask.id)
+			.then((deletedTask) => {
+				removeTask(deletedTask.id);
+				resetTaskData();
+				setContextMenu(null);
+				snackBar(
+					`Task ${relatedTask.name} was successfully deleted`,
+					"success",
+				);
+			})
+			.catch((err) => snackBar(err.message, "error"))
+			.finally(() => setIsModalOpen(false));
 	};
 
 	const handleComentDelete = () => {
-		if (!commentData || !relatedTaskId) return;
+		if (!commentData || !relatedEntityId) return;
+		if (!("spent_hours" in commentData)) return; // typeguard here
 
 		api.deleteComment(commentData.id)
 			.then((res) => {
@@ -104,7 +116,7 @@ const ContextMenu = () => {
 					const deletedHours = commentData.spent_hours;
 					if (deletedHours) {
 						const relatedTask = tasks?.find(
-							(task) => task.id === relatedTaskId,
+							(task) => task.id === relatedEntityId,
 						)!;
 						const newHours = relatedTask.spent_hours - deletedHours;
 						const newTask = {
@@ -123,7 +135,45 @@ const ContextMenu = () => {
 			})
 			.catch((err) => {
 				snackBar(err.message, "error");
-			});
+			})
+			.finally(() => setIsModalOpen(false));
+	};
+
+	const handleMediaDelete = () => {
+		if (!commentData || !relatedEntityId) return;
+		if ("spent_hours" in commentData) return;
+
+		if ("scene_id" in commentData) {
+			api.deleteSceneMedia(commentData.id)
+				.then((res) => {
+					if (res) {
+						removeOneSceneData(commentData.id);
+					}
+					resetCommentData();
+					setContextMenu(null);
+					snackBar("Media was successfully deleted", "success");
+				})
+				.catch((err) => {
+					snackBar(err.message, "error");
+				})
+				.finally(() => setIsModalOpen(false));
+		}
+
+		if ("project_id" in commentData) {
+			api.deleteProjectMedia(commentData.id)
+				.then((res) => {
+					if (res) {
+						removeOneProjectData(commentData.id);
+					}
+					resetCommentData();
+					setContextMenu(null);
+					snackBar("Media was successfully deleted", "success");
+				})
+				.catch((err) => {
+					snackBar(err.message, "error");
+				})
+				.finally(() => setIsModalOpen(false));
+		}
 	};
 
 	useEffect(() => {
@@ -210,6 +260,21 @@ const ContextMenu = () => {
 					key={contextMenu.type}
 					isOpen={isModalOpen}
 					cb={handleComentDelete}
+					setClose={() => {
+						setIsModalOpen(false);
+						setContextMenu(null);
+					}}
+				>
+					<MenuItem key="delete" onClick={() => setIsModalOpen(true)}>
+						Delete
+					</MenuItem>
+				</Warning>,
+			]}
+			{contextMenu?.type === "media" && [
+				<Warning
+					key={contextMenu.type}
+					isOpen={isModalOpen}
+					cb={handleMediaDelete}
 					setClose={() => {
 						setIsModalOpen(false);
 						setContextMenu(null);

@@ -80,13 +80,15 @@ const ItemsBlock = ({
 			>
 				{menu && (
 					<div className="itemsblock-menu">
-						<AddCircleOutlineOutlinedIcon
-							className="itemsblock-button"
-							onClick={handleAddButton}
-						/>
+						{!myTasksLocation && (
+							<AddCircleOutlineOutlinedIcon
+								className="itemsblock-button"
+								onClick={handleAddButton}
+							/>
+						)}
 						<InfoOutlinedIcon
 							className="itemsblock-button"
-							onClick={() => infoOpenClose(true)}
+							onClick={() => infoOpenClose(!taskOpen)}
 						/>
 					</div>
 				)}
