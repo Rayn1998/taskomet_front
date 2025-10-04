@@ -1,5 +1,9 @@
-import { Routes, Route, Navigate } from "react-router-dom";
+import { useEffect } from "react";
+import { Routes, Route, Navigate, useLocation } from "react-router-dom";
 import { SnackbarProvider } from "notistack";
+
+import { snackBar } from "@/utils/snackBar";
+import { handleRefresh } from "@/utils/refresh";
 
 // COMPONENTS
 import Admin from "@/components/Admin/Admin";
@@ -20,7 +24,25 @@ import ScenesList from "@/components/ScenesList/ScenesList";
 import ShotsList from "@/components/ShotsList/ShotsList";
 import Signup from "@/components/Signup/Signup";
 
+// STORES
+import { useProjectsStore } from "@/zustand/projectsStore";
+import { useScenesStore } from "@/zustand/scenesStore";
+import { useTasksStore } from "@/zustand/tasksStore";
+
 const App = () => {
+	const location = useLocation();
+
+	const { setProjects } = useProjectsStore();
+	const { setScenes } = useScenesStore();
+	const { setTasks } = useTasksStore();
+
+	useEffect(() => {
+		setInterval(
+			() => handleRefresh(location, setProjects, setScenes, setTasks),
+			1000 * 60,
+		);
+		snackBar("Auto refresh every minute", "info");
+	}, []);
 	return (
 		<SnackbarProvider
 			style={{ fontSize: "1.5rem", cursor: "pointer" }}
@@ -57,6 +79,10 @@ const App = () => {
 					<Route path="/signup" element={<Signup />} />
 					<Route path="/error-page" element={<ErrorComponent />} />
 					<Route path="/not-found" element={<ErrorComponent />} />
+					<Route
+						path="*"
+						element={<Navigate to="/not-found" replace />}
+					/>
 				</Routes>
 				<CreateArtistPopup />
 				<CreateProjectPopup />

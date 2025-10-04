@@ -32,21 +32,23 @@ const MyTasks = () => {
 	};
 
 	useEffect(() => {
-		if (
-			(auth !== null && location.pathname !== lastPath) ||
-			(auth !== null && !tasks)
-		) {
-			resetTasks();
+		if (auth !== null && !tasks) {
 			api.getMyTasks(auth.id)
 				.then((tasks) => {
 					setTasks(tasks, location.pathname);
 				})
 				.catch((err) => console.error(err));
 		}
-	}, [auth, lastPath, location.pathname]);
+	}, [auth, tasks]);
 
 	useEffect(() => {
 		if (!tasks) return;
+
+		if (auth !== null && location.pathname !== lastPath) {
+			resetTasks();
+			return;
+		}
+
 		const tasksByProject = new Map();
 		const filteredTasks = [];
 
@@ -66,7 +68,7 @@ const MyTasks = () => {
 		}
 
 		setFilteredByProjectTasks(filteredTasks as any);
-	}, [tasks]);
+	}, [tasks, auth, location.pathname]);
 	return (
 		<Layout isHeader order menu>
 			<div className="my-tasks-content">

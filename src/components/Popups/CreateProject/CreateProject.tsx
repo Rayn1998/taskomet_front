@@ -9,6 +9,7 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogActions from "@mui/material/DialogActions";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
+import CircularProgress from "@mui/material/CircularProgress";
 
 // STORES
 import { useProjectsStore } from "@/zustand/projectsStore";
@@ -17,6 +18,8 @@ import { useCreateProjectPopupStore } from "./CreateProjectPopupStore";
 const CreateProjectPopup = () => {
 	const [name, setName] = useState<string>("");
 	const [description, setDescription] = useState<string>("");
+	const [creatingProjectRequest, setCreatingProjectRequest] =
+		useState<boolean>(false);
 
 	// PROJECTS STORE
 	const { projects, addProject } = useProjectsStore();
@@ -27,6 +30,7 @@ const CreateProjectPopup = () => {
 
 	const handleCreateProject = (e: FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
+		setCreatingProjectRequest(true);
 		if (!projects) return;
 
 		for (const project of projects) {
@@ -44,7 +48,8 @@ const CreateProjectPopup = () => {
 				setDescription("");
 				snackBar("Project was successfully created", "success");
 			})
-			.catch((err) => console.log(err));
+			.catch((_) => snackBar("Can't create new project", "error"))
+			.finally(() => setCreatingProjectRequest(false));
 	};
 
 	const handleClose = () => {
@@ -109,7 +114,13 @@ const CreateProjectPopup = () => {
 					color="success"
 					form="create-project-form"
 				>
-					Add new project
+					{creatingProjectRequest ? (
+						<CircularProgress
+							style={{ width: "2rem", height: "2rem" }}
+						/>
+					) : (
+						`Add new project`
+					)}
 				</Button>
 			</DialogActions>
 		</Dialog>

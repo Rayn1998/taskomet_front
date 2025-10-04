@@ -1,9 +1,7 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useRef } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 
-import { api } from "@/utils/Api";
-import { checkLocation } from "@/utils/checkLocation";
-import { snackBar } from "@/utils/snackBar";
+import { handleRefresh } from "@/utils/refresh";
 
 // MUI
 import Avatar from "@mui/material/Avatar";
@@ -29,29 +27,30 @@ import { useTasksStore } from "@/zustand/tasksStore";
 import { EArtistRole } from "@/types/ArtistRole";
 
 const Header = ({ isHeader }: { isHeader: boolean }) => {
-	// AUTH STORE
-	const { auth, resetAuth } = useAuthStore();
+	const location = useLocation();
 
-	// PROJECTS STORE
 	const { setProjects } = useProjectsStore();
-
-	// SCENES STORE
 	const { setScenes } = useScenesStore();
-
-	// TASKS STORE
 	const { setTasks } = useTasksStore();
 
-	const location = useLocation();
+	// AUTH STORE
+	const { auth, resetAuth, resetTgAuth, setLoggedIn } = useAuthStore();
+
 	const navigate = useNavigate();
 
 	const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-	const [refreshed, setRefreshed] = useState<boolean>(false);
 	const [rotateAngle, setRotateAngel] = useState<number>(0);
+
 	const open = Boolean(anchorEl);
 
 	const isAuth = Boolean(auth);
 	const [isSearchActive, setSearchActive] = useState<boolean>(false);
 	const inputRef = useRef<HTMLInputElement>(null);
+
+	const handleRefreshButtonClick = () => {
+		setRotateAngel((prev) => prev + 360);
+		handleRefresh(location, setProjects, setScenes, setTasks);
+	};
 
 	const handleSetSearchActive = () => {
 		setSearchActive(true);
@@ -65,56 +64,16 @@ const Header = ({ isHeader }: { isHeader: boolean }) => {
 		setAnchorEl(event.currentTarget);
 	};
 
-	const handleRefreshClick = () => {
-		setRotateAngel((prev) => prev + 360);
-		setRefreshed(true);
-		setTimeout(() => setRefreshed(false), 1000);
-	};
-
 	const handleClose = () => {
 		setAnchorEl(null);
 	};
 
 	const handleLogout = () => {
-		localStorage.removeItem("user");
 		resetAuth();
+		resetTgAuth();
+		setLoggedIn(false);
+		localStorage.removeItem("user");
 		navigate("/signup");
-	};
-
-	const handleRefresh = () => {
-		const currentLocation = checkLocation(location);
-
-		if (currentLocation.project || currentLocation.artistsLoading) {
-			api.getProjects()
-				.then(setProjects)
-				.catch(() => snackBar("Can't receive projects", "error"));
-		}
-
-		if (currentLocation.scene || currentLocation.artistsLoading) {
-			const projectName = location.pathname.split("/").pop();
-			projectName &&
-				api
-					.getScenes(projectName)
-					.then((scenes) => setScenes(scenes, projectName))
-					.catch(() => snackBar("Can't receive scenes", "error"));
-		}
-
-		if (
-			currentLocation.task ||
-			currentLocation.myTasks ||
-			currentLocation.artistsLoading
-		) {
-			const [projectName, sceneName] = location.pathname
-				.split("/")
-				.slice(-2);
-			if (!(projectName && sceneName)) return;
-
-			api.getTasks(projectName, sceneName)
-				.then((tasks) => setTasks(tasks, location.pathname))
-				.catch(() => snackBar("Can't receive tasks", "error"));
-		}
-
-		snackBar("Refreshed!", "success");
 	};
 
 	if (!isHeader) return <></>;
@@ -131,7 +90,7 @@ const Header = ({ isHeader }: { isHeader: boolean }) => {
 							: "none",
 					}}
 				>
-					<SearchOutlinedIcon
+					{/* <SearchOutlinedIcon
 						className="header-icon"
 						onClick={handleSetSearchActive}
 					/>
@@ -139,15 +98,13 @@ const Header = ({ isHeader }: { isHeader: boolean }) => {
 						ref={inputRef}
 						className="header-search"
 						placeholder="Search"
-					></input>
+						disabled
+					></input> */}
 				</div>
 				<div className="header-right-block">
 					<AutorenewOutlinedIcon
 						className="header-icon-refresh"
-						onClick={() => {
-							handleRefreshClick();
-							handleRefresh();
-						}}
+						onClick={handleRefreshButtonClick}
 						style={{
 							transform: `rotate(${rotateAngle}deg)`,
 						}}

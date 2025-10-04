@@ -10,6 +10,9 @@ import { snackBar } from "@/utils/snackBar";
 // NIVO
 import { ResponsivePie } from "@nivo/pie";
 
+// MUI
+import LinearProgress from "@mui/material/LinearProgress";
+
 // STORES
 import { useProjectsStore } from "@/zustand/projectsStore";
 import { useTasksStore } from "@/zustand/tasksStore";
@@ -25,7 +28,7 @@ const ProjectsStatistics = () => {
 	const { projects } = useProjectsStore();
 
 	// TASKS STORE
-	const { tasks, setTasks } = useTasksStore();
+	const { tasks, setTasks, resetTasks } = useTasksStore();
 
 	// TASK INFO STORE
 	const { setOpenClose: setInfoBlockOpenClose } = useTaskInfoStore();
@@ -46,6 +49,7 @@ const ProjectsStatistics = () => {
 	useEffect(() => {
 		if (!selectedProjectId) return;
 
+		resetTasks();
 		api.getAllTasks(selectedProjectId)
 			.then((tasks) => {
 				setTasks(tasks, location.pathname);
@@ -97,6 +101,12 @@ const ProjectsStatistics = () => {
 						handleSelectItem={handleClick}
 					/>
 				</div>
+				{!selectedProjectId && !tasks && (
+					<p>Choose a project to get statistics</p>
+				)}
+				{selectedProjectId && !tasks && (
+					<LinearProgress style={{ width: "70%" }} />
+				)}
 				{tasks && tasks.length > 0 && (
 					<div className="projects-statistics-pie">
 						<div className="projects-statistics-pie-wrapper">

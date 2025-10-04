@@ -1,4 +1,6 @@
-import { FC, useEffect } from "react";
+import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+
 import { useAuthStore } from "@/zustand/authStore";
 
 declare global {
@@ -7,7 +9,8 @@ declare global {
 	}
 }
 
-const TelegramAuth: FC = () => {
+const TelegramAuth = () => {
+	const navigate = useNavigate();
 	const { setTgAuth } = useAuthStore();
 
 	useEffect(() => {
@@ -29,13 +32,15 @@ const TelegramAuth: FC = () => {
 
 	useEffect(() => {
 		window.onTelegramAuth = function (user) {
-			// alert(
-			// 	`Logged in as ${user.first_name} ${user.last_name} (${user.id}${
-			// 		user.username ? ", @" + user.username : ""
-			// 	})`,
-			// );
 			localStorage.setItem("user", `${JSON.stringify(user)}`);
 			setTgAuth(user);
+
+			let enteringPath = "";
+			location.pathname === "/signup"
+				? (enteringPath = "/projects")
+				: (enteringPath = location.pathname);
+
+			navigate(enteringPath);
 		};
 
 		const script = document.createElement("script");
