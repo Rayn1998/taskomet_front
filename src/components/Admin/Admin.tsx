@@ -32,7 +32,7 @@ const Admin = () => {
 		useCreateArtistPopupStore();
 
 	// ARTISTS STORE
-	const { artists, updateArtist } = useArtistStore();
+	const { artists, updateArtist, deleteArtist } = useArtistStore();
 
 	// TASK INFO STORE
 	const { setOpenClose: setOpenCloseTaskInfo } = useTaskInfoStore();
@@ -50,7 +50,7 @@ const Admin = () => {
 			const artist = artists.find((artist) => artist.id === id)!;
 			setSelectedArtistData(artist);
 		},
-		[selectedArtistData],
+		[selectedArtistData, artists],
 	);
 
 	const handleCreateArtistClick = () => {
@@ -66,9 +66,26 @@ const Admin = () => {
 				updateArtist(updatedArtist);
 				snackBar("Role was changed successfully", "success");
 			})
+			.catch((_) => {
+				snackBar("Something went wrong", "error");
+			});
+	};
+
+	const handleDeleteArtist = (artistId: number) => {
+		if (!Number.isInteger(artistId)) return;
+
+		api.deleteArtist(artistId)
+			.then((deletedArtist) => {
+				deleteArtist(deletedArtist.id);
+				setSelectedArtistData(null);
+				snackBar(
+					`Artist ${deletedArtist.name} was successfully deleted`,
+					"success",
+				);
+			})
 			.catch((err) => {
 				console.log(err);
-				snackBar("Something went wrong", "error");
+				snackBar("Error deleting artist", "error");
 			});
 	};
 
@@ -91,6 +108,7 @@ const Admin = () => {
 							flexDirection: "column",
 							gap: "1rem",
 							padding: "1rem",
+							overflowY: "scroll",
 						}}
 					>
 						{!artists && <LinearProgress />}
@@ -103,9 +121,9 @@ const Admin = () => {
 								<ListItem
 									onMouseEnter={() => setHoverId(artist.id)}
 									onMouseLeave={() => setHoverId(null)}
-									onClick={() =>
-										handleSelectArtist(artist.id)
-									}
+									onClick={() => {
+										handleSelectArtist(artist.id);
+									}}
 									key={artist.id}
 									style={{
 										backgroundColor: isSelected
@@ -185,6 +203,9 @@ const Admin = () => {
 								className="admin-artists-info-delete-button"
 								variant="contained"
 								color="error"
+								onClick={() =>
+									handleDeleteArtist(selectedArtistData.id)
+								}
 							>
 								DELETE ARTIST
 							</Button>

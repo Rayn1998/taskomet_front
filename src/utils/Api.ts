@@ -63,6 +63,18 @@ class Api {
         });
     }
 
+    async deleteArtist(artistId: number): Promise<IArtist> {
+        return this._request<IArtist>(
+            `${this.url}/delete-artist?artistId=${artistId}`,
+            {
+                method: "DELETE",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+            },
+        );
+    }
+
     async updateArtistRole(artistId: number, role: number): Promise<IArtist> {
         return this._request<IArtist>(`${this.url}/artist-role`, {
             method: "PATCH",

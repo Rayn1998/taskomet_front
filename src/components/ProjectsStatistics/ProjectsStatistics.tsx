@@ -25,7 +25,7 @@ const ProjectsStatistics = () => {
 	const location = useLocation();
 
 	// PROJECTS STORE
-	const { projects } = useProjectsStore();
+	const { projects, setProjects } = useProjectsStore();
 
 	// TASKS STORE
 	const { tasks, setTasks, resetTasks } = useTasksStore();
@@ -45,6 +45,14 @@ const ProjectsStatistics = () => {
 	};
 
 	useEffect(() => setInfoBlockOpenClose(false), []);
+
+	useEffect(() => {
+		if (projects === null) {
+			api.getProjects()
+				.then(setProjects)
+				.catch(() => snackBar("Can't get projects...", "error"));
+		}
+	}, [projects]);
 
 	useEffect(() => {
 		if (!selectedProjectId) return;
@@ -91,6 +99,7 @@ const ProjectsStatistics = () => {
 			setSpentHours(hours);
 		}
 	}, [tasks, selectedProjectId]);
+
 	return (
 		<Layout isHeader canvas>
 			<div className="projects-statistics">
@@ -102,13 +111,39 @@ const ProjectsStatistics = () => {
 					/>
 				</div>
 				{!selectedProjectId && !tasks && (
-					<p>Choose a project to get statistics</p>
+					<div className="projects-statistics-empty">
+						<p className="empty-declaration">
+							There are no tasks in this project
+						</p>
+					</div>
 				)}
 				{selectedProjectId && !tasks && (
 					<LinearProgress style={{ width: "70%" }} />
 				)}
 				{tasks && tasks.length > 0 && (
 					<div className="projects-statistics-pie">
+						<div className="projects-statistics-pie-text-wrapper">
+							{selectedProjectId && (
+								<div className="projects-statistics-pie-text">
+									<div className="projects-statistics-pie-text-block-item">
+										<p className="projects-statistics-pie-text-data">
+											Amount of tasks:
+										</p>
+										<p className="projects-statistics-pie-text-data_value">
+											{numberOfTasks}
+										</p>
+									</div>
+									<div className="projects-statistics-pie-text-block-item">
+										<p className="projects-statistics-pie-text-data">
+											Spent Hours:
+										</p>
+										<p className="projects-statistics-pie-text-data_value">
+											{spentHours}
+										</p>
+									</div>
+								</div>
+							)}
+						</div>
 						<div className="projects-statistics-pie-wrapper">
 							<ResponsivePie
 								data={pieData}
@@ -136,31 +171,6 @@ const ProjectsStatistics = () => {
 								arcLabelsTextColor={"#fff"}
 							/>
 						</div>
-						{selectedProjectId && (
-							<div className="projects-statistics-pie-text">
-								<div className="projects-statistics-pie-text-block-item">
-									<p className="projects-statistics-pie-text-data">
-										Amount of tasks:
-									</p>
-									<p className="projects-statistics-pie-text-data_value">
-										{numberOfTasks}
-									</p>
-								</div>
-								<div className="projects-statistics-pie-text-block-item">
-									<p className="projects-statistics-pie-text-data">
-										Spent Hours:
-									</p>
-									<p className="projects-statistics-pie-text-data_value">
-										{spentHours}
-									</p>
-								</div>
-							</div>
-						)}
-					</div>
-				)}
-				{tasks?.length === 0 && (
-					<div className="empty-declaration">
-						There are no tasks in this project
 					</div>
 				)}
 			</div>

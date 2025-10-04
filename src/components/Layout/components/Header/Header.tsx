@@ -1,7 +1,7 @@
-import { useState, useRef } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useState, useRef, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
-import { handleRefresh } from "@/utils/refresh";
+import { snackBar } from "@/utils/snackBar";
 
 // MUI
 import Avatar from "@mui/material/Avatar";
@@ -9,6 +9,8 @@ import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import Logout from "@mui/icons-material/Logout";
+import Popover from "@mui/material/Popover";
+import Slider from "@mui/material/Slider";
 
 // MUI ICONS
 import SearchOutlinedIcon from "@mui/icons-material/SearchOutlined";
@@ -19,48 +21,55 @@ import AutorenewOutlinedIcon from "@mui/icons-material/AutorenewOutlined";
 
 // STORES
 import { useAuthStore } from "@/zustand/authStore";
-import { useArtistStore } from "@/zustand/artistStore";
-import { useProjectsStore } from "@/zustand/projectsStore";
-import { useScenesStore } from "@/zustand/scenesStore";
-import { useTasksStore } from "@/zustand/tasksStore";
+import { useRefreshStore } from "@/zustand/refreshStore";
 
 // TYPES
 import { EArtistRole } from "@/types/ArtistRole";
 
 const Header = ({ isHeader }: { isHeader: boolean }) => {
-	const location = useLocation();
-
-	const { setArtists } = useArtistStore();
-	const { setProjects } = useProjectsStore();
-	const { setScenes } = useScenesStore();
-	const { setTasks } = useTasksStore();
+	const { triggerNow, setDelay, delay } = useRefreshStore();
 
 	// AUTH STORE
-	const { auth, resetAuth, resetTgAuth, setLoggedIn } = useAuthStore();
+	const { auth, resetAuth, resetTgAuth } = useAuthStore();
 
 	const navigate = useNavigate();
 
-	const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+	const [anchorEl, setAnchorEl] = useState<null | HTMLElement | SVGElement>(
+		null,
+	);
 	const [rotateAngle, setRotateAngel] = useState<number>(0);
-
-	const open = Boolean(anchorEl);
+	const [rememberedValue, setRememberedValue] = useState<number>(1);
+	const [delayMins, setDelayMins] = useState<number>(1);
+	const [avatarMenuOpen, setAvatarMenuOpen] = useState<boolean>(false);
+	const [settingsOpen, setSettingsOpen] = useState<boolean>(false);
 
 	const isAuth = Boolean(auth);
 	const [isSearchActive, setSearchActive] = useState<boolean>(false);
 	const inputRef = useRef<HTMLInputElement>(null);
+	const debounceTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
 
 	const handleRefreshButtonClick = () => {
 		if (!auth) return;
-		const id = auth.id;
 		setRotateAngel((prev) => prev + 360);
-		handleRefresh(
-			location,
-			id,
-			setArtists,
-			setProjects,
-			setScenes,
-			setTasks,
-		);
+		triggerNow();
+	};
+
+	useEffect(() => {
+		if (delay) setDelayMins(delay);
+	}, [delay]);
+
+	const handleChangeDelay = (e: any) => {
+		const value = +e.target.value;
+		setDelayMins(value);
+
+		if (debounceTimeout.current) {
+			clearTimeout(debounceTimeout.current);
+		}
+
+		debounceTimeout.current = setTimeout(() => {
+			setDelay(value);
+			snackBar(`Auto refresh set to ${value} mins`, "success");
+		}, 2000);
 	};
 
 	const handleSetSearchActive = () => {
@@ -71,18 +80,24 @@ const Header = ({ isHeader }: { isHeader: boolean }) => {
 		setSearchActive(false);
 	};
 
+	const handleSettingsClick = (event: React.MouseEvent<SVGElement>) => {
+		setAnchorEl(event.currentTarget);
+		setSettingsOpen(true);
+	};
+
 	const handleAvatarClick = (event: React.MouseEvent<HTMLElement>) => {
 		setAnchorEl(event.currentTarget);
+		setAvatarMenuOpen(true);
 	};
 
 	const handleClose = () => {
 		setAnchorEl(null);
+		setAvatarMenuOpen(false);
 	};
 
 	const handleLogout = () => {
 		resetAuth();
 		resetTgAuth();
-		setLoggedIn(false);
 		localStorage.removeItem("user");
 		navigate("/signup");
 	};
@@ -120,7 +135,47 @@ const Header = ({ isHeader }: { isHeader: boolean }) => {
 							transform: `rotate(${rotateAngle}deg)`,
 						}}
 					/>
-					{/* <SettingsOutlinedIcon className="header-icon" /> */}
+					<SettingsOutlinedIcon
+						className="header-icon"
+						onClick={(e) => handleSettingsClick(e)}
+					/>
+					<Popover
+						open={settingsOpen}
+						onClose={() => setSettingsOpen(false)}
+						anchorEl={anchorEl}
+						anchorOrigin={{
+							vertical: "bottom",
+							horizontal: "left",
+						}}
+						sx={{
+							"& .MuiPaper-root": {
+								width: "15rem",
+								height: "5rem",
+								padding: "0 1rem",
+								backgroundColor: "rgba(30,30,30,0.5)",
+								display: "flex",
+								flexDirection: "column",
+								justifyContent: "flex-end",
+							},
+						}}
+					>
+						<p style={{ color: "rgb(230,230,230)" }}>
+							Refresh delay in mins
+						</p>
+						<Slider
+							aria-label="Refresh delay"
+							defaultValue={30}
+							getAriaValueText={(value) => `${value}`}
+							valueLabelDisplay="auto"
+							shiftStep={30}
+							value={delayMins}
+							onChange={(e) => handleChangeDelay(e)}
+							step={1}
+							marks
+							min={1}
+							max={10}
+						/>
+					</Popover>
 					{/* <NotificationsNoneOutlinedIcon className="header-icon" /> */}
 					{auth && auth.role !== EArtistRole.Artist && (
 						<AdminPanelSettingsOutlinedIcon
@@ -132,15 +187,17 @@ const Header = ({ isHeader }: { isHeader: boolean }) => {
 						alt="profile-avatar"
 						src={isAuth ? auth?.photo_url : ""}
 						onClick={handleAvatarClick}
-						aria-controls={open ? "account-menu" : undefined}
+						aria-controls={
+							avatarMenuOpen ? "account-menu" : undefined
+						}
 						aria-haspopup="true"
-						aria-expanded={open ? "true" : undefined}
+						aria-expanded={avatarMenuOpen ? "true" : undefined}
 						sx={{ cursor: "pointer" }}
 					/>
 					<Menu
 						anchorEl={anchorEl}
 						id="account-menu"
-						open={open}
+						open={avatarMenuOpen}
 						onClose={handleClose}
 						onClick={handleClose}
 						slotProps={{

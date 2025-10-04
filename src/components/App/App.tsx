@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { Routes, Route, Navigate, useLocation } from "react-router-dom";
 import { SnackbarProvider } from "notistack";
 
@@ -26,6 +26,7 @@ import Signup from "@/components/Signup/Signup";
 
 // STORES
 import { useAuthStore } from "@/zustand/authStore";
+import { useRefreshStore } from "@/zustand/refreshStore";
 import { useArtistStore } from "@/zustand/artistStore";
 import { useProjectsStore } from "@/zustand/projectsStore";
 import { useScenesStore } from "@/zustand/scenesStore";
@@ -34,6 +35,7 @@ import { useTasksStore } from "@/zustand/tasksStore";
 const App = () => {
 	const location = useLocation();
 
+	const { startInterval } = useRefreshStore();
 	const { auth } = useAuthStore();
 	const { setArtists } = useArtistStore();
 	const { setProjects } = useProjectsStore();
@@ -43,19 +45,17 @@ const App = () => {
 	useEffect(() => {
 		if (!auth) return;
 		const id = auth.id;
-		setInterval(
-			() =>
-				handleRefresh(
-					location,
-					id,
-					setArtists,
-					setProjects,
-					setScenes,
-					setTasks,
-				),
-			1000 * 60,
+		startInterval(() =>
+			handleRefresh(
+				location,
+				id,
+				setArtists,
+				setProjects,
+				setScenes,
+				setTasks,
+			),
 		);
-		snackBar("Auto refresh every minute", "info");
+		setTimeout(() => snackBar("Auto refresh every minute", "info"), 3000);
 	}, [auth]);
 	return (
 		<SnackbarProvider

@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 
 import { useAuthStore } from "@/zustand/authStore";
 
@@ -10,6 +10,7 @@ declare global {
 }
 
 const TelegramAuth = () => {
+	const location = useLocation();
 	const navigate = useNavigate();
 	const { setTgAuth } = useAuthStore();
 
@@ -64,7 +65,6 @@ const TelegramAuth = () => {
 		};
 	}, []);
 	return <div id="telegram-button-container"></div>;
-	return <></>;
 };
 
 export default TelegramAuth;

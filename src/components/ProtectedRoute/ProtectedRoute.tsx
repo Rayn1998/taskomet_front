@@ -20,10 +20,11 @@ interface IProtectedRouteProps {
 const ProtectedRoute = ({
 	redirectingPath = "/signup",
 }: IProtectedRouteProps) => {
+	const location = useLocation();
 	const navigate = useNavigate();
 
 	// AUTH STORE
-	const { auth, tgAuth, setAuth, setTgAuth, setLoggedIn } = useAuthStore();
+	const { auth, tgAuth, setAuth, setTgAuth } = useAuthStore();
 
 	// ERROR STORE
 	const { setErrorMessage } = useErrorDataStore();
@@ -100,7 +101,6 @@ const ProtectedRoute = ({
 				}
 
 				setAuth(authArtist);
-				setLoggedIn(true);
 				snackBar(`Welcome back, dear ${authArtist.name}`);
 
 				const artists = await api.getArtists();

@@ -13,7 +13,9 @@ export const handleRefresh = (
     const currentLocation = checkLocation(location);
 
     api.getArtists()
-        .then((artists) => setArtists(artists))
+        .then((artists) => {
+            setArtists(artists);
+        })
         .catch(() => console.log("error"));
 
     if (currentLocation.project || currentLocation.artistsLoading) {
