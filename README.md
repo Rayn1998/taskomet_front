@@ -18,10 +18,11 @@
 ## ✨ Возможности
 
 -   🔐 Авторизация через **Telegram**
+-   🎚️ Админ-панель для управления ролями пользователей
 -   🎬 Иерархия: **Проекты → Сцены → Шоты → Таски**
 -   📝 Описание и прикреплённые медиафайлы
 -   ✅ Статусы задач и назначение артистов
--   💬 Комментарии
+-   💬 Комментарии и отправка медиафайлов как отчётности по задачам
 
 ---
 
@@ -35,10 +36,11 @@
 
 ## 📸 Скриншоты
 
-![Projects](./src/assets/images/preview/preview-projects.png)
 ![Tasks](./src/assets/images/preview/preview-tasks.png)
-![Dailies](./src/assets/images/preview/preview-dailies.png)
+![Projects](./src/assets/images/preview/preview-projects.png)
+![Dailies](./src/assets/images/preview/preview-add-comment.png)
 ![Artists-Loading](./src/assets/images/preview/preview-artists-loading.png)
+![Artists-Loading](./src/assets/images/preview/preview-projects-statistics.png)
 
 ---
 
