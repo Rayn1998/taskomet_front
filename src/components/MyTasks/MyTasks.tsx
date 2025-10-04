@@ -33,7 +33,8 @@ const MyTasks = () => {
 
 	useEffect(() => {
 		if (auth !== null && !tasks) {
-			api.getMyTasks(auth.id)
+			const id = auth.id;
+			api.getMyTasks(id)
 				.then((tasks) => {
 					setTasks(tasks, location.pathname);
 				})

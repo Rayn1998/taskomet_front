@@ -19,6 +19,7 @@ import AutorenewOutlinedIcon from "@mui/icons-material/AutorenewOutlined";
 
 // STORES
 import { useAuthStore } from "@/zustand/authStore";
+import { useArtistStore } from "@/zustand/artistStore";
 import { useProjectsStore } from "@/zustand/projectsStore";
 import { useScenesStore } from "@/zustand/scenesStore";
 import { useTasksStore } from "@/zustand/tasksStore";
@@ -29,6 +30,7 @@ import { EArtistRole } from "@/types/ArtistRole";
 const Header = ({ isHeader }: { isHeader: boolean }) => {
 	const location = useLocation();
 
+	const { setArtists } = useArtistStore();
 	const { setProjects } = useProjectsStore();
 	const { setScenes } = useScenesStore();
 	const { setTasks } = useTasksStore();
@@ -48,8 +50,17 @@ const Header = ({ isHeader }: { isHeader: boolean }) => {
 	const inputRef = useRef<HTMLInputElement>(null);
 
 	const handleRefreshButtonClick = () => {
+		if (!auth) return;
+		const id = auth.id;
 		setRotateAngel((prev) => prev + 360);
-		handleRefresh(location, setProjects, setScenes, setTasks);
+		handleRefresh(
+			location,
+			id,
+			setArtists,
+			setProjects,
+			setScenes,
+			setTasks,
+		);
 	};
 
 	const handleSetSearchActive = () => {

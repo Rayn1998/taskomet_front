@@ -76,6 +76,7 @@ const CreateComment = () => {
 
 		const file = acceptedFiles[0];
 		setFiles(acceptedFiles);
+		console.log("file :", file);
 
 		const fileReader = new FileReader();
 		fileReader.onload = () => {
@@ -188,6 +189,9 @@ const CreateComment = () => {
 
 	const handleTaskDataSubmit = async (e: React.SyntheticEvent) => {
 		e.preventDefault();
+		console.log("taskData :", taskData);
+		console.log("relatedTask :", relatedTask);
+		console.log("auth :", auth);
 
 		if (!taskData || !relatedTask || !auth) return;
 		typeOfComment ===
@@ -214,6 +218,7 @@ const CreateComment = () => {
 
 		formData.append("data", JSON.stringify(taskDataToBeSent));
 
+		console.log("before request: ", formData);
 		await api
 			.sendComment(formData)
 			.then((res) => {
@@ -244,7 +249,8 @@ const CreateComment = () => {
 	const handleSubmit = (e: React.SyntheticEvent) => {
 		if (currentLocation.project) handleProjectDataSubmit(e);
 		if (currentLocation.scene) handleSceneDataSubmit(e);
-		if (currentLocation.task) handleTaskDataSubmit(e);
+		if (currentLocation.task || currentLocation.myTasks)
+			handleTaskDataSubmit(e);
 	};
 
 	const statuses = [];
@@ -272,7 +278,7 @@ const CreateComment = () => {
 		>
 			<div className="create-comment-header">
 				<DialogTitle>Add new comment</DialogTitle>
-				{currentLocation.task && (
+				{(currentLocation.task || currentLocation.myTasks) && (
 					<DropDown<TypeOfData>
 						items={TypeOfDataLabels}
 						selected={typeOfComment}
@@ -362,7 +368,7 @@ const CreateComment = () => {
 			</DialogContent>
 			<DialogActions>
 				{typeOfComment === TypeOfData.Dailies &&
-					currentLocation.task && (
+					(currentLocation.task || currentLocation.myTasks) && (
 						<NativeSelect
 							style={{ color: "rgb(230,230,230)" }}
 							value={spentHours}
@@ -377,7 +383,7 @@ const CreateComment = () => {
 							})}
 						</NativeSelect>
 					)}
-				{currentLocation.task && (
+				{(currentLocation.task || currentLocation.myTasks) && (
 					<NativeSelect
 						style={{ color: "rgb(230,230,230)" }}
 						value={status}

@@ -1,20 +1,11 @@
 @use "@/scss/variables" as *;
 
 .drop-down {
-    // background-color: $background-transparent;
     font-size: 2rem;
     margin: 0.4rem 0;
-    // outline: 0.1rem solid $comment-text-background;
     min-height: 3rem;
     display: flex;
     align-items: center;
     justify-content: center;
     text-overflow: ellipsis;
-
-    .drop-down-label {
-        color: #fff;
-    }
-    .drop-down-select {
-        color: #fff;
-    }
 }

@@ -42,7 +42,11 @@ const DropDown = <K extends number>({
 				>
 					{Object.entries(items).map(([key, value]) => {
 						return (
-							<option key={key} value={key}>
+							<option
+								key={key}
+								value={key}
+								style={{ color: "rgb(30,30,30)" }}
+							>
 								{value as any}
 							</option>
 						);

@@ -25,6 +25,8 @@ import ShotsList from "@/components/ShotsList/ShotsList";
 import Signup from "@/components/Signup/Signup";
 
 // STORES
+import { useAuthStore } from "@/zustand/authStore";
+import { useArtistStore } from "@/zustand/artistStore";
 import { useProjectsStore } from "@/zustand/projectsStore";
 import { useScenesStore } from "@/zustand/scenesStore";
 import { useTasksStore } from "@/zustand/tasksStore";
@@ -32,17 +34,29 @@ import { useTasksStore } from "@/zustand/tasksStore";
 const App = () => {
 	const location = useLocation();
 
+	const { auth } = useAuthStore();
+	const { setArtists } = useArtistStore();
 	const { setProjects } = useProjectsStore();
 	const { setScenes } = useScenesStore();
 	const { setTasks } = useTasksStore();
 
 	useEffect(() => {
+		if (!auth) return;
+		const id = auth.id;
 		setInterval(
-			() => handleRefresh(location, setProjects, setScenes, setTasks),
+			() =>
+				handleRefresh(
+					location,
+					id,
+					setArtists,
+					setProjects,
+					setScenes,
+					setTasks,
+				),
 			1000 * 60,
 		);
 		snackBar("Auto refresh every minute", "info");
-	}, []);
+	}, [auth]);
 	return (
 		<SnackbarProvider
 			style={{ fontSize: "1.5rem", cursor: "pointer" }}

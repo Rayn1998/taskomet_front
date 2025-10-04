@@ -106,7 +106,11 @@ const ProtectedRoute = ({
 				const artists = await api.getArtists();
 				if (artists?.length) setArtists(artists);
 
-				navigate("/projects");
+				let redirectingPath = location.pathname;
+				if (redirectingPath === "/signup")
+					redirectingPath = "/projects";
+
+				navigate(redirectingPath);
 			} catch (err) {
 				if (err instanceof Error) {
 					setErrorMessage(err.message);
