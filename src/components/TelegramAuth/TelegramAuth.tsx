@@ -15,16 +15,17 @@ const TelegramAuth = () => {
 	const { setTgAuth } = useAuthStore();
 
 	useEffect(() => {
+		console.log(process.env.REACT_APP_TEST);
 		if (process.env.REACT_APP_TEST === "true") {
 			const fakeUser = {
-				auth_date: 12314512,
+				auth_date: "1231451212",
 				first_name: "Yuriy",
 				hash: "4152352352",
 				last_name: "Bodolanov",
 				username: "bodolanov",
 				photo_url:
 					"https://t.me/i/userpic/320/L00DAS7h4otNF4Or_Qy4l9n32VBw3HQl1yWyjhxemrw.jpg",
-				id: 1,
+				id: "1234567890",
 			};
 			localStorage.setItem("user", JSON.stringify(fakeUser));
 			setTgAuth(fakeUser);

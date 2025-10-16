@@ -56,7 +56,6 @@ const Media = ({ data, relatedEntityId }: IMediaProps) => {
 		>
 			<div className="media-block">
 				<div className="media-block-header">
-					{ext && <div className="media-block-ext">{ext}</div>}
 					<div className="media-author-block">
 						<div className="media-author">
 							<p className="media-author-text">{author}</p>
@@ -72,7 +71,7 @@ const Media = ({ data, relatedEntityId }: IMediaProps) => {
 							src={`${process.env.REACT_APP_SERVER_DOMAIN}/${data.media}`}
 						/>
 					)}
-					{data.media && (
+					{data.media && !mp4 && (
 						<img
 							className="media-image"
 							src={`${process.env.REACT_APP_SERVER_DOMAIN}/${data.media}`}

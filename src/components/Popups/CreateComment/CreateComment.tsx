@@ -1,4 +1,4 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import { useDropzone } from "react-dropzone";
 
@@ -76,7 +76,6 @@ const CreateComment = () => {
 
 		const file = acceptedFiles[0];
 		setFiles(acceptedFiles);
-		console.log("file :", file);
 
 		const fileReader = new FileReader();
 		fileReader.onload = () => {
@@ -189,9 +188,6 @@ const CreateComment = () => {
 
 	const handleTaskDataSubmit = async (e: React.SyntheticEvent) => {
 		e.preventDefault();
-		console.log("taskData :", taskData);
-		console.log("relatedTask :", relatedTask);
-		console.log("auth :", auth);
 
 		if (!taskData || !relatedTask || !auth) return;
 		typeOfComment ===
@@ -218,7 +214,6 @@ const CreateComment = () => {
 
 		formData.append("data", JSON.stringify(taskDataToBeSent));
 
-		console.log("before request: ", formData);
 		await api
 			.sendComment(formData)
 			.then((res) => {
@@ -334,34 +329,57 @@ const CreateComment = () => {
 						</div>
 					)}
 				{(imagePreview || videoPreview) && (
-					<DeleteIcon
-						className="delete-icon"
-						sx={{
-							width: "3rem",
-							height: "3rem",
-							color: "rgb(200,0,0)",
-							cursor: "pointer",
-						}}
-						onClick={() => {
-							setImagePreview(null);
-							setVideoPreview(null);
-							setFiles([]);
-							setHideInputArea(false);
-						}}
-					/>
-				)}
-				{imagePreview && (
-					<img
-						className="create-comment-preview"
-						src={imagePreview as string}
-					/>
-				)}
-				{videoPreview && (
-					<video src={videoPreview as string} controls />
+					<div className="preview-wrapper">
+						<DeleteIcon
+							className="delete-icon"
+							sx={{
+								width: "3rem",
+								height: "3rem",
+								color: "rgb(200,0,0)",
+								cursor: "pointer",
+							}}
+							onClick={() => {
+								setImagePreview(null);
+								setVideoPreview(null);
+								setFiles([]);
+								setHideInputArea(false);
+							}}
+						/>
+						{imagePreview && (
+							<img
+								className="create-comment-preview"
+								src={imagePreview as string}
+							/>
+						)}
+						{videoPreview && (
+							<video
+								className="create-comment-preview"
+								src={videoPreview as string}
+								controls
+							/>
+						)}
+					</div>
 				)}
 				{hideInputArea &&
+					!loading &&
+					!imagePreview &&
+					videoPreview === null && (
+						<p style={{ fontSize: "1.2rem" }}>
+							File of this format can't be previewed, but it's
+							okay, just send it
+						</p>
+					)}
+				{hideInputArea &&
 					!loading && [
-						<p>File ready to be uploaded</p>,
+						<p
+							style={{
+								width: "fit-content",
+								borderRadius: 0,
+								borderBottom: "0.1rem solid green",
+							}}
+						>
+							File ready to be uploaded
+						</p>,
 						<CheckCircle color="success" fontSize="large" />,
 					]}
 				{loading && <CircularProgress />}
