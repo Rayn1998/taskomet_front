@@ -21,6 +21,7 @@ export const projectsApi = {
             `projects/project-data?id=${projectId}`,
             {
                 method: "GET",
+                credentials: "include",
             },
         );
     },

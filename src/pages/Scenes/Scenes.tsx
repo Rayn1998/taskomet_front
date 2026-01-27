@@ -1,9 +1,9 @@
-import { FC, MouseEvent, useState, useEffect } from "react";
+import { MouseEvent, useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 
 import Layout from "@/components/Layout/Layout";
 import LayoutItem from "@/components/Layout/components/LayoutItem/LayoutItem";
-import { api } from "@/routes/Api";
+import { scenesApi } from "@/routes/scenes.api";
 
 // MUI
 import LinearProgress from "@mui/material/LinearProgress";
@@ -18,7 +18,7 @@ import { useTaskInfoStore } from "@/zustand/taskInfoStore";
 import type IScene from "@shared/types/Scene";
 import type IEntityProgress from "@shared/types/EntityProgress";
 
-const ScenesList: FC = () => {
+const Scenes = () => {
 	// TASK INFO STORE
 	const { isOpen: taskViewOpen } = useTaskInfoStore();
 
@@ -51,7 +51,8 @@ const ScenesList: FC = () => {
 	useEffect(() => {
 		if (!(selected && taskViewOpen && relatedScene)) return;
 
-		api.getSceneData(relatedScene.id)
+		scenesApi
+			.getData(relatedScene.id)
 			.then((newSceneData) => {
 				setSceneData(newSceneData);
 			})
@@ -64,7 +65,8 @@ const ScenesList: FC = () => {
 		if (projectName === lastProject?.toLowerCase()) return;
 
 		const scenesRequest = (projectName: string) => {
-			api.getScenes(projectName)
+			scenesApi
+				.getAll(projectName)
 				.then((scenes) => {
 					setScenes(scenes, projectName);
 				})
@@ -115,4 +117,4 @@ const ScenesList: FC = () => {
 	);
 };
 
-export default ScenesList;
+export default Scenes;

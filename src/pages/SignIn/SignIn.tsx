@@ -43,6 +43,7 @@ const SignIn = () => {
 
 			if (res.status === 200) {
 				setAuth(res);
+				snackBar(`Welcome, dear ${res.name}`);
 				reset();
 			}
 

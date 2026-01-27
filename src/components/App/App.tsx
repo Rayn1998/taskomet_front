@@ -17,10 +17,10 @@ import { handleRefresh } from "@/utils/refresh";
 import ErrorComponent from "@/pages/Error/Error";
 // import ImagePreviewPopup from "@/components/Popups/ImagePreview/ImagePreview";
 // import MyTasks from "@/components/MyTasks/MyTasks";
-import ProjectsList from "@/components/ProjectsList/ProjectsList";
+import Projects from "@/pages/Projects/Projects";
 // import ProjectsStatistics from "@/components/ProjectsStatistics/ProjectsStatistics";
 import ProtectedRoute from "@/components/ProtectedRoute/ProtectedRoute";
-// import ScenesList from "@/components/ScenesList/ScenesList";
+import Scenes from "@/pages/Scenes/Scenes";
 // import ShotsList from "@/components/ShotsList/ShotsList";
 import Signup from "@/pages/Signup/Signup";
 import SignIn from "@/pages/SignIn/SignIn";
@@ -71,11 +71,9 @@ const App = () => {
 						element={<Navigate to="/projects" replace />}
 					/>
 					{/* <Route element={<ProtectedRoute />}> */}
-					<Route path="/projects" element={<ProjectsList />} />
-					{/* <Route
-							path="/projects/:projectId"
-							element={<ScenesList />}
-						/>
+					<Route path="/projects" element={<Projects />} />
+					<Route path="/projects/:projectId" element={<Scenes />} />
+					{/* 
 						<Route
 							path="/projects/:projectId/:sceneId"
 							element={<ShotsList />}

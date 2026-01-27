@@ -6,6 +6,7 @@ import { useForm, FieldErrors } from "react-hook-form";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 
+import { useAuthStore } from "@/zustand/authStore";
 import { snackBar } from "@/utils/snackBar";
 import { artitstApi } from "@/routes/artists.api";
 
@@ -18,6 +19,8 @@ type TFormData = {
 
 const Signup = () => {
 	const navigate = useNavigate();
+
+	const { setAuth } = useAuthStore();
 
 	const { register, handleSubmit } = useForm<TFormData>({
 		mode: "onSubmit",
@@ -34,10 +37,12 @@ const Signup = () => {
 	const onSubmit = async (data: TFormData) => {
 		try {
 			const user = { role: 1, ...data };
-			await artitstApi.create(user);
+			const newUser = await artitstApi.create(user);
+			setAuth(newUser);
 			navigate("/projects");
-		} catch (err) {
-			console.log(err);
+			snackBar(`Welcome, dear ${newUser.name}`);
+		} catch (err: any) {
+			snackBar(err.message, "error");
 		}
 	};
 

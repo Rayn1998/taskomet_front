@@ -18,7 +18,7 @@ import { useTaskInfoStore } from "@/zustand/taskInfoStore";
 import type IProject from "@shared/types/Project";
 import IEntityProgress from "@shared/types/EntityProgress";
 
-const ProjectsList = () => {
+const Projects = () => {
 	const navigate = useNavigate();
 
 	// TASK INFO STORE
@@ -112,4 +112,4 @@ const ProjectsList = () => {
 	);
 };
 
-export default ProjectsList;
+export default Projects;

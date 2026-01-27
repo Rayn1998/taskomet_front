@@ -47,6 +47,7 @@ const InfoBlock = ({ blockOpen }: { blockOpen: boolean }) => {
 	const { removeScene } = useScenesStore();
 	const { setOpenClose: setTaskInfoOpenClose } = useTaskInfoStore();
 	const { projectData, relatedProject } = useProjectDataStore();
+	useEffect(() => console.log(projectData), [projectData]);
 	const { sceneData, relatedScene } = useSceneDataStore();
 	const { resetTaskData, taskData, relatedTask } = useTaskDataStore();
 	const { setOpenClose: setOpenCloseComment } = useCreateCommentPopupStore();
