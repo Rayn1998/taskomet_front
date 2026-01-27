@@ -5,7 +5,7 @@ import { useDropzone } from "react-dropzone";
 import DropDown from "@/components/DropDown/DropDown";
 
 import { snackBar } from "@/utils/snackBar";
-import { api } from "@/utils/Api";
+import { api } from "@/routes/Api";
 import { formatSQLTimestamp } from "@/utils/formatSQLTimestamp";
 import { hours } from "@/utils/constants";
 import { checkLocation } from "@/utils/checkLocation";

@@ -1,8 +1,11 @@
 import { FC, useState, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 
-import { api } from "@/utils/Api";
 import Button from "@mui/material/Button";
+
+// API
+import { checkServerConnection } from "@/routes/_http";
+import { artitstApi } from "@/routes/artists.api";
 
 // STORES
 import { useErrorDataStore } from "@/zustand/errorDataStore";
@@ -20,16 +23,12 @@ const ErrorComponent: FC = () => {
 	const errorData = useErrorDataStore((state) => state.errorMessage);
 
 	// ARTIST STORE
-	const setArtists = useArtistStore((state) => state.setArtists);
+	// const setArtists = useArtistStore((state) => state.setArtists);
 
 	const checkConnection = useCallback(async () => {
 		try {
-			const result = await api.checkServerConnection();
+			const result = await checkServerConnection();
 			if (result) {
-				await api
-					.getArtists()
-					.then((artistList) => setArtists(artistList))
-					.catch((err) => console.log(err));
 				navigate("/projects");
 			}
 		} catch (err) {

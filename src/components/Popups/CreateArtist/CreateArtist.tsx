@@ -12,11 +12,14 @@ import DialogActions from "@mui/material/DialogActions";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 
-import { api } from "@/utils/Api";
+import { api } from "@/routes/Api";
 import { snackBar } from "@/utils/snackBar";
 
 // TYPES
 import type IArtist from "@shared/types/Artist";
+
+const email = "test@mail.ru";
+const password = "fucking_password";
 
 const CreateArtistPopup = () => {
 	// ARTIST STORE
@@ -46,6 +49,8 @@ const CreateArtistPopup = () => {
 			user_name: userName,
 			role: 0,
 			photo_url: "",
+			email,
+			password,
 		};
 
 		api.createArtist(reqData)

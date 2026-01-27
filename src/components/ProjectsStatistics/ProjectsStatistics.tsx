@@ -4,7 +4,7 @@ import { useLocation } from "react-router-dom";
 import Layout from "@/components/Layout/Layout";
 import ListItemsBlock from "@/components/ListItemsBlock/ListItemsBlock";
 
-import { api } from "@/utils/Api";
+import { api } from "@/routes/Api";
 import { snackBar } from "@/utils/snackBar";
 
 // NIVO

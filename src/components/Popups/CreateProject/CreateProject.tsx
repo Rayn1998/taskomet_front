@@ -1,5 +1,5 @@
 import { useState, FormEvent } from "react";
-import { api } from "@/utils/Api";
+import { api } from "@/routes/Api";
 import { snackBar } from "@/utils/snackBar";
 
 // MUI

@@ -12,7 +12,7 @@ declare global {
 const TelegramAuth = () => {
 	const location = useLocation();
 	const navigate = useNavigate();
-	const { setTgAuth } = useAuthStore();
+	// const { setTgAuth } = useAuthStore();
 
 	useEffect(() => {
 		console.log(process.env.REACT_APP_TEST);
@@ -28,14 +28,14 @@ const TelegramAuth = () => {
 				id: "1234567890",
 			};
 			localStorage.setItem("user", JSON.stringify(fakeUser));
-			setTgAuth(fakeUser);
+			// setTgAuth(fakeUser);
 		}
 	}, []);
 
 	useEffect(() => {
 		window.onTelegramAuth = function (user) {
 			localStorage.setItem("user", `${JSON.stringify(user)}`);
-			setTgAuth(user);
+			// setTgAuth(user);
 
 			let enteringPath = "";
 			location.pathname === "/signup"

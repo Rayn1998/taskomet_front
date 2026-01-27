@@ -6,7 +6,7 @@ import AccordionItemsBlock from "@/components/AccordionItemsBlock/AccordionItems
 import ListItemsBlock from "@/components/ListItemsBlock/ListItemsBlock";
 import StatisticBlock from "@/components/StatisticBlock/StatisticBlock";
 
-import { api } from "@/utils/Api";
+import { api } from "@/routes/Api";
 
 //STORES
 import { useArtistStore } from "@/zustand/artistStore";

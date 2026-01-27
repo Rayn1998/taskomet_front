@@ -3,6 +3,8 @@ import { useNavigate } from "react-router-dom";
 
 import { snackBar } from "@/utils/snackBar";
 
+import { authApi } from "@/routes/auth.api";
+
 // MUI
 import Avatar from "@mui/material/Avatar";
 import Menu from "@mui/material/Menu";
@@ -30,7 +32,7 @@ const Header = ({ isHeader }: { isHeader: boolean }) => {
 	const { triggerNow, setDelay, delay } = useRefreshStore();
 
 	// AUTH STORE
-	const { auth, resetAuth, resetTgAuth } = useAuthStore();
+	const { auth, resetAuth } = useAuthStore();
 
 	const navigate = useNavigate();
 
@@ -97,9 +99,8 @@ const Header = ({ isHeader }: { isHeader: boolean }) => {
 
 	const handleLogout = () => {
 		resetAuth();
-		resetTgAuth();
-		localStorage.removeItem("user");
-		navigate("/signup");
+		authApi.logout();
+		navigate("/signin");
 	};
 
 	if (!isHeader) return <></>;

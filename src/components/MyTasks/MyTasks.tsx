@@ -4,7 +4,7 @@ import { useLocation } from "react-router-dom";
 import Layout from "@/components/Layout/Layout";
 import AccordionItemsBlock from "@/components/AccordionItemsBlock/AccordionItemsBlock";
 
-import { api } from "@/utils/Api";
+import { api } from "@/routes/Api";
 
 // STORES
 import { useTasksStore } from "@/zustand/tasksStore";

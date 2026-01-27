@@ -3,7 +3,7 @@ import { useLocation } from "react-router-dom";
 
 import { snackBar } from "@/utils/snackBar";
 import { checkLocation } from "@/utils/checkLocation";
-import { api } from "@/utils/Api";
+// import { api } from "@/routes/Api";
 
 import Title from "@/components/InfoBlock/components/Title/Title";
 import Description from "@/components/InfoBlock/components/Description/Description";
@@ -55,53 +55,53 @@ const InfoBlock = ({ blockOpen }: { blockOpen: boolean }) => {
 		setIsModalOpen(!isModalOpen);
 	};
 
-	const handleDelete = () => {
-		if (taskLocation && relatedTask) {
-			api.deleteTask(relatedTask.id)
-				.then((res) => {
-					snackBar(
-						`Task ${res.name} was deleted successfully!`,
-						"success",
-						[removeTask.bind(null, res.id), resetTaskData],
-					);
-				})
-				.catch((_) => {
-					snackBar("Error while deleting the task", "error");
-				});
-		}
-		if (sceneLocation && relatedScene) {
-			api.deleteScene(relatedScene.id)
-				.then((_) => {
-					snackBar(
-						`Scene ${relatedScene.name} was deleted successfully!`,
-						"success",
-						[
-							removeScene.bind(null, relatedScene.id),
-							resetTaskData,
-						],
-					);
-				})
-				.catch((err) => {
-					snackBar("Error while deleting the scene", "error");
-				});
-		}
-		if (projectsLocation && relatedProject) {
-			api.deleteProject(relatedProject.id)
-				.then((_) => {
-					snackBar(
-						`Project ${relatedProject.name} was deleted successfully!`,
-						"success",
-						[
-							removeProject.bind(null, relatedProject.id),
-							resetTaskData,
-						],
-					);
-				})
-				.catch((_) => {
-					snackBar("Error while deleting the project", "error");
-				});
-		}
-	};
+	// const handleDelete = () => {
+	// 	if (taskLocation && relatedTask) {
+	// 		api.deleteTask(relatedTask.id)
+	// 			.then((res) => {
+	// 				snackBar(
+	// 					`Task ${res.name} was deleted successfully!`,
+	// 					"success",
+	// 					[removeTask.bind(null, res.id), resetTaskData],
+	// 				);
+	// 			})
+	// 			.catch((_) => {
+	// 				snackBar("Error while deleting the task", "error");
+	// 			});
+	// 	}
+	// 	if (sceneLocation && relatedScene) {
+	// 		api.deleteScene(relatedScene.id)
+	// 			.then((_) => {
+	// 				snackBar(
+	// 					`Scene ${relatedScene.name} was deleted successfully!`,
+	// 					"success",
+	// 					[
+	// 						removeScene.bind(null, relatedScene.id),
+	// 						resetTaskData,
+	// 					],
+	// 				);
+	// 			})
+	// 			.catch((err) => {
+	// 				snackBar("Error while deleting the scene", "error");
+	// 			});
+	// 	}
+	// 	if (projectsLocation && relatedProject) {
+	// 		api.deleteProject(relatedProject.id)
+	// 			.then((_) => {
+	// 				snackBar(
+	// 					`Project ${relatedProject.name} was deleted successfully!`,
+	// 					"success",
+	// 					[
+	// 						removeProject.bind(null, relatedProject.id),
+	// 						resetTaskData,
+	// 					],
+	// 				);
+	// 			})
+	// 			.catch((_) => {
+	// 				snackBar("Error while deleting the project", "error");
+	// 			});
+	// 	}
+	// };
 
 	useEffect(() => {
 		if ((taskLocation || myTasksLocation) && taskData && relatedTask) {
@@ -141,18 +141,18 @@ const InfoBlock = ({ blockOpen }: { blockOpen: boolean }) => {
 					onClick={handleOpenComment}
 				/>
 				{/* <ModeEditOutlineOutlinedIcon className="infoblock__block-buttons-edit-info" /> */}
-				{auth && auth.role !== EArtistRole.Artist && (
-					<Warning
-						isOpen={isModalOpen}
-						setClose={handleDeleteButton}
-						cb={handleDelete}
-					>
-						<DeleteOutlinedIcon
-							className="infoblock__block-buttons-delete"
-							onClick={handleDeleteButton}
-						/>
-					</Warning>
-				)}
+				{/* {auth && auth.role !== EArtistRole.Artist && (
+					// <Warning
+					// 	isOpen={isModalOpen}
+					// 	setClose={handleDeleteButton}
+					// 	cb={handleDelete}
+					// >
+					// 	<DeleteOutlinedIcon
+					// 		className="infoblock__block-buttons-delete"
+					// 		onClick={handleDeleteButton}
+					// 	/>
+					// </Warning>
+				)} */}
 			</div>
 			<div className="infoblock-content">
 				{projectData && relatedProject && projectsLocation && (

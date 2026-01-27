@@ -1,6 +1,11 @@
 import { checkLocation } from "./checkLocation";
-import { api } from "./Api";
 import { snackBar } from "./snackBar";
+
+// API
+import { artitstApi } from "@/routes/artists.api";
+import { projectsApi } from "@/routes/projects.api";
+import { scenesApi } from "@/routes/scenes.api";
+import { tasksApi } from "@/routes/tasks.api";
 
 export const handleRefresh = (
     location: any,
@@ -12,14 +17,16 @@ export const handleRefresh = (
 ) => {
     const currentLocation = checkLocation(location);
 
-    api.getArtists()
+    artitstApi
+        .getAll()
         .then((artists) => {
             setArtists(artists);
         })
         .catch(() => console.log("error"));
 
     if (currentLocation.project || currentLocation.artistsLoading) {
-        api.getProjects()
+        projectsApi
+            .getAll()
             .then(setProjects)
             .catch(() => snackBar("Can't receive projects", "error"));
     }
@@ -27,8 +34,8 @@ export const handleRefresh = (
     if (currentLocation.scene || currentLocation.artistsLoading) {
         const projectName = location.pathname.split("/").pop();
         projectName &&
-            api
-                .getScenes(projectName)
+            scenesApi
+                .getAll(projectName)
                 .then((scenes) => setScenes(scenes, projectName))
                 .catch(() => snackBar("Can't receive scenes", "error"));
     }
@@ -37,14 +44,16 @@ export const handleRefresh = (
         const [projectName, sceneName] = location.pathname.split("/").slice(-2);
         if (!(projectName && sceneName)) return;
 
-        api.getTasks(projectName, sceneName)
+        tasksApi
+            .getAllForScene(projectName, sceneName)
             .then((tasks) => setTasks(tasks, location.pathname))
             .catch(() => snackBar("Can't receive tasks", "error"));
     }
 
     if (currentLocation.myTasks || currentLocation.artistsLoading) {
         // в artistsLoading сейчас не работает. Надо понять как передавать выбранный id. Новый стор?
-        api.getMyTasks(id)
+        tasksApi
+            .getMyTasks(id)
             .then((tasks) => {
                 setTasks(tasks, location.pathname);
             })

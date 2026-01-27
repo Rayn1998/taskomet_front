@@ -3,7 +3,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 
 import Layout from "@/components/Layout/Layout";
 import LayoutItem from "@/components/Layout/components/LayoutItem/LayoutItem";
-import { api } from "@/utils/Api";
+import { api } from "@/routes/Api";
 
 // MUI
 import LinearProgress from "@mui/material/LinearProgress";

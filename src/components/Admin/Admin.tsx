@@ -5,7 +5,7 @@ import IArtist from "@shared/types/Artist";
 import DropDown from "../DropDown/DropDown";
 
 import { snackBar } from "@/utils/snackBar";
-import { api } from "@/utils/Api";
+// import { api } from "@/routes/Api";
 
 // MUI
 import LinearProgress from "@mui/material/LinearProgress";
@@ -57,37 +57,37 @@ const Admin = () => {
 		setArtistCreateOpenClose();
 	};
 
-	const handleChangeRole = (role: number) => {
-		if (!Number.isInteger(role) || selectedArtistData === null) return;
-		if (role === selectedArtistData.role) return;
-		api.updateArtistRole(selectedArtistData.id, role)
-			.then((updatedArtist) => {
-				setSelectedArtistData(updatedArtist);
-				updateArtist(updatedArtist);
-				snackBar("Role was changed successfully", "success");
-			})
-			.catch((_) => {
-				snackBar("Something went wrong", "error");
-			});
-	};
+	// const handleChangeRole = (role: number) => {
+	// 	if (!Number.isInteger(role) || selectedArtistData === null) return;
+	// 	if (role === selectedArtistData.role) return;
+	// 	api.updateArtistRole(selectedArtistData.id, role)
+	// 		.then((updatedArtist) => {
+	// 			setSelectedArtistData(updatedArtist);
+	// 			updateArtist(updatedArtist);
+	// 			snackBar("Role was changed successfully", "success");
+	// 		})
+	// 		.catch((_) => {
+	// 			snackBar("Something went wrong", "error");
+	// 		});
+	// };
 
-	const handleDeleteArtist = (artistId: number) => {
-		if (!Number.isInteger(artistId)) return;
+	// const handleDeleteArtist = (artistId: number) => {
+	// 	if (!Number.isInteger(artistId)) return;
 
-		api.deleteArtist(artistId)
-			.then((deletedArtist) => {
-				deleteArtist(deletedArtist.id);
-				setSelectedArtistData(null);
-				snackBar(
-					`Artist ${deletedArtist.name} was successfully deleted`,
-					"success",
-				);
-			})
-			.catch((err) => {
-				console.log(err);
-				snackBar("Error deleting artist", "error");
-			});
-	};
+	// 	api.deleteArtist(artistId)
+	// 		.then((deletedArtist) => {
+	// 			deleteArtist(deletedArtist.id);
+	// 			setSelectedArtistData(null);
+	// 			snackBar(
+	// 				`Artist ${deletedArtist.name} was successfully deleted`,
+	// 				"success",
+	// 			);
+	// 		})
+	// 		.catch((err) => {
+	// 			console.log(err);
+	// 			snackBar("Error deleting artist", "error");
+	// 		});
+	// };
 
 	useEffect(() => setOpenCloseTaskInfo(false), []);
 	return (
@@ -185,21 +185,21 @@ const Admin = () => {
 								<p className="admin-artists-info-item-name">
 									Role:{" "}
 								</p>
-								<DropDown
+								{/* <DropDown
 									// label="role"
 									items={ArtistRoleLabels}
 									selected={
 										selectedArtistData.role as EArtistRole
 									}
 									onChange={handleChangeRole}
-								/>
+								/> */}
 							</div>
 							<div className="admin-artists-info-item">
 								<p className="admin-artists-info-item-name">
 									Photo:{" "}
 								</p>
 							</div>
-							<Button
+							{/* <Button
 								className="admin-artists-info-delete-button"
 								variant="contained"
 								color="error"
@@ -208,7 +208,7 @@ const Admin = () => {
 								}
 							>
 								DELETE ARTIST
-							</Button>
+							</Button> */}
 						</div>
 					)}
 				</div>

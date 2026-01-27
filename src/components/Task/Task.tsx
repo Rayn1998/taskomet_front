@@ -2,7 +2,7 @@ import { useState, useEffect, useMemo, useCallback } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 
 import { snackBar } from "@/utils/snackBar";
-import { api } from "@/utils/Api";
+import { api } from "@/routes/Api";
 import { formatSQLTimestamp } from "@/utils/formatSQLTimestamp";
 
 // STORES
@@ -239,7 +239,6 @@ const Task = ({
 			</div>
 			<p className="task-spent-hours">{spentHours}</p>
 			<DropDown<EPriority>
-				// label="priority"
 				items={PriorityLabels}
 				selected={priority}
 				onChange={handleChangePriority}

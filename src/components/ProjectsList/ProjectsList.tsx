@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import Layout from "@/components/Layout/Layout";
 import LayoutItem from "@/components/Layout/components/LayoutItem/LayoutItem";
 
-import { api } from "@/utils/Api";
+import { projectsApi } from "@/routes/projects.api";
 
 // MUI
 import LinearProgress from "@mui/material/LinearProgress";
@@ -58,7 +58,8 @@ const ProjectsList = () => {
 	useEffect(() => {
 		if (!(selected && isTaskInfoOpen && relatedProject)) return;
 
-		api.getProjectData(relatedProject.id)
+		projectsApi
+			.getData(relatedProject.id)
 			.then((newProjectData) => {
 				setProjectData(newProjectData);
 			})
@@ -67,12 +68,15 @@ const ProjectsList = () => {
 
 	useEffect(() => {
 		resetProjectData();
-		api.getProjects()
+		projectsApi
+			.getAll()
 			.then((projects) => {
 				setProjects(projects);
 			})
 			.catch((err) => {
 				if (err instanceof Error) {
+					if (err.message.toLowerCase() === "unauthorized")
+						return navigate("/signin");
 					setErrorMessage(err.message);
 					return navigate("/error-page");
 				}

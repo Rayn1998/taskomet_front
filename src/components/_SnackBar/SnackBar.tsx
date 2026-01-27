@@ -14,7 +14,7 @@ interface SnackBarProps {
 	successCBs?: SuccessCallbacks[];
 }
 
-export const useSnackBar = () => {
+const useSnackBar = () => {
 	const { enqueueSnackbar } = useSnackbar();
 
 	const showSnack = ({

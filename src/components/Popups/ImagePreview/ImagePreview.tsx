@@ -1,4 +1,4 @@
-import { api } from "@/utils/Api";
+import { api } from "@/routes/Api";
 
 // MUI
 import Button from "@mui/material/Button";

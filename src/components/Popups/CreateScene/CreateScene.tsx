@@ -12,7 +12,7 @@ import TextField from "@mui/material/TextField";
 import IconButton from "@mui/material/IconButton";
 import CloseIcon from "@mui/icons-material/Close";
 
-import { api } from "@/utils/Api";
+import { api } from "@/routes/Api";
 import { snackBar } from "@/utils/snackBar";
 
 // STORE

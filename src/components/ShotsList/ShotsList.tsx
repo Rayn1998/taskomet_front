@@ -4,7 +4,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 import Layout from "@/components/Layout/Layout";
 import Shot from "@/components/Shot/Shot";
 import Task from "@/components/Task/Task";
-import { api } from "@/utils/Api";
+import { api } from "@/routes/Api";
 
 // MUI
 import LinearProgress from "@mui/material/LinearProgress";

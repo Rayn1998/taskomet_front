@@ -1,7 +1,7 @@
 import { create } from "zustand";
 import IArtist from "@shared/types/Artist";
 
-interface IArtistStore {
+interface IArtistsStore {
     artists: IArtist[] | null;
     setArtists: (data: IArtist[]) => void;
     getArtist: (id: number) => IArtist | undefined;
@@ -10,7 +10,7 @@ interface IArtistStore {
     updateArtist: (data: IArtist) => void;
 }
 
-export const useArtistStore = create<IArtistStore>((set, get) => ({
+export const useArtistStore = create<IArtistsStore>((set, get) => ({
     artists: null,
     setArtists: (data) => set({ artists: data }),
     getArtist: (id) => {

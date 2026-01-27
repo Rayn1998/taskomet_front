@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 
 import Warning from "@/components/Popups/Warning/Warning";
 
-import { api } from "@/utils/Api";
+import { api } from "@/routes/Api";
 import { snackBar } from "@/utils/snackBar";
 
 // MUI

@@ -3,7 +3,7 @@
 @use "components/App/App.scss";
 @use "components/ArtistsLoading/ArtistsLoading";
 @use "components/DropDown/DropDown";
-@use "components/Error/Error";
+@use "pages/Error/Error";
 @use "components/InfoBlock/InfoBlock";
 @use "components/Infoblock/components/Comment/Comment";
 @use "components/Infoblock/components/Description/Description";
@@ -19,7 +19,7 @@
 @use "components/ProjectsList/ProjectsList";
 @use "components/ProjectsStatistics/ProjectsStatistics";
 @use "components/ShotsList/ShotsList";
-@use "components/Signup/Signup";
+@use "pages/Signup/Signup";
 @use "components/StatisticBlock/StatisticBlock";
 @use "components/Task/Task";
 @use "components/Popups/CreateComment/CreateComment";
