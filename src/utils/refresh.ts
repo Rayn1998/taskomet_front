@@ -2,7 +2,7 @@ import { checkLocation } from "./checkLocation";
 import { snackBar } from "./snackBar";
 
 // API
-import { artitstApi } from "@/routes/artists.api";
+import { artistsApi } from "@/routes/artists.api";
 import { projectsApi } from "@/routes/projects.api";
 import { scenesApi } from "@/routes/scenes.api";
 import { tasksApi } from "@/routes/tasks.api";
@@ -17,17 +17,17 @@ export const handleRefresh = (
 ) => {
     const currentLocation = checkLocation(location);
 
-    artitstApi
+    artistsApi
         .getAll()
-        .then((artists) => {
-            setArtists(artists);
+        .then((res) => {
+            setArtists(res.data);
         })
         .catch(() => console.log("error"));
 
     if (currentLocation.project || currentLocation.artistsLoading) {
         projectsApi
             .getAll()
-            .then(setProjects)
+            .then((res) => setProjects(res.data))
             .catch(() => snackBar("Can't receive projects", "error"));
     }
 
@@ -36,7 +36,7 @@ export const handleRefresh = (
         projectName &&
             scenesApi
                 .getAll(projectName)
-                .then((scenes) => setScenes(scenes, projectName))
+                .then((res) => setScenes(res.data, projectName))
                 .catch(() => snackBar("Can't receive scenes", "error"));
     }
 
@@ -46,7 +46,7 @@ export const handleRefresh = (
 
         tasksApi
             .getAllForScene(projectName, sceneName)
-            .then((tasks) => setTasks(tasks, location.pathname))
+            .then((res) => setTasks(res.data, location.pathname))
             .catch(() => snackBar("Can't receive tasks", "error"));
     }
 
@@ -54,8 +54,8 @@ export const handleRefresh = (
         // в artistsLoading сейчас не работает. Надо понять как передавать выбранный id. Новый стор?
         tasksApi
             .getMyTasks(id)
-            .then((tasks) => {
-                setTasks(tasks, location.pathname);
+            .then((res) => {
+                setTasks(res.data, location.pathname);
             })
             .catch((err) => console.error(err));
     }

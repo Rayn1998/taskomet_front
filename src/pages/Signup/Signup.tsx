@@ -8,7 +8,7 @@ import Button from "@mui/material/Button";
 
 import { useAuthStore } from "@/zustand/authStore";
 import { snackBar } from "@/utils/snackBar";
-import { artitstApi } from "@/routes/artists.api";
+import { artistsApi } from "@/routes/artists.api";
 
 type TFormData = {
 	name: string;
@@ -37,10 +37,10 @@ const Signup = () => {
 	const onSubmit = async (data: TFormData) => {
 		try {
 			const user = { role: 1, ...data };
-			const newUser = await artitstApi.create(user);
-			setAuth(newUser);
+			const newUser = await artistsApi.create(user);
+			setAuth(newUser.data);
 			navigate("/projects");
-			snackBar(`Welcome, dear ${newUser.name}`);
+			snackBar(`Welcome, dear ${newUser.data.name}`);
 		} catch (err: any) {
 			snackBar(err.message, "error");
 		}

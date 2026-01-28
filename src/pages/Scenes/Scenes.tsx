@@ -53,8 +53,8 @@ const Scenes = () => {
 
 		scenesApi
 			.getData(relatedScene.id)
-			.then((newSceneData) => {
-				setSceneData(newSceneData);
+			.then((res) => {
+				setSceneData(res.data);
 			})
 			.catch(console.log);
 	}, [selected, taskViewOpen, relatedScene]);
@@ -67,8 +67,8 @@ const Scenes = () => {
 		const scenesRequest = (projectName: string) => {
 			scenesApi
 				.getAll(projectName)
-				.then((scenes) => {
-					setScenes(scenes, projectName);
+				.then((res) => {
+					setScenes(res.data, projectName);
 				})
 				.catch((err) => {
 					if (err instanceof Error) {
@@ -86,7 +86,6 @@ const Scenes = () => {
 			scenesRequest(projectName);
 		}
 	}, [lastProject]);
-
 	return (
 		<Layout isHeader isStatusline order menu>
 			{scenes === null && <LinearProgress />}

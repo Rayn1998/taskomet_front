@@ -1,10 +1,10 @@
-import { FC, useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 
 import Layout from "@/components/Layout/Layout";
 import Shot from "@/components/Shot/Shot";
 import Task from "@/components/Task/Task";
-import { api } from "@/routes/Api";
+import { tasksApi } from "@/routes/tasks.api";
 
 // MUI
 import LinearProgress from "@mui/material/LinearProgress";
@@ -15,7 +15,7 @@ import { useTaskViewStore } from "@/zustand/taskViewStore";
 import { useTasksStore } from "@/zustand/tasksStore";
 import { useTaskRedirectStore } from "@/zustand/taskRedirectStore";
 
-const ShotsList: FC = () => {
+const Shots = () => {
 	const navigate = useNavigate();
 	const location = useLocation();
 
@@ -43,9 +43,10 @@ const ShotsList: FC = () => {
 		const tasksRequest = async () => {
 			const [projectName, sceneName] = path.split("/").slice(-2);
 			if (!(projectName && sceneName)) return;
-			api.getTasks(projectName, sceneName)
-				.then((result) => {
-					setTasks(result, location.pathname);
+			tasksApi
+				.getAllForScene(projectName, sceneName)
+				.then((res) => {
+					setTasks(res.data, location.pathname);
 				})
 				.catch((err) => {
 					if (err instanceof Error) {
@@ -97,4 +98,4 @@ const ShotsList: FC = () => {
 	);
 };
 
-export default ShotsList;
+export default Shots;

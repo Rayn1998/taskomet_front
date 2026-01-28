@@ -12,8 +12,11 @@ import DialogActions from "@mui/material/DialogActions";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 
-import { api } from "@/routes/Api";
+// UTILS
 import { snackBar } from "@/utils/snackBar";
+
+// API
+import { artistsApi } from "@/routes/artists.api";
 
 // TYPES
 import type IArtist from "@shared/types/Artist";
@@ -53,12 +56,13 @@ const CreateArtistPopup = () => {
 			password,
 		};
 
-		api.createArtist(reqData)
-			.then((newArtist) => {
+		artistsApi
+			.create(reqData)
+			.then((res) => {
 				setName("");
 				setUserName("");
 				handleClose();
-				addArtist(newArtist);
+				addArtist(res.data);
 			})
 			.catch((err) => console.log(err));
 	};

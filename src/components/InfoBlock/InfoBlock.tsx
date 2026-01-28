@@ -1,10 +1,16 @@
 import { useState, useEffect, useCallback } from "react";
 import { useLocation } from "react-router-dom";
 
+// UTILS
 import { snackBar } from "@/utils/snackBar";
 import { checkLocation } from "@/utils/checkLocation";
-// import { api } from "@/routes/Api";
 
+// API
+import { tasksApi } from "@/routes/tasks.api";
+import { scenesApi } from "@/routes/scenes.api";
+import { projectsApi } from "@/routes/projects.api";
+
+// COMPONENTS
 import Title from "@/components/InfoBlock/components/Title/Title";
 import Description from "@/components/InfoBlock/components/Description/Description";
 import Comment from "@/components/InfoBlock/components/Comment/Comment";
@@ -47,7 +53,6 @@ const InfoBlock = ({ blockOpen }: { blockOpen: boolean }) => {
 	const { removeScene } = useScenesStore();
 	const { setOpenClose: setTaskInfoOpenClose } = useTaskInfoStore();
 	const { projectData, relatedProject } = useProjectDataStore();
-	useEffect(() => console.log(projectData), [projectData]);
 	const { sceneData, relatedScene } = useSceneDataStore();
 	const { resetTaskData, taskData, relatedTask } = useTaskDataStore();
 	const { setOpenClose: setOpenCloseComment } = useCreateCommentPopupStore();
@@ -56,53 +61,56 @@ const InfoBlock = ({ blockOpen }: { blockOpen: boolean }) => {
 		setIsModalOpen(!isModalOpen);
 	};
 
-	// const handleDelete = () => {
-	// 	if (taskLocation && relatedTask) {
-	// 		api.deleteTask(relatedTask.id)
-	// 			.then((res) => {
-	// 				snackBar(
-	// 					`Task ${res.name} was deleted successfully!`,
-	// 					"success",
-	// 					[removeTask.bind(null, res.id), resetTaskData],
-	// 				);
-	// 			})
-	// 			.catch((_) => {
-	// 				snackBar("Error while deleting the task", "error");
-	// 			});
-	// 	}
-	// 	if (sceneLocation && relatedScene) {
-	// 		api.deleteScene(relatedScene.id)
-	// 			.then((_) => {
-	// 				snackBar(
-	// 					`Scene ${relatedScene.name} was deleted successfully!`,
-	// 					"success",
-	// 					[
-	// 						removeScene.bind(null, relatedScene.id),
-	// 						resetTaskData,
-	// 					],
-	// 				);
-	// 			})
-	// 			.catch((err) => {
-	// 				snackBar("Error while deleting the scene", "error");
-	// 			});
-	// 	}
-	// 	if (projectsLocation && relatedProject) {
-	// 		api.deleteProject(relatedProject.id)
-	// 			.then((_) => {
-	// 				snackBar(
-	// 					`Project ${relatedProject.name} was deleted successfully!`,
-	// 					"success",
-	// 					[
-	// 						removeProject.bind(null, relatedProject.id),
-	// 						resetTaskData,
-	// 					],
-	// 				);
-	// 			})
-	// 			.catch((_) => {
-	// 				snackBar("Error while deleting the project", "error");
-	// 			});
-	// 	}
-	// };
+	const handleDelete = () => {
+		if (taskLocation && relatedTask) {
+			tasksApi
+				.delete(relatedTask.id)
+				.then((res) => {
+					snackBar(
+						`Task ${res.data.name} was deleted successfully!`,
+						"success",
+						[removeTask.bind(null, res.data.id), resetTaskData],
+					);
+				})
+				.catch((_) => {
+					snackBar("Error while deleting the task", "error");
+				});
+		}
+		if (sceneLocation && relatedScene) {
+			scenesApi
+				.delete(relatedScene.id)
+				.then((_) => {
+					snackBar(
+						`Scene ${relatedScene.name} was deleted successfully!`,
+						"success",
+						[
+							removeScene.bind(null, relatedScene.id),
+							resetTaskData,
+						],
+					);
+				})
+				.catch((err) => {
+					snackBar("Error while deleting the scene", "error");
+				});
+		}
+		if (projectsLocation && relatedProject) {
+			projectsApi
+				.delete(relatedProject.id)
+				.then((_) => {
+					snackBar(
+						`Project ${relatedProject.name} was deleted successfully!`,
+						"success",
+						[
+							removeProject.bind(null, relatedProject.id),
+							resetTaskData,
+						],
+					);
+				})
+				.catch((_) => {
+					snackBar("Error while deleting the project", "error");
+				});
+		}
+	};
 
 	useEffect(() => {
 		if ((taskLocation || myTasksLocation) && taskData && relatedTask) {
@@ -141,19 +149,19 @@ const InfoBlock = ({ blockOpen }: { blockOpen: boolean }) => {
 					className="infoblock__block-buttons-add"
 					onClick={handleOpenComment}
 				/>
-				{/* <ModeEditOutlineOutlinedIcon className="infoblock__block-buttons-edit-info" /> */}
-				{/* {auth && auth.role !== EArtistRole.Artist && (
-					// <Warning
-					// 	isOpen={isModalOpen}
-					// 	setClose={handleDeleteButton}
-					// 	cb={handleDelete}
-					// >
-					// 	<DeleteOutlinedIcon
-					// 		className="infoblock__block-buttons-delete"
-					// 		onClick={handleDeleteButton}
-					// 	/>
-					// </Warning>
-				)} */}
+				<ModeEditOutlineOutlinedIcon className="infoblock__block-buttons-edit-info" />
+				{auth && auth.role !== EArtistRole.Artist && (
+					<Warning
+						isOpen={isModalOpen}
+						setClose={handleDeleteButton}
+						cb={handleDelete}
+					>
+						<DeleteOutlinedIcon
+							className="infoblock__block-buttons-delete"
+							onClick={handleDeleteButton}
+						/>
+					</Warning>
+				)}
 			</div>
 			<div className="infoblock-content">
 				{projectData && relatedProject && projectsLocation && (

@@ -4,8 +4,8 @@ import type IScene from "@shared/types/Scene";
 import type IEntityProgress from "@shared/types/EntityProgress";
 
 interface IScenesStore {
-    scenes: IScene[] | null;
-    scenesProgress: IEntityProgress[] | null;
+    scenes: IScene[];
+    scenesProgress: IEntityProgress[];
     lastProject: string | null;
     setScenes: (
         data: [IScene[], IEntityProgress[]],
@@ -18,8 +18,8 @@ interface IScenesStore {
 }
 
 export const useScenesStore = create<IScenesStore>((set) => ({
-    scenes: null,
-    scenesProgress: null,
+    scenes: [],
+    scenesProgress: [],
     lastProject: null,
     setScenes: (data, projectName) =>
         set({
@@ -55,13 +55,13 @@ export const useScenesStore = create<IScenesStore>((set) => ({
         set((state) => ({
             scenes: state.scenes
                 ? state.scenes.filter((scene) => scene.id !== id)
-                : null,
+                : [],
             scenesProgress: state.scenesProgress
                 ? state.scenesProgress.filter(
                       (progress) => progress.entityId !== id,
                   )
-                : null,
+                : [],
         })),
-    resetScenes: () => set({ scenes: null, scenesProgress: null }),
+    resetScenes: () => set({ scenes: [], scenesProgress: [] }),
     resetLastProject: () => set({ lastProject: null }),
 }));

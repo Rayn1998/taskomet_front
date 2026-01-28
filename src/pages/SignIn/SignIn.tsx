@@ -3,7 +3,6 @@ import { useNavigate } from "react-router-dom";
 import { useForm, FieldErrors } from "react-hook-form";
 
 import { authApi } from "@/routes/auth.api";
-import { artitstApi } from "@/routes/artists.api";
 
 // MUI
 import TextField from "@mui/material/TextField";
@@ -19,7 +18,7 @@ type TSignInFormData = {
 };
 
 const SignIn = () => {
-	const { setAuth, auth } = useAuthStore();
+	const { setAuth } = useAuthStore();
 
 	const navigate = useNavigate();
 
@@ -42,8 +41,8 @@ const SignIn = () => {
 				: await authApi.loginViaUsername(loginField, password);
 
 			if (res.status === 200) {
-				setAuth(res);
-				snackBar(`Welcome, dear ${res.name}`);
+				setAuth(res.data);
+				snackBar(`Welcome, dear ${res.data.name}`);
 				reset();
 			}
 

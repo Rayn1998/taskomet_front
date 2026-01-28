@@ -1,29 +1,24 @@
-import { FC, useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 
 import Button from "@mui/material/Button";
 
 // API
 import { checkServerConnection } from "@/routes/_http";
-import { artitstApi } from "@/routes/artists.api";
 
 // STORES
 import { useErrorDataStore } from "@/zustand/errorDataStore";
-import { useArtistStore } from "@/zustand/artistStore";
 
 // IMAGES
 import ErrorIcon from "./ErrorIcon";
 
-const ErrorComponent: FC = () => {
+const ErrorComponent = () => {
 	const navigate = useNavigate();
 	const [error, setError] = useState<string>("");
 	const [time, setTime] = useState<number>(30);
 
 	// ERROR DATA STORE
 	const errorData = useErrorDataStore((state) => state.errorMessage);
-
-	// ARTIST STORE
-	// const setArtists = useArtistStore((state) => state.setArtists);
 
 	const checkConnection = useCallback(async () => {
 		try {

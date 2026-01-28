@@ -1,8 +1,9 @@
 import { request } from "./_http";
 import type IArtist from "@shared/types/Artist";
+import type { ApiResponse } from "./_http";
 
-export const artitstApi = {
-    create(props: Omit<IArtist, "id">): Promise<IArtist> {
+export const artistsApi = {
+    create(props: Omit<IArtist, "id">): Promise<ApiResponse<IArtist>> {
         return request<IArtist>("create-artist", {
             method: "POST",
             headers: {
@@ -13,7 +14,7 @@ export const artitstApi = {
         });
     },
 
-    getAll(): Promise<IArtist[]> {
+    getAll(): Promise<ApiResponse<IArtist[]>> {
         return request<IArtist[]>("get-artist", {
             method: "GET",
             headers: {
@@ -32,24 +33,26 @@ export const artitstApi = {
     //     });
     // },
 
-    // delete(artistId: number): Promise<IArtist> {
-    //     return request<IArtist>(`delete-artist?artistId=${artistId}`, {
-    //         method: "DELETE",
-    //         headers: {
-    //             "Content-Type": "application/json",
-    //         },
-    //     });
-    // },
+    delete(artistId: number): Promise<ApiResponse<IArtist>> {
+        return request<IArtist>(`delete-artist?artistId=${artistId}`, {
+            method: "DELETE",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            credentials: "include",
+        });
+    },
 
-    // updateRole(artistId: number, role: number): Promise<IArtist> {
-    //     return request<IArtist>("artist-role", {
-    //         method: "PATCH",
-    //         headers: {
-    //             "Content-Type": "application/json",
-    //         },
-    //         body: JSON.stringify({ artistId, role }),
-    //     });
-    // },
+    updateRole(artistId: number, role: number): Promise<ApiResponse<IArtist>> {
+        return request<IArtist>("artist-role", {
+            method: "PATCH",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ artistId, role }),
+            credentials: "include",
+        });
+    },
 
     // updateArtistAfterRegister(
     //     data: Omit<IArtist, "id" | "role" | "name">,

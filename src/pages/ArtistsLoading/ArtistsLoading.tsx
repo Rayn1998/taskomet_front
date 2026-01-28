@@ -1,12 +1,14 @@
 import { useCallback, useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 
+// COMPONENTS
 import Layout from "@/components/Layout/Layout";
 import AccordionItemsBlock from "@/components/AccordionItemsBlock/AccordionItemsBlock";
 import ListItemsBlock from "@/components/ListItemsBlock/ListItemsBlock";
 import StatisticBlock from "@/components/StatisticBlock/StatisticBlock";
 
-import { api } from "@/routes/Api";
+// API
+import { tasksApi } from "@/routes/tasks.api";
 
 //STORES
 import { useArtistStore } from "@/zustand/artistStore";
@@ -43,9 +45,10 @@ const ArtistsLoading = () => {
 			setFilteredByProjectTasks(null);
 			setSelectedArtistId(id);
 			resetTasks();
-			api.getMyTasks(id)
-				.then((tasks) => {
-					setTasks(tasks, location.pathname);
+			tasksApi
+				.getMyTasks(id)
+				.then((res) => {
+					setTasks(res.data, location.pathname);
 				})
 				.catch((err) => console.log(err));
 		},

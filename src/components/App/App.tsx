@@ -4,24 +4,25 @@ import { SnackbarProvider } from "notistack";
 
 import { snackBar } from "@/utils/snackBar";
 import { handleRefresh } from "@/utils/refresh";
+import { authApi } from "@/routes/auth.api";
 
 // COMPONENTS
-// import Admin from "@/components/Admin/Admin";
-// import ArtistsLoading from "@/components/ArtistsLoading/ArtistsLoading";
-// import ContextMenu from "@/components/ContextMenu/ContextMenu";
-// import CreateArtistPopup from "@/components/Popups/CreateArtist/CreateArtist";
-// import CreateComment from "@/components/Popups/CreateComment/CreateComment";
-// import CreateProjectPopup from "@/components/Popups/CreateProject/CreateProject";
-// import CreateScenePopup from "@/components/Popups/CreateScene/CreateScene";
-// import CreateTaskPopup from "@/components/Popups/CreateTask/CreateTask";
+import Admin from "@/pages/Admin/Admin";
+import ArtistsLoading from "@/pages/ArtistsLoading/ArtistsLoading";
+import ContextMenu from "@/components/ContextMenu/ContextMenu";
+import CreateArtistPopup from "@/components/Popups/CreateArtist/CreateArtist";
+import CreateComment from "@/components/Popups/CreateComment/CreateComment";
+import CreateProjectPopup from "@/components/Popups/CreateProject/CreateProject";
+import CreateScenePopup from "@/components/Popups/CreateScene/CreateScene";
+import CreateTaskPopup from "@/components/Popups/CreateTask/CreateTask";
 import ErrorComponent from "@/pages/Error/Error";
-// import ImagePreviewPopup from "@/components/Popups/ImagePreview/ImagePreview";
-// import MyTasks from "@/components/MyTasks/MyTasks";
+import ImagePreviewPopup from "@/components/Popups/ImagePreview/ImagePreview";
+import MyTasks from "@/pages/MyTasks/MyTasks";
 import Projects from "@/pages/Projects/Projects";
-// import ProjectsStatistics from "@/components/ProjectsStatistics/ProjectsStatistics";
-import ProtectedRoute from "@/components/ProtectedRoute/ProtectedRoute";
+import ProjectsStatistics from "@/pages/ProjectsStatistics/ProjectsStatistics";
+// import ProtectedRoute from "@/components/_ProtectedRoute/ProtectedRoute";
 import Scenes from "@/pages/Scenes/Scenes";
-// import ShotsList from "@/components/ShotsList/ShotsList";
+import Shots from "@/pages/Shots/Shots";
 import Signup from "@/pages/Signup/Signup";
 import SignIn from "@/pages/SignIn/SignIn";
 
@@ -32,32 +33,51 @@ import { useArtistStore } from "@/zustand/artistStore";
 import { useProjectsStore } from "@/zustand/projectsStore";
 import { useScenesStore } from "@/zustand/scenesStore";
 import { useTasksStore } from "@/zustand/tasksStore";
+import { artistsApi } from "@/routes/artists.api";
 
 const App = () => {
 	const location = useLocation();
 
-	const { startInterval } = useRefreshStore();
-	const { auth } = useAuthStore();
+	const { startInterval, delay } = useRefreshStore();
+	const { auth, setAuth, isAuthChecked, setIsAuthChecked } = useAuthStore();
 	const { setArtists } = useArtistStore();
 	const { setProjects } = useProjectsStore();
 	const { setScenes } = useScenesStore();
 	const { setTasks } = useTasksStore();
 
-	// useEffect(() => {
-	// 	if (!auth) return;
-	// 	const id = auth.id;
-	// 	startInterval(() =>
-	// 		handleRefresh(
-	// 			location,
-	// 			id,
-	// 			setArtists,
-	// 			setProjects,
-	// 			setScenes,
-	// 			setTasks,
-	// 		),
-	// 	);
-	// 	setTimeout(() => snackBar("Auto refresh every minute", "info"), 3000);
-	// }, [auth]);
+	useEffect(() => {
+		if (isAuthChecked || auth) return;
+		authApi.getMe().then((res) => {
+			setAuth(res.data);
+			setIsAuthChecked(true);
+		});
+	}, [isAuthChecked, auth]);
+
+	useEffect(() => {
+		artistsApi
+			.getAll()
+			.then((res) => setArtists(res.data))
+			.catch((err) => snackBar(err.message, "error"));
+	}, []);
+
+	useEffect(() => {
+		if (!auth) return;
+		const id = auth.id;
+		startInterval(() =>
+			handleRefresh(
+				location,
+				id,
+				setArtists,
+				setProjects,
+				setScenes,
+				setTasks,
+			),
+		);
+		setTimeout(
+			() => snackBar(`Auto refresh every ${delay} minute(s)`, "info"),
+			3000,
+		);
+	}, [auth]);
 
 	return (
 		<SnackbarProvider
@@ -73,23 +93,20 @@ const App = () => {
 					{/* <Route element={<ProtectedRoute />}> */}
 					<Route path="/projects" element={<Projects />} />
 					<Route path="/projects/:projectId" element={<Scenes />} />
-					{/* 
-						<Route
-							path="/projects/:projectId/:sceneId"
-							element={<ShotsList />}
-						/>
-						<Route path="/my-tasks" element={<MyTasks />} />
-						<Route
-							path="/artists-loading"
-							element={<ArtistsLoading />}
-						/>
-						<Route path="/admin" element={<Admin />} />
-						<Route
-							path="/projects-statistics"
-							element={<ProjectsStatistics />}
-						/> */}
-					{/* </Route> */}
-
+					<Route
+						path="/projects/:projectId/:sceneId"
+						element={<Shots />}
+					/>
+					<Route path="/admin" element={<Admin />} />
+					<Route path="/my-tasks" element={<MyTasks />} />
+					<Route
+						path="/artists-loading"
+						element={<ArtistsLoading />}
+					/>
+					<Route
+						path="/projects-statistics"
+						element={<ProjectsStatistics />}
+					/>
 					<Route path="/signup" element={<Signup />} />
 					<Route path="/signin" element={<SignIn />} />
 					<Route path="/error-page" element={<ErrorComponent />} />
@@ -99,13 +116,14 @@ const App = () => {
 						element={<Navigate to="/not-found" replace />}
 					/>
 				</Routes>
-				{/* <CreateArtistPopup />
 				<CreateProjectPopup />
 				<CreateScenePopup />
 				<CreateTaskPopup />
+				{/* Создание артиста сейчас поломано */}
+				<CreateArtistPopup />
 				<CreateComment />
+				<ImagePreviewPopup />
 				<ContextMenu />
-				<ImagePreviewPopup /> */}
 			</div>
 		</SnackbarProvider>
 	);

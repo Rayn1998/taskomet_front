@@ -27,8 +27,6 @@ const Projects = () => {
 	// PROJECTS STORE
 	const { projects, projectsProgress, setProjects } = useProjectsStore();
 
-	// PROJECT DATA STORE
-
 	// ERROR DATA STORE
 	const { setErrorMessage } = useErrorDataStore();
 
@@ -61,7 +59,7 @@ const Projects = () => {
 		projectsApi
 			.getData(relatedProject.id)
 			.then((newProjectData) => {
-				setProjectData(newProjectData);
+				setProjectData(newProjectData.data);
 			})
 			.catch(console.log);
 	}, [selected, isTaskInfoOpen, relatedProject]);
@@ -70,8 +68,8 @@ const Projects = () => {
 		resetProjectData();
 		projectsApi
 			.getAll()
-			.then((projects) => {
-				setProjects(projects);
+			.then((res) => {
+				setProjects(res.data);
 			})
 			.catch((err) => {
 				if (err instanceof Error) {

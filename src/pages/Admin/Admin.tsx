@@ -1,11 +1,12 @@
 import { useEffect, useState, useCallback } from "react";
 
+// COMPONENTS
 import Layout from "@/components/Layout/Layout";
 import IArtist from "@shared/types/Artist";
-import DropDown from "../DropDown/DropDown";
+import DropDown from "../../components/DropDown/DropDown";
 
+// UTILS
 import { snackBar } from "@/utils/snackBar";
-// import { api } from "@/routes/Api";
 
 // MUI
 import LinearProgress from "@mui/material/LinearProgress";
@@ -19,23 +20,31 @@ import Button from "@mui/material/Button";
 import AddCircleOutlineOutlinedIcon from "@mui/icons-material/AddCircleOutlineOutlined";
 
 // STORES
+import { useAuthStore } from "@/zustand/authStore";
 import { useArtistStore } from "@/zustand/artistStore";
 import { useTaskInfoStore } from "@/zustand/taskInfoStore";
 import { useCreateArtistPopupStore } from "@/components/Popups/CreateArtist/CreateArtistPopupStore";
 
-// TYPEs
+// TYPES
 import { EArtistRole, ArtistRoleLabels } from "@/types/ArtistRole";
 
+// API
+import { artistsApi } from "@/routes/artists.api";
+
 const Admin = () => {
-	// CREATE ARTIST POPUP STORE
+	// CREATE ARTIST STORE
 	const { setOpenClose: setArtistCreateOpenClose } =
 		useCreateArtistPopupStore();
 
 	// ARTISTS STORE
-	const { artists, updateArtist, deleteArtist } = useArtistStore();
+	const { artists, setArtists, updateArtist, deleteArtist } =
+		useArtistStore();
 
-	// TASK INFO STORE
+	// INFO STORE
 	const { setOpenClose: setOpenCloseTaskInfo } = useTaskInfoStore();
+
+	// AUTH STORE
+	const { auth } = useAuthStore();
 
 	// STATES
 	const [hoverId, setHoverId] = useState<number | null>(null);
@@ -57,39 +66,49 @@ const Admin = () => {
 		setArtistCreateOpenClose();
 	};
 
-	// const handleChangeRole = (role: number) => {
-	// 	if (!Number.isInteger(role) || selectedArtistData === null) return;
-	// 	if (role === selectedArtistData.role) return;
-	// 	api.updateArtistRole(selectedArtistData.id, role)
-	// 		.then((updatedArtist) => {
-	// 			setSelectedArtistData(updatedArtist);
-	// 			updateArtist(updatedArtist);
-	// 			snackBar("Role was changed successfully", "success");
-	// 		})
-	// 		.catch((_) => {
-	// 			snackBar("Something went wrong", "error");
-	// 		});
-	// };
+	const handleChangeRole = (role: number) => {
+		if (!Number.isInteger(role) || selectedArtistData === null) return;
+		if (role === selectedArtistData.role) return;
+		artistsApi
+			.updateRole(selectedArtistData.id, role)
+			.then((res) => {
+				setSelectedArtistData(res.data);
+				updateArtist(res.data);
+				snackBar("Role was changed successfully", "success");
+			})
+			.catch((_) => {
+				snackBar("Something went wrong", "error");
+			});
+	};
 
-	// const handleDeleteArtist = (artistId: number) => {
-	// 	if (!Number.isInteger(artistId)) return;
+	const handleDeleteArtist = (artistId: number) => {
+		if (!Number.isInteger(artistId)) return;
+		if (auth!.id === artistId) {
+			return snackBar("You can't delete yourself :)", "warning");
+		}
 
-	// 	api.deleteArtist(artistId)
-	// 		.then((deletedArtist) => {
-	// 			deleteArtist(deletedArtist.id);
-	// 			setSelectedArtistData(null);
-	// 			snackBar(
-	// 				`Artist ${deletedArtist.name} was successfully deleted`,
-	// 				"success",
-	// 			);
-	// 		})
-	// 		.catch((err) => {
-	// 			console.log(err);
-	// 			snackBar("Error deleting artist", "error");
-	// 		});
-	// };
+		artistsApi
+			.delete(artistId)
+			.then((res) => {
+				deleteArtist(res.data.id);
+				setSelectedArtistData(null);
+				snackBar(
+					`Artist ${res.data.name} was successfully deleted`,
+					"success",
+				);
+			})
+			.catch((err) => {
+				console.log(err);
+				snackBar("Error deleting artist", "error");
+			});
+	};
 
 	useEffect(() => setOpenCloseTaskInfo(false), []);
+	// useEffect(() => {
+	// 	artistsApi.getAll().then((res) => {
+	// 		setArtists(res.data);
+	// 	});
+	// }, []);
 	return (
 		<Layout isHeader canvas>
 			<div className="admin">
@@ -185,21 +204,21 @@ const Admin = () => {
 								<p className="admin-artists-info-item-name">
 									Role:{" "}
 								</p>
-								{/* <DropDown
+								<DropDown
 									// label="role"
 									items={ArtistRoleLabels}
 									selected={
 										selectedArtistData.role as EArtistRole
 									}
 									onChange={handleChangeRole}
-								/> */}
+								/>
 							</div>
 							<div className="admin-artists-info-item">
 								<p className="admin-artists-info-item-name">
 									Photo:{" "}
 								</p>
 							</div>
-							{/* <Button
+							<Button
 								className="admin-artists-info-delete-button"
 								variant="contained"
 								color="error"
@@ -208,7 +227,7 @@ const Admin = () => {
 								}
 							>
 								DELETE ARTIST
-							</Button> */}
+							</Button>
 						</div>
 					)}
 				</div>

@@ -1,4 +1,5 @@
-import { api } from "@/routes/Api";
+// API
+import { download } from "@/routes/_http";
 
 // MUI
 import Button from "@mui/material/Button";
@@ -13,9 +14,8 @@ const ImagePreviewPopup = () => {
 		const fileName = src.split("/").slice(-2).join("/");
 
 		fileName &&
-			api
-				.download(fileName)
-				.then((res) => {
+			download(fileName)
+				.then((res: any) => {
 					return res.blob();
 				})
 				.then((blob) => {

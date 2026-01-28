@@ -24,6 +24,16 @@ export const authApi = {
         });
     },
 
+    getMe() {
+        return request<IArtist>("me", {
+            method: "GET",
+            // headers: {
+            //     "Content-Type": "application/json",
+            // },
+            credentials: "include",
+        });
+    },
+
     logout() {
         return request("logout", {
             method: "GET",

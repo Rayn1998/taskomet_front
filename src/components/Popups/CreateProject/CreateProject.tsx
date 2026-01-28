@@ -1,6 +1,10 @@
 import { useState, FormEvent } from "react";
-import { api } from "@/routes/Api";
+
+// UTILS
 import { snackBar } from "@/utils/snackBar";
+
+// API
+import { projectsApi } from "@/routes/projects.api";
 
 // MUI
 import Dialog from "@mui/material/Dialog";
@@ -40,9 +44,10 @@ const CreateProjectPopup = () => {
 			}
 		}
 
-		api.createProject(name, description)
-			.then((createdProject) => {
-				addProject(createdProject);
+		projectsApi
+			.create(name, description)
+			.then((res) => {
+				addProject(res.data);
 				setProjectPopupClose();
 				setName("");
 				setDescription("");

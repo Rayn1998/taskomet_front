@@ -2,8 +2,13 @@ import { useState, useEffect } from "react";
 
 import Warning from "@/components/Popups/Warning/Warning";
 
-import { api } from "@/routes/Api";
+// UTILS
 import { snackBar } from "@/utils/snackBar";
+
+// API
+import { projectsApi } from "@/routes/projects.api";
+import { scenesApi } from "@/routes/scenes.api";
+import { tasksApi } from "@/routes/tasks.api";
 
 // MUI
 import Menu from "@mui/material/Menu";
@@ -60,7 +65,8 @@ const ContextMenu = () => {
 
 	const handleProjectDelete = () => {
 		if (!relatedProject) return;
-		api.deleteProject(relatedProject.id)
+		projectsApi
+			.delete(relatedProject.id)
 			.then(() => {
 				removeProject(relatedProject.id);
 				resetProjectData();
@@ -76,7 +82,8 @@ const ContextMenu = () => {
 
 	const handleSceneDelete = () => {
 		if (!relatedScene) return;
-		api.deleteScene(relatedScene.id)
+		scenesApi
+			.delete(relatedScene.id)
 			.then(() => {
 				removeScene(relatedScene.id);
 				setContextMenu(null);
@@ -92,9 +99,10 @@ const ContextMenu = () => {
 	const handleTaskDelete = () => {
 		if (!relatedTask) return;
 
-		api.deleteTask(relatedTask.id)
-			.then((deletedTask) => {
-				removeTask(deletedTask.id);
+		tasksApi
+			.delete(relatedTask.id)
+			.then((res) => {
+				removeTask(res.data.id);
 				resetTaskData();
 				setContextMenu(null);
 				snackBar(
@@ -110,7 +118,8 @@ const ContextMenu = () => {
 		if (!commentData || !relatedEntityId) return;
 		if (!("spent_hours" in commentData)) return; // typeguard here
 
-		api.deleteComment(commentData.id)
+		tasksApi
+			.deleteComment(commentData.id)
 			.then((res) => {
 				if (res) {
 					const deletedHours = commentData.spent_hours;
@@ -144,7 +153,8 @@ const ContextMenu = () => {
 		if ("spent_hours" in commentData) return;
 
 		if ("scene_id" in commentData) {
-			api.deleteSceneMedia(commentData.id)
+			scenesApi
+				.deleteMedia(commentData.id)
 				.then((res) => {
 					if (res) {
 						removeOneSceneData(commentData.id);
@@ -160,7 +170,8 @@ const ContextMenu = () => {
 		}
 
 		if ("project_id" in commentData) {
-			api.deleteProjectMedia(commentData.id)
+			projectsApi
+				.deleteMedia(commentData.id)
 				.then((res) => {
 					if (res) {
 						removeOneProjectData(commentData.id);

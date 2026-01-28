@@ -14,4 +14,5 @@ const IconWrapper = ({
 	);
 };
 
-export default IconWrapper;
+// export default IconWrapper;
+export {};

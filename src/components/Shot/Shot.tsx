@@ -1,5 +1,4 @@
-import { FC } from "react";
-
+// MUI
 import Accordion from "@mui/material/Accordion";
 import AccordionSummary from "@mui/material/AccordionSummary";
 import AccordionDetails from "@mui/material/AccordionDetails";
@@ -11,9 +10,9 @@ import Button from "@mui/material/Button";
 import Task from "@/components/Task/Task";
 
 // TYPES
-import type { TaskProps } from "@/components/ShotsList/TaskProps.type";
+import type { TaskProps } from "@/pages/Shots/TaskProps.type";
 
-const Shot: FC<TaskProps> = ({ task, orderNum, selected, handleClick }) => {
+const Shot = ({ task, orderNum, selected, handleClick }: TaskProps) => {
 	const { name, id, ...rest } = task;
 	return (
 		<Accordion className="shot-accordion">

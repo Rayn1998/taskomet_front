@@ -2,7 +2,7 @@ import { useState, useEffect, useMemo, useCallback } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 
 import { snackBar } from "@/utils/snackBar";
-import { api } from "@/routes/Api";
+import { tasksApi } from "@/routes/tasks.api";
 import { formatSQLTimestamp } from "@/utils/formatSQLTimestamp";
 
 // STORES
@@ -20,7 +20,7 @@ import ArtistSimpleDialog from "@/components/ArtistSimpleDialog/ArtistSimpleDial
 
 // TYPES | CONSTANTS
 import type ITask from "@shared/types/Task";
-import type { TaskProps } from "@/components/ShotsList/TaskProps.type";
+import type { TaskProps } from "@/pages/Shots/TaskProps.type";
 import { EStatus, StatusLabels, StatusColors } from "@/types/Status";
 import { EPriority, PriorityLabels, PriorityColors } from "@/types/Priority";
 import { TypeOfData } from "@/types/TypeOfData";
@@ -88,9 +88,10 @@ const Task = ({
 	const handleClose = (artistId: number | null) => {
 		setartistDialogOpen(false);
 		if (artistId !== executor) {
-			api.updateTaskExecutor(id, artistId)
-				.then((id) => {
-					const updatedTask: ITask = { ...task, executor: id };
+			tasksApi
+				.updateExecutor(id, artistId)
+				.then((res) => {
+					const updatedTask: ITask = { ...task, executor: res.data };
 					updateTask(updatedTask);
 					snackBar("Executor was changed", "success");
 				})
@@ -107,12 +108,13 @@ const Task = ({
 			status,
 			spent_hours: null,
 		};
-		api.updateTaskStatus(taskData)
+		tasksApi
+			.updateStatus(taskData)
 			.then((res) => {
-				const { status } = res;
+				const { status } = res.data;
 				const updatedTask: ITask = { ...task, status };
 				updateTask(updatedTask);
-				addTaskData(res);
+				addTaskData(res.data);
 				resetLastProject(); // для того чтобы прогрессбар на странице сцен обновился
 				snackBar("Status was changed", "success");
 			})
@@ -120,9 +122,10 @@ const Task = ({
 	};
 
 	const handleChangePriority = (priority: number) => {
-		api.updateTaskPriority(id, priority)
-			.then((newPriority) => {
-				const updatedTask: ITask = { ...task, priority: newPriority };
+		tasksApi
+			.updatePriority(id, priority)
+			.then((res) => {
+				const updatedTask: ITask = { ...task, priority: res.data };
 				updateTask(updatedTask);
 				resetLastProject(); // для того чтобы прогрессбар на странице сцен обновился
 				snackBar("Priority was changed", "success");
@@ -168,9 +171,10 @@ const Task = ({
 		if (!selected || !taskInfoOpen) return;
 		if (relatedTask?.id === id && taskData) return;
 
-		api.getTaskData(id)
-			.then((newTaskData) => {
-				setTaskData(newTaskData, task);
+		tasksApi
+			.getData(id)
+			.then((res) => {
+				setTaskData(res.data, task);
 			})
 			.catch(console.log);
 	}, [selected, taskInfoOpen, id]);
@@ -179,11 +183,12 @@ const Task = ({
 		if (!redirectedTaskId) return;
 		if (redirectedTaskId !== id) return; // !!!!!!!!!!!
 
-		api.getTaskData(redirectedTaskId)
-			.then((newTaskData) => {
+		tasksApi
+			.getData(redirectedTaskId)
+			.then((res) => {
 				setRedirectedTaskId(null);
 				setTaskViewOpenClose(true);
-				setTaskData(newTaskData, task);
+				setTaskData(res.data, task);
 			})
 			.catch(console.log);
 	}, [redirectedTaskId]);

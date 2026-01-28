@@ -1,5 +1,7 @@
 import { useState, FormEvent } from "react";
 import { useLocation } from "react-router-dom";
+
+// UTILS
 import { snackBar } from "@/utils/snackBar";
 
 // MUI
@@ -15,7 +17,8 @@ import { useCreateTaskPopupStore } from "./CreateTaskPopupStore";
 import { useTasksStore } from "@/zustand/tasksStore";
 import { useScenesStore } from "@/zustand/scenesStore";
 
-import { api } from "@/routes/Api";
+//API
+import { tasksApi } from "@/routes/tasks.api";
 
 const CreateTaskPopup = () => {
 	const location = useLocation();
@@ -46,8 +49,10 @@ const CreateTaskPopup = () => {
 
 		const [projectName, sceneName] = location.pathname.split("/").slice(-2);
 		if (projectName && projectName.length > 0) {
-			api.createTask(name, description, projectName, sceneName)
-				.then((newTask) => {
+			tasksApi
+				.create(name, description, projectName, sceneName)
+				.then((res) => {
+					const newTask = res.data;
 					newTask.project_name = projectName;
 					newTask.scene_name = sceneName.toUpperCase();
 					newTask.spent_hours = 0;

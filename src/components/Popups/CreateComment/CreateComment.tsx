@@ -1,14 +1,20 @@
-import { useState, useCallback, useEffect } from "react";
+import { useState, useCallback } from "react";
 import { useLocation } from "react-router-dom";
 import { useDropzone } from "react-dropzone";
 
+// COMPONENTS
 import DropDown from "@/components/DropDown/DropDown";
 
+// UTILS
 import { snackBar } from "@/utils/snackBar";
-import { api } from "@/routes/Api";
 import { formatSQLTimestamp } from "@/utils/formatSQLTimestamp";
 import { hours } from "@/utils/constants";
 import { checkLocation } from "@/utils/checkLocation";
+
+// API
+import { projectsApi } from "@/routes/projects.api";
+import { scenesApi } from "@/routes/scenes.api";
+import { tasksApi } from "@/routes/tasks.api";
 
 // MUI
 import Dialog from "@mui/material/Dialog";
@@ -133,8 +139,8 @@ const CreateComment = () => {
 
 		formData.append("data", JSON.stringify(taskDataToBeSent));
 
-		await api
-			.sendProjectMedia(formData)
+		await projectsApi
+			.sendMedia(formData)
 			.then((res) => {
 				addProjectData(res);
 				snackBar("Success", "success");
@@ -170,8 +176,8 @@ const CreateComment = () => {
 
 		formData.append("data", JSON.stringify(taskDataToBeSent));
 
-		await api
-			.sendSceneMedia(formData)
+		await scenesApi
+			.sendMedia(formData)
 			.then((res) => {
 				addSceneData(res);
 				snackBar("Success", "success");
@@ -214,9 +220,10 @@ const CreateComment = () => {
 
 		formData.append("data", JSON.stringify(taskDataToBeSent));
 
-		await api
+		await tasksApi
 			.sendComment(formData)
 			.then((res) => {
+				console.log(res);
 				const { status, spent_hours } = res;
 				addTaskData(res);
 				const relatedToDataTask = tasks?.find(

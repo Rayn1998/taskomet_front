@@ -1,10 +1,12 @@
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 
+// COMPONENTS
 import Layout from "@/components/Layout/Layout";
 import AccordionItemsBlock from "@/components/AccordionItemsBlock/AccordionItemsBlock";
 
-import { api } from "@/routes/Api";
+// API
+import { tasksApi } from "@/routes/tasks.api";
 
 // STORES
 import { useTasksStore } from "@/zustand/tasksStore";
@@ -34,9 +36,10 @@ const MyTasks = () => {
 	useEffect(() => {
 		if (auth !== null && !tasks) {
 			const id = auth.id;
-			api.getMyTasks(id)
-				.then((tasks) => {
-					setTasks(tasks, location.pathname);
+			tasksApi
+				.getMyTasks(id)
+				.then((res) => {
+					setTasks(res.data, location.pathname);
 				})
 				.catch((err) => console.error(err));
 		}

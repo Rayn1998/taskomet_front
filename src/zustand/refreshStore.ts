@@ -12,7 +12,7 @@ interface IRefreshState {
 }
 
 export const useRefreshStore = create<IRefreshState>((set, get) => ({
-    delay: 1,
+    delay: 5,
     interval: null,
     callback: null,
 

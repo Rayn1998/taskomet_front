@@ -1,10 +1,15 @@
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 
+// COMPONENTS
 import Layout from "@/components/Layout/Layout";
 import ListItemsBlock from "@/components/ListItemsBlock/ListItemsBlock";
 
-import { api } from "@/routes/Api";
+// API
+import { projectsApi } from "@/routes/projects.api";
+import { tasksApi } from "@/routes/tasks.api";
+
+// UTILS
 import { snackBar } from "@/utils/snackBar";
 
 // NIVO
@@ -48,8 +53,9 @@ const ProjectsStatistics = () => {
 
 	useEffect(() => {
 		if (projects === null) {
-			api.getProjects()
-				.then(setProjects)
+			projectsApi
+				.getAll()
+				.then((res) => setProjects(res.data))
 				.catch(() => snackBar("Can't get projects...", "error"));
 		}
 	}, [projects]);
@@ -58,9 +64,10 @@ const ProjectsStatistics = () => {
 		if (!selectedProjectId) return;
 
 		resetTasks();
-		api.getAllTasks(selectedProjectId)
-			.then((tasks) => {
-				setTasks(tasks, location.pathname);
+		tasksApi
+			.getAllForProject(selectedProjectId)
+			.then((res) => {
+				setTasks(res.data, location.pathname);
 			})
 			.catch((err) => {
 				snackBar("Can't get data...", "error");

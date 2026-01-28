@@ -12,7 +12,10 @@ import TextField from "@mui/material/TextField";
 import IconButton from "@mui/material/IconButton";
 import CloseIcon from "@mui/icons-material/Close";
 
-import { api } from "@/routes/Api";
+// API
+import { scenesApi } from "@/routes/scenes.api";
+
+// UTILS
 import { snackBar } from "@/utils/snackBar";
 
 // STORE
@@ -48,9 +51,10 @@ const CreateScenePopup = () => {
 
 		const [projectName] = location.pathname.split("/").slice(-1);
 		if (projectName && projectName.length > 0) {
-			api.createScene(name, description, projectName)
-				.then((newScene) => {
-					addScene(newScene);
+			scenesApi
+				.create(name, description, projectName)
+				.then((res) => {
+					addScene(res.data);
 					setName("");
 					setDescription("");
 					setScenePopupClose();
