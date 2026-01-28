@@ -1,9 +1,6 @@
 @use "components/AccordionItemsBlock/AccordionItemsBlock";
-@use "pages/Admin/Admin";
 @use "components/App/App.scss";
-@use "pages/ArtistsLoading/ArtistsLoading";
 @use "components/DropDown/DropDown";
-@use "pages/Error/Error";
 @use "components/InfoBlock/InfoBlock";
 @use "components/Infoblock/components/Comment/Comment";
 @use "components/Infoblock/components/Description/Description";
@@ -15,15 +12,19 @@
 @use "components/Layout/components/ItemsBlock/ItemsBlock";
 @use "components/Layout/components/Sidebar/Sidebar";
 @use "components/Layout/components/Statusline/Statusline";
+@use "components/StatisticBlock/StatisticBlock";
+@use "components/Task/Task";
+@use "components/Popups/CreateComment/CreateComment";
+@use "components/Popups/ImagePreview/ImagePreview";
+
+@use "pages/Admin/Admin";
+@use "pages/ArtistsLoading/ArtistsLoading";
+@use "pages/Error/Error";
 @use "pages/MyTasks/MyTasks";
 @use "pages/Projects/Projects";
 @use "pages/ProjectsStatistics/ProjectsStatistics";
 @use "pages/Shots/Shots";
 @use "pages/Signup/Signup";
-@use "components/StatisticBlock/StatisticBlock";
-@use "components/Task/Task";
-@use "components/Popups/CreateComment/CreateComment";
-@use "components/Popups/ImagePreview/ImagePreview";
 
 @use "scss/variables" as *;
 

@@ -1,5 +1,5 @@
 import { checkLocation } from "./checkLocation";
-import { snackBar } from "./snackBar";
+import { snackBar } from "@/utils/snackBar";
 
 // API
 import { artistsApi } from "@/routes/artists.api";

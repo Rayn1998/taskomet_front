@@ -1,25 +1,32 @@
-import { MouseEvent, useEffect, useState } from "react";
+import { MouseEvent, useEffect, useState, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
+
+// COMPONENTS
 import Layout from "@/components/Layout/Layout";
 import LayoutItem from "@/components/Layout/components/LayoutItem/LayoutItem";
 
+// API
 import { projectsApi } from "@/routes/projects.api";
 
 // MUI
 import LinearProgress from "@mui/material/LinearProgress";
 
 // STORES
-import { useErrorDataStore } from "@/zustand/errorDataStore";
 import { useProjectsStore } from "@/zustand/projectsStore";
 import { useProjectDataStore } from "@/zustand/projectDataStore";
 import { useTaskInfoStore } from "@/zustand/taskInfoStore";
 
 // TYPES
 import type IProject from "@shared/types/Project";
-import IEntityProgress from "@shared/types/EntityProgress";
+
+// UTILS
+import { snackBar } from "@/utils/snackBar";
+import { useHotkeyInfoBlock } from "@/utils/useHotkey";
 
 const Projects = () => {
 	const navigate = useNavigate();
+
+	useHotkeyInfoBlock(true);
 
 	// TASK INFO STORE
 	const { isOpen: isTaskInfoOpen } = useTaskInfoStore();
@@ -27,22 +34,23 @@ const Projects = () => {
 	// PROJECTS STORE
 	const { projects, projectsProgress, setProjects } = useProjectsStore();
 
-	// ERROR DATA STORE
-	const { setErrorMessage } = useErrorDataStore();
-
 	// PROJECT DATA STORE
 	const {
-		projectData,
 		setProjectData,
 		setRelatedProject,
 		relatedProject,
 		resetProjectData,
 	} = useProjectDataStore();
 
-	const [selected, setSelected] = useState<string>("");
+	const [selectedId, setSelectedId] = useState<number | null>(null);
+
+	const progressMap = useMemo(() => {
+		if (!projectsProgress) return;
+		return Object.fromEntries(projectsProgress.map((p) => [p.entityId, p]));
+	}, [projectsProgress]);
 
 	const handleClick = (project: IProject) => {
-		setSelected(project.name);
+		setSelectedId(project.id);
 		setRelatedProject(project);
 	};
 
@@ -53,8 +61,12 @@ const Projects = () => {
 		navigate(`/projects/${project}`);
 	};
 
+	const onContext = (item: IProject) => {
+		setRelatedProject(item);
+	};
+
 	useEffect(() => {
-		if (!(selected && isTaskInfoOpen && relatedProject)) return;
+		if (!(isTaskInfoOpen && relatedProject)) return;
 
 		projectsApi
 			.getData(relatedProject.id)
@@ -62,7 +74,7 @@ const Projects = () => {
 				setProjectData(newProjectData.data);
 			})
 			.catch(console.log);
-	}, [selected, isTaskInfoOpen, relatedProject]);
+	}, [isTaskInfoOpen, relatedProject]);
 
 	useEffect(() => {
 		resetProjectData();
@@ -73,11 +85,9 @@ const Projects = () => {
 			})
 			.catch((err) => {
 				if (err instanceof Error) {
-					if (err.message.toLowerCase() === "unauthorized")
-						return navigate("/signin");
-					setErrorMessage(err.message);
-					return navigate("/error-page");
+					snackBar(err.message, "error");
 				}
+				snackBar("Server is not replying", "error");
 			});
 	}, []);
 	return (
@@ -86,20 +96,20 @@ const Projects = () => {
 			{projects &&
 				projectsProgress &&
 				projects.map((project, i) => {
-					const progress = projectsProgress.find((progressItem) => {
-						if (progressItem.entityId === project.id)
-							return progressItem;
-					}) as IEntityProgress;
+					const progress = progressMap
+						? progressMap[project.id]
+						: null;
 					return (
 						<LayoutItem<IProject>
 							dataType="project"
-							key={i}
+							key={project.id}
 							number={i + 1}
 							item={project}
 							itemProgress={progress}
+							handleContext={() => onContext(project)}
 							handleClick={handleClick}
 							handleDoubleClick={handleDoubleClick}
-							selected={Boolean(project.name === selected)}
+							selected={project.id === selectedId}
 						/>
 					);
 				})}

@@ -1,15 +1,18 @@
 import { MouseEvent, useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 
+// COMPONENTS
 import Layout from "@/components/Layout/Layout";
 import LayoutItem from "@/components/Layout/components/LayoutItem/LayoutItem";
 import { scenesApi } from "@/routes/scenes.api";
+
+// UTILS
+import { snackBar } from "@/utils/snackBar";
 
 // MUI
 import LinearProgress from "@mui/material/LinearProgress";
 
 // STORES
-import { useErrorDataStore } from "@/zustand/errorDataStore";
 import { useScenesStore } from "@/zustand/scenesStore";
 import { useSceneDataStore } from "@/zustand/sceneDataStore";
 import { useTaskInfoStore } from "@/zustand/taskInfoStore";
@@ -21,9 +24,6 @@ import type IEntityProgress from "@shared/types/EntityProgress";
 const Scenes = () => {
 	// TASK INFO STORE
 	const { isOpen: taskViewOpen } = useTaskInfoStore();
-
-	// ERROR DATA STORE
-	const { setErrorMessage } = useErrorDataStore();
 
 	// SCENES STORE
 	const { scenes, scenesProgress, lastProject, setScenes, resetScenes } =
@@ -38,9 +38,13 @@ const Scenes = () => {
 	const navigate = useNavigate();
 	const location = useLocation();
 
+	const onContext = (item: IScene) => {
+		setRelatedScene(item);
+	};
+
 	const handleClick = (scene: IScene) => {
 		setSelected(scene.name);
-		setRelatedScene(scene);
+		onContext(scene);
 	};
 
 	const handleDoubleClick = (e: MouseEvent<HTMLDivElement>) => {
@@ -72,10 +76,9 @@ const Scenes = () => {
 				})
 				.catch((err) => {
 					if (err instanceof Error) {
-						setErrorMessage(err.message);
-						return navigate("/error-page");
+						snackBar(err.message, "error");
 					}
-					navigate("/not-found");
+					snackBar("Server is not replying", "error");
 				});
 		};
 
@@ -104,6 +107,7 @@ const Scenes = () => {
 							itemProgress={progress}
 							handleClick={handleClick}
 							handleDoubleClick={handleDoubleClick}
+							handleContext={() => onContext(scene)}
 							selected={Boolean(scene.name === selected)}
 						/>
 					);

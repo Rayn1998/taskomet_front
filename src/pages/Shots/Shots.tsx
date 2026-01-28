@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 
 import Layout from "@/components/Layout/Layout";
 import Shot from "@/components/Shot/Shot";
@@ -13,10 +13,8 @@ import LinearProgress from "@mui/material/LinearProgress";
 import { useErrorDataStore } from "@/zustand/errorDataStore";
 import { useTaskViewStore } from "@/zustand/taskViewStore";
 import { useTasksStore } from "@/zustand/tasksStore";
-import { useTaskRedirectStore } from "@/zustand/taskRedirectStore";
 
 const Shots = () => {
-	const navigate = useNavigate();
 	const location = useLocation();
 
 	// TASK VIEW STORE
@@ -27,9 +25,6 @@ const Shots = () => {
 
 	// TASKS STORE
 	const { tasks, setTasks, lastPath, resetTasks } = useTasksStore();
-
-	// TASK REDIRECTED STORE
-	const { redirectedTaskId } = useTaskRedirectStore();
 
 	const [selected, setSelected] = useState<number | null>(null);
 
@@ -51,9 +46,7 @@ const Shots = () => {
 				.catch((err) => {
 					if (err instanceof Error) {
 						setErrorMessage(err.message);
-						return navigate("/error-page");
 					}
-					navigate("/not-found");
 				});
 		};
 
@@ -61,7 +54,7 @@ const Shots = () => {
 			resetTasks();
 			tasksRequest();
 		}
-	}, [lastPath, redirectedTaskId]);
+	}, [lastPath]);
 
 	return (
 		<Layout isHeader isStatusline order menu>

@@ -2,10 +2,6 @@ import { useEffect } from "react";
 import { Routes, Route, Navigate, useLocation } from "react-router-dom";
 import { SnackbarProvider } from "notistack";
 
-import { snackBar } from "@/utils/snackBar";
-import { handleRefresh } from "@/utils/refresh";
-import { authApi } from "@/routes/auth.api";
-
 // COMPONENTS
 import Admin from "@/pages/Admin/Admin";
 import ArtistsLoading from "@/pages/ArtistsLoading/ArtistsLoading";
@@ -20,7 +16,6 @@ import ImagePreviewPopup from "@/components/Popups/ImagePreview/ImagePreview";
 import MyTasks from "@/pages/MyTasks/MyTasks";
 import Projects from "@/pages/Projects/Projects";
 import ProjectsStatistics from "@/pages/ProjectsStatistics/ProjectsStatistics";
-// import ProtectedRoute from "@/components/_ProtectedRoute/ProtectedRoute";
 import Scenes from "@/pages/Scenes/Scenes";
 import Shots from "@/pages/Shots/Shots";
 import Signup from "@/pages/Signup/Signup";
@@ -33,7 +28,14 @@ import { useArtistStore } from "@/zustand/artistStore";
 import { useProjectsStore } from "@/zustand/projectsStore";
 import { useScenesStore } from "@/zustand/scenesStore";
 import { useTasksStore } from "@/zustand/tasksStore";
+
+// API
 import { artistsApi } from "@/routes/artists.api";
+import { authApi } from "@/routes/auth.api";
+
+// UTILS
+import { snackBar } from "@/utils/snackBar";
+import { handleRefresh } from "@/utils/refresh";
 
 const App = () => {
 	const location = useLocation();
@@ -90,7 +92,6 @@ const App = () => {
 						path="/"
 						element={<Navigate to="/projects" replace />}
 					/>
-					{/* <Route element={<ProtectedRoute />}> */}
 					<Route path="/projects" element={<Projects />} />
 					<Route path="/projects/:projectId" element={<Scenes />} />
 					<Route

@@ -1,8 +1,10 @@
 import { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
+// UTILS
 import { snackBar } from "@/utils/snackBar";
 
+// API
 import { authApi } from "@/routes/auth.api";
 
 // MUI
@@ -40,7 +42,6 @@ const Header = ({ isHeader }: { isHeader: boolean }) => {
 		null,
 	);
 	const [rotateAngle, setRotateAngel] = useState<number>(0);
-	const [rememberedValue, setRememberedValue] = useState<number>(1);
 	const [delayMins, setDelayMins] = useState<number>(1);
 	const [avatarMenuOpen, setAvatarMenuOpen] = useState<boolean>(false);
 	const [settingsOpen, setSettingsOpen] = useState<boolean>(false);
@@ -117,7 +118,7 @@ const Header = ({ isHeader }: { isHeader: boolean }) => {
 							: "none",
 					}}
 				>
-					{/* <SearchOutlinedIcon
+					<SearchOutlinedIcon
 						className="header-icon"
 						onClick={handleSetSearchActive}
 					/>
@@ -126,7 +127,7 @@ const Header = ({ isHeader }: { isHeader: boolean }) => {
 						className="header-search"
 						placeholder="Search"
 						disabled
-					></input> */}
+					></input>
 				</div>
 				<div className="header-right-block">
 					<AutorenewOutlinedIcon
@@ -177,7 +178,7 @@ const Header = ({ isHeader }: { isHeader: boolean }) => {
 							max={10}
 						/>
 					</Popover>
-					{/* <NotificationsNoneOutlinedIcon className="header-icon" /> */}
+					<NotificationsNoneOutlinedIcon className="header-icon" />
 					{auth && auth.role !== EArtistRole.Artist && (
 						<AdminPanelSettingsOutlinedIcon
 							className="header-icon"

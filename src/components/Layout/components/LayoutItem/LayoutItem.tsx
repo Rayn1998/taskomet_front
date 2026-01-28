@@ -1,8 +1,4 @@
-import { useState, MouseEvent, useEffect } from "react";
-
-// STORES
-import { useProjectDataStore } from "@/zustand/projectDataStore";
-import { useSceneDataStore } from "@/zustand/sceneDataStore";
+import { useState, MouseEvent } from "react";
 
 // TYPES
 import type IProject from "@shared/types/Project";
@@ -11,13 +7,16 @@ import type IEntityProgress from "@shared/types/EntityProgress";
 import { EStatus, StatusColors } from "@/types/Status";
 import { EPriority, PriorityColors } from "@/types/Priority";
 
+type DataType = "project" | "scene";
+
 interface ILayoutItem<T extends IProject | IScene> {
-	dataType: string;
+	dataType: DataType;
 	number: number;
 	item: T;
-	itemProgress: IEntityProgress;
+	itemProgress: IEntityProgress | null;
 	handleClick: (item: T) => void;
 	handleDoubleClick: (e: MouseEvent<HTMLDivElement>) => void;
+	handleContext: () => void;
 	selected: boolean;
 }
 
@@ -28,36 +27,20 @@ const LayoutItem = <T extends IProject | IScene>({
 	itemProgress,
 	handleClick,
 	handleDoubleClick,
+	handleContext,
 	selected,
 }: ILayoutItem<T>) => {
-	// PROJECT DATA STORE
-	const { setRelatedProject } = useProjectDataStore();
-
-	// SCENE DATA STORE
-	const { setRelatedScene } = useSceneDataStore();
-
 	const [hover, setHover] = useState<boolean>(false);
-
-	const handleContextClick = () => {
-		switch (dataType) {
-			case "project":
-				setRelatedProject(item as IProject);
-				break;
-			case "scene":
-				setRelatedScene(item as IScene);
-				break;
-		}
-	};
 
 	return (
 		<div
 			data-type={dataType}
 			className="item"
 			data-name={item.name}
-			onContextMenu={handleContextClick}
+			onContextMenu={handleContext}
 			onClick={() => {
 				handleClick(item);
-				handleContextClick();
+				handleContext();
 			}}
 			onDoubleClick={(e) => handleDoubleClick(e)}
 			onMouseEnter={() => setHover(true)}
